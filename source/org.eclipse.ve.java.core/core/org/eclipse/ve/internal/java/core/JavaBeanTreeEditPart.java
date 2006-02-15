@@ -9,11 +9,10 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.25 $ $Date: 2005-12-09 21:55:57 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.26 $ $Date: 2006-02-15 16:11:47 $
  */
 package org.eclipse.ve.internal.java.core;
 
-import java.text.Collator;
 import java.util.*;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -35,9 +34,13 @@ import org.eclipse.ui.IActionFilter;
 import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.emf.*;
+import org.eclipse.ve.internal.cde.emf.DefaultTreeEditPart;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.jcm.*;
+
+import com.ibm.icu.text.Collator;
+import com.ibm.icu.util.ULocale;
 
 /**
  * Tree Editpart for most basic JavaBeans. So that events are handled correctly, any other ones for beans should subclass this one.
@@ -476,7 +479,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 		// Sort the result. Events go before properties, and they both get sorted by name
 		Collections.sort(result, new Comparator() {
 
-			Collator coll = Collator.getInstance(Locale.getDefault());
+			Collator coll = Collator.getInstance(ULocale.getDefault().toLocale());
 
 			public int compare(Object o1, Object o2) {
 				// EventCallback gets sorted before properties and by method name within itself

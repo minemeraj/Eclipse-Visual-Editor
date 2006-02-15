@@ -10,11 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BaseResolveTestCase.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:54:15 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-15 16:11:43 $ 
  */
 package org.eclipse.ve.tests.codegen.resolve;
 
-import java.util.StringTokenizer;
+import junit.framework.TestCase;
 
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
@@ -23,7 +23,7 @@ import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.ResolvedType;
 
-import junit.framework.TestCase;
+import com.ibm.icu.util.StringTokenizer;
  
 
 /**

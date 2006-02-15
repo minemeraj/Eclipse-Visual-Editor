@@ -11,16 +11,16 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanEventUtilities.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-15 16:11:47 $ 
  */
 
-import java.text.Collator;
 import java.util.*;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.*;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.TreeEditPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -29,12 +29,15 @@ import org.eclipse.jem.internal.beaninfo.*;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.jcm.*;
 
-import org.eclipse.jem.java.*;
+import com.ibm.icu.text.Collator;
+import com.ibm.icu.util.ULocale;
 
 /**
  */
@@ -179,7 +182,7 @@ public class JavaBeanEventUtilities {
 		}
 		if (sort) {
 			Collections.sort(result,new Comparator() {
-				Collator coll = Collator.getInstance(Locale.getDefault());
+				Collator coll = Collator.getInstance(ULocale.getDefault().toLocale());
 				public int compare(Object o1, Object o2) {
 					return coll.compare(((PropertyDecorator)o1).getDisplayName(), ((PropertyDecorator)o2).getDisplayName());
 				}
@@ -350,7 +353,7 @@ public class JavaBeanEventUtilities {
 		// Because the AllEvents is an EList we don't want to manipulate it directly
 		java.util.List sortedEvents = new ArrayList(javaEvents);
 		Collections.sort(sortedEvents,new Comparator() {
-			Collator coll = Collator.getInstance(Locale.getDefault());
+			Collator coll = Collator.getInstance(ULocale.getDefault().toLocale());
 			public int compare(Object o1, Object o2) {
 				EventSetDecorator e1 = Utilities.getEventSetDecorator((BeanEvent) o1);
 				EventSetDecorator e2 = Utilities.getEventSetDecorator((BeanEvent) o2);				

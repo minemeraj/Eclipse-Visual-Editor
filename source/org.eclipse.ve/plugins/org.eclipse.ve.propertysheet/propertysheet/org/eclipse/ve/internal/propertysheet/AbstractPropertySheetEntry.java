@@ -11,20 +11,21 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: AbstractPropertySheetEntry.java,v $
- *  $Revision: 1.14 $  $Date: 2006-02-06 23:38:32 $ 
+ *  $Revision: 1.15 $  $Date: 2006-02-15 16:11:40 $ 
  */
 
 
-import java.text.Collator;
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.*;
+
+import com.ibm.icu.text.Collator;
+import com.ibm.icu.util.ULocale;
 
 /**
  * <code>AbstractPropertySheetEntry</code> is an abstract implementation of
@@ -265,7 +266,7 @@ nextDesc:
 	// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=97593
 	List descriptors = new ArrayList(intersection.values());
 		Collections.sort(descriptors, new Comparator() {
-			Collator coll = Collator.getInstance(Locale.getDefault());
+			Collator coll = Collator.getInstance(ULocale.getDefault().toLocale());
 			public int compare(Object a, Object b) {
 				// Sort using the first descriptor from each array. They will all have the same id in the array, so the first is sufficient
 				IPropertyDescriptor d1, d2;

@@ -11,10 +11,9 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanEventsObjectActionDelegate.java,v $
- *  $Revision: 1.13 $  $Date: 2006-02-09 15:03:05 $ 
+ *  $Revision: 1.14 $  $Date: 2006-02-15 16:11:47 $ 
  */
 
-import java.text.Collator;
 import java.util.*;
 import java.util.List;
 
@@ -31,13 +30,17 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.jem.internal.beaninfo.*;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.ModelChangeController;
+
 import org.eclipse.ve.internal.jcm.Callback;
 import org.eclipse.ve.internal.jcm.PropertyEvent;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import com.ibm.icu.text.Collator;
+import com.ibm.icu.util.ULocale;
 
 /**
  * @author pwalker
@@ -258,7 +261,7 @@ public class JavaBeanEventsObjectActionDelegate implements IObjectActionDelegate
 					// Sort it and build the menu.
 					if (methodAndEventsList.size() > 1) {
 						Collections.sort(methodAndEventsList, new Comparator() {
-							Collator coll = Collator.getInstance(Locale.getDefault());
+							Collator coll = Collator.getInstance(ULocale.getDefault().toLocale());
 							public int compare(Object o1, Object o2) {
 								return coll.compare(((MethodAndEventSetDecorator) o1).methodDecor.getDisplayName(), ((MethodAndEventSetDecorator) o2).methodDecor.getDisplayName());
 							}
@@ -292,7 +295,7 @@ public class JavaBeanEventsObjectActionDelegate implements IObjectActionDelegate
 					if (boundPreferredProperties.size() > 1) {
 						// Now we have the list of bounds and preferred properties sort them by display name
 						Collections.sort(boundPreferredProperties, new Comparator() {
-							Collator coll = Collator.getInstance(Locale.getDefault());
+							Collator coll = Collator.getInstance(ULocale.getDefault().toLocale());
 							public int compare(Object o1, Object o2) {
 								return coll.compare(((PropertyDecorator) o1).getDisplayName(), ((PropertyDecorator) o2).getDisplayName());
 							}

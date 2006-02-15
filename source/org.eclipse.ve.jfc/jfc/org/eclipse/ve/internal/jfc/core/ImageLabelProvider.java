@@ -11,14 +11,14 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ImageLabelProvider.java,v $ $Revision: 1.7 $ $Date: 2005-08-24 23:38:09 $
+ * $RCSfile: ImageLabelProvider.java,v $ $Revision: 1.8 $ $Date: 2006-02-15 16:11:41 $
  */
-
-import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.LabelProvider;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import com.ibm.icu.util.StringTokenizer;
 
 public class ImageLabelProvider extends LabelProvider {
 

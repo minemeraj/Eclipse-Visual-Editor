@@ -11,15 +11,21 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: MinmaxValidator.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:44:29 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-15 16:11:40 $ 
  */
 
 
  
+import java.text.MessageFormat;
+import java.text.ParseException;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.viewers.ICellEditorValidator;
-import java.text.*;
-import org.eclipse.core.runtime.*;
-import java.util.StringTokenizer;
+
+import com.ibm.icu.text.NumberFormat;
+import com.ibm.icu.util.StringTokenizer;
+
 /**
  * Validates the number to verify if it is within the bounds 
  * specified for this validator.

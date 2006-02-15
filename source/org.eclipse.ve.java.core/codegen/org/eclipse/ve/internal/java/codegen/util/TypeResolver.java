@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.10 $  $Date: 2006-02-06 23:49:37 $ 
+ *  $Revision: 1.11 $  $Date: 2006-02-15 16:11:47 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -24,6 +24,8 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jem.workbench.utility.JavaModelListener;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import com.ibm.icu.util.StringTokenizer;
  
 
 /**

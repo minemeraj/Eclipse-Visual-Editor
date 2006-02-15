@@ -10,12 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PDEUtilities.java,v $
- *  $Revision: 1.6 $  $Date: 2005-12-09 21:55:56 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-15 16:11:47 $ 
  */
 package org.eclipse.ve.internal.java.vce;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Properties;
 
 import javax.xml.parsers.*;
 
@@ -24,10 +25,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.IFileEditorInput;
-import org.xml.sax.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import com.ibm.icu.util.ULocale;
 
 
 public class PDEUtilities {
@@ -164,7 +168,7 @@ public class PDEUtilities {
 					static final int DEFAULT = 0;				
 					private int processing = DEFAULT;	// Flag to show what kind of extension point we are parsing currently					
 					public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-						String tag = qName.trim().toLowerCase(Locale.US); // Always use US locale for system strings
+						String tag = qName.trim().toLowerCase(ULocale.US.toLocale()); // Always use US locale for system strings
 						// If we are an extension of "org.eclipse.ui.views" then flag this as our next set of tags
 						if(tag.equals("extension")){ //$NON-NLS-1$
 							String extensionPointName = attributes.getValue("point"); //$NON-NLS-1$

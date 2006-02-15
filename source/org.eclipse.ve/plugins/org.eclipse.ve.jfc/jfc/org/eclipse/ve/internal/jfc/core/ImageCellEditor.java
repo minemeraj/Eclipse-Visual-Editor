@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.jfc.core;
 
-import java.util.StringTokenizer;
-
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.window.Window;
@@ -29,6 +27,8 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.core.*;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Cell editor for javax.swing.ImageIcon.

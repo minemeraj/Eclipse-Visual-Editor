@@ -11,12 +11,11 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.20 $  $Date: 2006-02-03 17:11:45 $ 
+ *  $Revision: 1.21 $  $Date: 2006-02-15 16:11:47 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.logging.Level;
 
 import javax.swing.UIManager;
@@ -48,6 +47,8 @@ import org.eclipse.jem.internal.proxy.core.ProxyPlugin.FoundIDs;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferencePage;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
+
+import com.ibm.icu.util.ULocale;
 
 /**
  * This tab appears in the LaunchConfigurationDialog for launch configurations that
@@ -192,7 +193,7 @@ public class JavaBeanTab extends JavaLaunchTab {
 		fLocaleText = new Text(localeComp,SWT.BORDER);
 		fLocaleText.setEnabled(false);
 		fLocaleText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		fLocaleText.setText(Locale.getDefault().toString());
+		fLocaleText.setText(ULocale.getDefault().toString());
 		
 		Label fSuggestionLabel = new Label(localeComp,SWT.NONE);
 		fSuggestionLabel.setText(VCELauncherMessages.BeanTab_localesuggest_label); 
@@ -306,8 +307,8 @@ public class JavaBeanTab extends JavaLaunchTab {
 			return true;
 		}		
 		boolean localeIsValid = false;
-		for ( int i=0; i < Locale.getAvailableLocales().length ; i++){
-			if(newLocaleText.trim().equals(Locale.getAvailableLocales()[i].toString().trim())){
+		for ( int i=0; i < ULocale.getAvailableLocales().length ; i++){
+			if(newLocaleText.trim().equals(ULocale.getAvailableLocales()[i].toString().trim())){
 				localeIsValid = true;
 				setErrorMessage(null);
 			}

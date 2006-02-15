@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaObjectEmiter.java,v $
- *  $Revision: 1.12 $  $Date: 2006-02-03 17:12:49 $ 
+ *  $Revision: 1.13 $  $Date: 2006-02-15 16:11:47 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -34,6 +34,8 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblem;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import com.ibm.icu.util.ULocale;
 
 /**
  * @author Gili Mendel
@@ -430,7 +432,7 @@ public class JavaObjectEmiter {
 		INameEnvironment env = new FileSystem(classPath, new String[0], fEncodeing);
 		tick(pm);
 		IErrorHandlingPolicy errorPolicy = DefaultErrorHandlingPolicies.exitOnFirstError();
-		IProblemFactory problemFactory = org.eclipse.jdt.internal.core.builder.ProblemFactory.getProblemFactory(java.util.Locale.getDefault());
+		IProblemFactory problemFactory = org.eclipse.jdt.internal.core.builder.ProblemFactory.getProblemFactory(ULocale.getDefault().toLocale());
 		EmiterCompilerRequestor requestor = new EmiterCompilerRequestor();
 		Hashtable options = JavaCore.getOptions();
 		// Force JDK 1.4	

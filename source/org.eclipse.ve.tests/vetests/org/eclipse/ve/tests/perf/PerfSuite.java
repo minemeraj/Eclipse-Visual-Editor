@@ -11,7 +11,6 @@
 package org.eclipse.ve.tests.perf;
 
 import java.lang.reflect.InvocationTargetException;
-import java.text.DateFormat;
 import java.util.*;
 
 import junit.extensions.TestSetup;
@@ -36,6 +35,8 @@ import org.eclipse.jem.util.PerformanceMonitorUtil;
 import org.eclipse.jem.util.PerformanceMonitorUtil.PerformanceEvent;
 
 import org.eclipse.ve.tests.VETestsPlugin;
+
+import com.ibm.icu.text.DateFormat;
 
 /**
  * Test the performance types suite.

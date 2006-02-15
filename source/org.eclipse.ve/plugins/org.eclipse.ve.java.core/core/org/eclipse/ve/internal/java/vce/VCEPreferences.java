@@ -11,18 +11,19 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.20 $  $Date: 2005-10-24 18:00:33 $ 
+ *  $Revision: 1.21 $  $Date: 2006-02-15 16:11:47 $ 
  */
 
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.*;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import com.ibm.icu.util.StringTokenizer;
 
 public class VCEPreferences {
 	

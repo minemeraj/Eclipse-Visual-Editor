@@ -30,6 +30,8 @@ import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
+import com.ibm.icu.util.ULocale;
+
 
 
 /**
@@ -62,12 +64,12 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 			this.varFirstOffset = varFirstOffset;
 			// we only rename get<varName> type method
 			if(iMethod!=null){
-				String methodName = iMethod.getElementName().toLowerCase(Locale.getDefault());
-				String expectedName = "get"+varName.toLowerCase(Locale.getDefault()); //$NON-NLS-1$
+				String methodName = iMethod.getElementName().toLowerCase(ULocale.getDefault().toLocale());
+				String expectedName = "get"+varName.toLowerCase(ULocale.getDefault().toLocale()); //$NON-NLS-1$
 				if(expectedName.equals(methodName)){
 					this.iMethod = iMethod;
 				}else{
-					expectedName = "create"+varName.toLowerCase(Locale.getDefault()); //$NON-NLS-1$
+					expectedName = "create"+varName.toLowerCase(ULocale.getDefault().toLocale()); //$NON-NLS-1$
 					if(expectedName.equals(methodName)){
 						this.iMethod = iMethod;
 					}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPrefContributor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-09-20 22:04:42 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-15 16:11:47 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
@@ -29,6 +29,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * @author Gili Mendel
@@ -82,7 +84,7 @@ public class VCEPrefContributor extends AbstractStyleContributor {
 	
 	private static ArrayList extractMethods(String methodString) {
 		ArrayList methods = new ArrayList(3);
-		java.util.StringTokenizer stok = new java.util.StringTokenizer(methodString, ";"); //$NON-NLS-1$
+		StringTokenizer stok = new StringTokenizer(methodString, ";"); //$NON-NLS-1$
 		// Skip the first element.  We will always store a dummy first element
 		// so that we can distinguish between a "" of no methods, or "" Nothing in the Store,
 		// which requires the usage of the defaults above.

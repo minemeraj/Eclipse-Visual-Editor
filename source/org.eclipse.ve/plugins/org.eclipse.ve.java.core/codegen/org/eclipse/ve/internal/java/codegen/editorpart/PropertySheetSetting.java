@@ -12,11 +12,9 @@
  *  Created May 27, 2005 by Gili Mendel
  * 
  *  $RCSfile: PropertySheetSetting.java,v $
- *  $Revision: 1.3 $  $Date: 2005-12-14 21:27:33 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-15 16:11:47 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
-
-import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -27,6 +25,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import com.ibm.icu.util.StringTokenizer;
  
 
 public class PropertySheetSetting implements EditorSettings.ISetting {

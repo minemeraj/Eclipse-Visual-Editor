@@ -11,11 +11,10 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.20 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.21 $  $Date: 2006-02-15 16:11:41 $ 
  */
 
 
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
@@ -28,7 +27,8 @@ import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+
+import org.eclipse.ve.internal.jcm.MemberContainer;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
@@ -36,7 +36,8 @@ import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.jcm.MemberContainer;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 public class ConstraintDecoderHelper extends ExpressionDecoderHelper {

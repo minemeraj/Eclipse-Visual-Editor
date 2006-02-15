@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ImageController.java,v $
- *  $Revision: 1.7 $  $Date: 2005-12-12 21:29:30 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-15 16:11:37 $ 
  */
 
 import java.io.File;
@@ -40,6 +40,8 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /** 
  * The IconDialog and IconController form the Icon property editor,

@@ -11,13 +11,18 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: NumberCellEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:44:29 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-15 16:11:40 $ 
  */
 
 
+import java.text.ParseException;
+import java.text.ParsePosition;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.swt.widgets.Composite;
-import java.text.*;
-import org.eclipse.core.runtime.*;
+
+import com.ibm.icu.text.NumberFormat;
 
 /**
  * Number Celleditor that formats according to the current locale.
