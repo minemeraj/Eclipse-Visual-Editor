@@ -11,26 +11,19 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: CDMFactoryImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2006-02-07 17:21:33 $ 
+ *  $Revision: 1.9 $  $Date: 2006-02-15 16:11:35 $ 
  */
 
-import org.eclipse.ve.internal.cdm.*;
-
 import java.util.Map;
-import java.util.StringTokenizer;
 
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
-import org.eclipse.ve.internal.cdm.model.Dimension;
-import org.eclipse.ve.internal.cdm.model.Point;
-import org.eclipse.ve.internal.cdm.model.Rectangle;
+import org.eclipse.ve.internal.cdm.*;
+import org.eclipse.ve.internal.cdm.model.*;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * <!-- begin-user-doc -->

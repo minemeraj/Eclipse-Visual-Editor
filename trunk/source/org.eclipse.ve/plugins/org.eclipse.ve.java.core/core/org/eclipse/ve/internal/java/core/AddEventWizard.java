@@ -11,10 +11,9 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: AddEventWizard.java,v $
- *  $Revision: 1.13 $  $Date: 2005-12-09 21:55:57 $ 
+ *  $Revision: 1.14 $  $Date: 2006-02-15 16:11:47 $ 
  */
 
-import java.text.Collator;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
@@ -43,6 +42,9 @@ import org.eclipse.jem.java.Method;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 
 import org.eclipse.ve.internal.jcm.*;
+
+import com.ibm.icu.text.Collator;
+import com.ibm.icu.util.ULocale;
 
 public class AddEventWizard extends Wizard {
 	
@@ -422,7 +424,7 @@ public class AddEventWizard extends Wizard {
 						}
 						
 						Collections.sort(listenerMethodDecs, new Comparator() {
-							Collator coll = Collator.getInstance(Locale.getDefault());
+							Collator coll = Collator.getInstance(ULocale.getDefault().toLocale());
 							public int compare(Object o1, Object o2) {
 								return coll.compare(((MethodDecorator) o1).getDisplayName(), ((MethodDecorator) o2).getDisplayName());
 							}

@@ -11,10 +11,8 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ImageCellEditor.java,v $
- *  $Revision: 1.10 $  $Date: 2005-11-15 18:53:27 $ 
+ *  $Revision: 1.11 $  $Date: 2006-02-15 16:11:37 $ 
  */
-
-import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.window.Window;
@@ -30,6 +28,8 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.core.*;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Cell editor for javax.swing.ImageIcon. TODO Needs to be changed to use parse

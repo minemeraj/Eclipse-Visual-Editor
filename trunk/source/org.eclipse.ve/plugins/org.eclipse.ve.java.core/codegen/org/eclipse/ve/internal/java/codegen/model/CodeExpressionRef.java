@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.66 $  $Date: 2005-12-09 21:15:05 $ 
+ *  $Revision: 1.67 $  $Date: 2006-02-15 16:11:47 $ 
  */
 
 
@@ -32,6 +32,8 @@ import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import com.ibm.icu.util.StringTokenizer;
 
 public class CodeExpressionRef extends AbstractCodeRef {
 

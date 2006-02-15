@@ -12,7 +12,7 @@
  *  Created May 27, 2005 by Gili Mendel
  * 
  *  $RCSfile: PaletteDrawersSetting.java,v $
- *  $Revision: 1.6 $  $Date: 2005-12-14 21:27:33 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-15 16:11:47 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -28,6 +28,8 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Save's the palette state per resource. There is no way to listen to palette edit parts expending/closing, so we will persist the palette when he

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.40 $  $Date: 2005-12-01 22:54:41 $ 
+ *  $Revision: 1.41 $  $Date: 2006-02-15 16:11:47 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -42,6 +42,8 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.codegen.util.DefaultClassGenerator;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.templates.*;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * @authors JoeWin, pmuldoon

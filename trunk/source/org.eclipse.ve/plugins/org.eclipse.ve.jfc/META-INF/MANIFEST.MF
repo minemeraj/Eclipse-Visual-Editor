@@ -32,5 +32,6 @@ Require-Bundle: org.eclipse.ve.java.core,
  org.eclipse.jface,
  org.eclipse.jem.workbench,
  org.eclipse.core.runtime,
- org.eclipse.jem.util
+ org.eclipse.jem.util,
+ com.ibm.icu
 Eclipse-LazyStart: true

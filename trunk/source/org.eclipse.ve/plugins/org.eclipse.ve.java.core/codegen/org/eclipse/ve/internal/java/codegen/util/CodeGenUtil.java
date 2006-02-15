@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.65 $  $Date: 2006-02-09 15:03:05 $ 
+ *  $Revision: 1.66 $  $Date: 2006-02-15 16:11:47 $ 
  */
 
 
@@ -52,6 +52,8 @@ import org.eclipse.ve.internal.java.core.ASTMethodUtil;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.rules.IEditorStyle;
 import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 /**

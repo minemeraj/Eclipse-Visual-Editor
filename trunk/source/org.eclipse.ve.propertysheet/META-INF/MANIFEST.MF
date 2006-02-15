@@ -13,5 +13,6 @@ Require-Bundle: org.eclipse.emf.common,
  org.eclipse.ui,
  org.eclipse.gef;resolution:=optional,
  org.eclipse.ui.views,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ com.ibm.icu
 Eclipse-LazyStart: true

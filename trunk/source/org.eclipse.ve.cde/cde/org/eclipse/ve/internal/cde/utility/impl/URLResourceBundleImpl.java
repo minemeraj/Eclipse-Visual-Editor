@@ -9,12 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.cde.utility.impl;
-/*
- *  $RCSfile: URLResourceBundleImpl.java,v $
- *  $Revision: 1.10 $  $Date: 2006-02-07 17:21:33 $ 
- */
-import java.util.Collection;
-
 import java.net.*;
 import java.util.*;
 
@@ -29,6 +23,8 @@ import org.osgi.framework.Bundle;
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.utility.URLResourceBundle;
 import org.eclipse.ve.internal.cde.utility.UtilityPackage;
+
+import com.ibm.icu.util.ULocale;
 
 /**
  * <!-- begin-user-doc -->
@@ -149,7 +145,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 				if (fBundle == null) { //dbk
 					URLClassLoader cl = new URLClassLoader((URL[]) urls.toArray(new URL[urls.size()]), null);
 					try {
-						fBundle = java.util.ResourceBundle.getBundle(getBundleName(), Locale.getDefault(), cl);
+						fBundle = java.util.ResourceBundle.getBundle(getBundleName(), ULocale.getDefault().toLocale(), cl);
 						rbCache.put(key, fBundle); //dbk						
 					} catch (MissingResourceException e) {
 						CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$

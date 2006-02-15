@@ -29,7 +29,8 @@
       <!-- dbk added for perf tests -->
       <import plugin="org.eclipse.ui.ide" />
       <import plugin="org.eclipse.jface" />   
-      <import plugin="org.eclipse.jem.util"/>           
+      <import plugin="org.eclipse.jem.util"/>
+      <import plugin="com.ibm.icu"/>           
    </requires>
 
 

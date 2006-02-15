@@ -11,12 +11,13 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: NumberLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:44:29 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-15 16:11:40 $ 
  */
 
 
 import org.eclipse.jface.viewers.LabelProvider;
-import java.text.NumberFormat;
+
+import com.ibm.icu.text.NumberFormat;
 /**
  * This will format numbers in locale dependent format.
  * (e.g. 3,000 instead of 3000)

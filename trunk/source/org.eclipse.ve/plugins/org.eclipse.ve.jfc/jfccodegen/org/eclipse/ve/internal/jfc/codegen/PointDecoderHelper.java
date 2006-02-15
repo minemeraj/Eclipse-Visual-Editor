@@ -11,12 +11,11 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: PointDecoderHelper.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.15 $  $Date: 2006-02-15 16:11:41 $ 
  */
 
 
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -24,7 +23,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Statement;
-
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -36,6 +34,8 @@ import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 public class PointDecoderHelper extends ExpressionDecoderHelper {

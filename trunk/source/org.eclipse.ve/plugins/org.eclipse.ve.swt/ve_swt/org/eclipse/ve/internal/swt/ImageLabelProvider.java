@@ -10,15 +10,15 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
 /*
- * $RCSfile: ImageLabelProvider.java,v $ $Revision: 1.5 $ $Date: 2004/05/19
+ * $RCSfile: ImageLabelProvider.java,v $ $Revision: 1.6 $ $Date: 2004/05/19
  * 17:05:43 $
  */
-
-import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.LabelProvider;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import com.ibm.icu.util.StringTokenizer;
 
 public class ImageLabelProvider extends LabelProvider {
 

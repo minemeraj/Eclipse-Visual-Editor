@@ -11,11 +11,9 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: PointJavaClassCellEditor.java,v $
- *  $Revision: 1.8 $  $Date: 2005-11-15 18:53:28 $ 
+ *  $Revision: 1.9 $  $Date: 2006-02-15 16:11:47 $ 
  */
 
-
-import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -26,6 +24,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.java.core.*;
+
+import com.ibm.icu.util.StringTokenizer;
 /**
  * Cell Editor for Point instances
  * The actual point class itself is provided as an initialization string so the same class can be used for 

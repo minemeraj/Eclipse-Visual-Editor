@@ -13,7 +13,6 @@ package org.eclipse.ve.internal.swt;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.*;
@@ -29,6 +28,8 @@ import org.osgi.framework.Constants;
 import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 public class SWTContainer implements IClasspathContainer, IConfigurationContributor {

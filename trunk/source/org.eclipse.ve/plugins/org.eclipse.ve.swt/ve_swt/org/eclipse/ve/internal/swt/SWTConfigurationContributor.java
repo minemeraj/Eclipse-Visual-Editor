@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.39 $  $Date: 2006-02-10 18:41:49 $ 
+ *  $Revision: 1.40 $  $Date: 2006-02-15 16:11:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -38,6 +38,8 @@ import org.osgi.framework.Version;
 import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 
