@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.164 $  $Date: 2006-02-09 15:03:05 $ 
+ *  $Revision: 1.165 $  $Date: 2006-02-16 17:45:43 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -668,7 +668,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					Object obj = editorPart.getEditDomain().getData(IDiagramModelBuilder.MODEL_BUILDER_KEY);
 					if (obj instanceof IDiagramModelBuilder) {
 						IDiagramModelBuilder mb = (IDiagramModelBuilder) obj;
-						MemberDecoderAdapter ca = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(mb.getModelRoot(), ICodeGenAdapter.JVE_MEMBER_ADAPTER);
+						// Model root could be null due to parse errors.
+						MemberDecoderAdapter ca = mb.getModelRoot() != null ? (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(mb.getModelRoot(), ICodeGenAdapter.JVE_MEMBER_ADAPTER) : null;
 						if(ca!=null){
 							IBeanDeclModel bdm = ca.getBeanDeclModel();
 							
