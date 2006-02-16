@@ -951,7 +951,9 @@ public boolean  decodeDocument (final IFile sourceFile,IProgressMonitor pm) thro
 			if (fBeanModel!=null) 
 				   VEModelCacheUtility.removeCache(fBeanModel.getCompositionModel());
 				else
-				   VEModelCacheUtility.removeCache(sourceFile);			
+				   VEModelCacheUtility.removeCache(sourceFile);	
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+				JavaVEPlugin.log(e, Level.WARNING);
 			fireParseError(true);			
 		}
     	return true;
