@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.35 $  $Date: 2006-02-09 15:22:12 $ 
+ *  $Revision: 1.36 $  $Date: 2006-02-16 17:47:37 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -29,8 +29,7 @@ import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.core.FactoryCreationData;
@@ -45,7 +44,7 @@ import org.eclipse.ve.internal.swt.SwtPlugin;
  */
 public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	
-	BeanPart fParent = null ;
+	private BeanPart fParent = null;	// Only access through getParent() and resetParent();
 	protected String constructorSF = null;
 	protected CodeExpressionRef masterExpression = null; // Expression drives the existence of this expression
 
@@ -59,6 +58,14 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	
 	private static boolean isComposite(EObject eObject, ResourceSet rs) {
 		JavaHelpers widgetType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets", "Composite", rs) ; //$NON-NLS-1$ //$NON-NLS-2$
+		if(widgetType!=null && widgetType.isInstance(eObject)){
+			return true;
+		}
+		return false;
+	}
+	
+	private static boolean isShell(EObject eObject, ResourceSet rs) {
+		JavaHelpers widgetType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets", "Shell", rs) ; //$NON-NLS-1$ //$NON-NLS-2$
 		if(widgetType!=null && widgetType.isInstance(eObject)){
 			return true;
 		}
@@ -77,6 +84,8 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		super(bean, exp, fm, owner);
 		this.constructorSF = constructorSF;
 	}
+	
+	boolean explicitNullParent;
 	/**
 	 * If this widget is initialized in the same method as its parent, than
 	 * we know that this widget will be instantiated, and we need to set up
@@ -84,10 +93,16 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	 * @return
 	 * 
 	 * @since 1.0.0
-	 */
-	
+	 */	
 	protected BeanPart getParent() {
+		if (explicitNullParent)
+			return null;
 		if (fParent!=null) return fParent;
+		if (isShell(fbeanPart.getEObject(), fOwner.getBeanModel().getCompositionModel().getModelResourceSet())) {
+			// Shell nevers has a parent. It is always on the freeform.
+			explicitNullParent = true;
+			return null;
+		}
 		// It the BeanPart is an implicit swt, then the parent may not be the first referenced widget. It may be the parent widget
 		// itself.
 		IJavaObjectInstance jo = (IJavaObjectInstance) fbeanPart.getEObject();
@@ -143,7 +158,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	}
 	protected boolean isControlFeatureNeeded() {
 		// Does the constructor refer to a parent
-		if (getExpressionReferences().size()>0) {
+		if (getParent()!=null && getExpressionReferences().size()>0) {
 			// check to see if both parent/child are defined on with the same method
 			// The assumption is that a call to the init method of teh child will create
 			// the control feature						
@@ -269,7 +284,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		if (result) {
 			BeanPart oldParentBP = getParent();
 			EStructuralFeature oldIndexSF = getIndexSF();
-			fParent = null;
+			resetParent();
 			if (isControlFeatureNeeded()) {
 				createControlFeature(true, oldParentBP, oldIndexSF);								
 			}
@@ -280,6 +295,11 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 			fbeanPart.resolveParentExpressions(getParent());
 		}
 		return (result);
+	}
+
+	protected void resetParent() {
+		fParent = null;
+		explicitNullParent = false;
 	}
 	
 	public boolean restore() throws CodeGenException {
