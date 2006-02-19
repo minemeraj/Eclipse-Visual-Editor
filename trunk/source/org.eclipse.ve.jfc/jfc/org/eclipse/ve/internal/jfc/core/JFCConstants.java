@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JFCConstants.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.13 $  $Date: 2006-02-19 01:32:34 $ 
  */
 
 import org.eclipse.emf.common.util.URI;
@@ -38,6 +38,10 @@ public class JFCConstants {
 		SF_CONTAINER_LAYOUT,	// java.awt.Container, layout
 		
 		SF_DIALOG_MODAL,		// java.awt.Dialog, modal
+		
+		SF_FLOWLAYOUT_ALIGNMENT,   // java.awt.FlowLayout, alignment
+		SF_FLOWLAYOUT_HGAP,    
+		SF_FLOWLAYOUT_VGAP,
 		
 		SF_GRIDLAYOUT_COLUMNS, // java.awt.GridLayout, columns
 		SF_GRIDLAYOUT_ROWS,
@@ -121,6 +125,10 @@ public class JFCConstants {
 		SF_CONSTRAINT_CONSTRAINT = URI.createURI("platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/containerVisuals.ecore#//ConstraintComponent/constraint"); //$NON-NLS-1$
 		
 		SF_DIALOG_MODAL = URI.createURI("java:/java.awt#Dialog/modal");		 //$NON-NLS-1$		
+		
+		SF_FLOWLAYOUT_ALIGNMENT = URI.createURI("java:/java.awt#FlowLayout/alignment"); //$NON-NLS-1$
+		SF_FLOWLAYOUT_HGAP = URI.createURI("java:/java.awt#FlowLayout/Hgap"); //$NON-NLS-1$
+		SF_FLOWLAYOUT_VGAP = URI.createURI("java:/java.awt#FlowLayout/Vgap"); //$NON-NLS-1$
 				
 		SF_GRIDBAGCONSTRAINTS_GRIDX = URI.createURI("java:/java.awt#GridBagConstraints/gridx"); //$NON-NLS-1$
 		SF_GRIDBAGCONSTRAINTS_GRIDY = URI.createURI("java:/java.awt#GridBagConstraints/gridy"); //$NON-NLS-1$

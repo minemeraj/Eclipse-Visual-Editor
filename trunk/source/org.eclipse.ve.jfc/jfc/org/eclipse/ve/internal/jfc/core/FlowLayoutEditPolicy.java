@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FlowLayoutEditPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-11 21:23:50 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-19 01:32:34 $ 
  */
 
 import java.util.Collections;
@@ -19,13 +19,20 @@ import java.util.Collections;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.ui.IActionFilter;
+
+import org.eclipse.ve.internal.cde.core.CustomizeLayoutPage;
+import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /**
- * Layout input policiy for hanlding the Flow layout of a Container.
+ * Layout input policy for handling the Flow layout of a Container.
  */
-public class FlowLayoutEditPolicy extends org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy {
+public class FlowLayoutEditPolicy extends org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy implements IActionFilter {
+	
+	public final static String LAYOUT_ID = "java.awt.FlowLayout"; //$NON-NLS-1$
+	
 	protected FlowLayoutPolicyHelper helper = new FlowLayoutPolicyHelper();
 
 	/**
@@ -36,6 +43,12 @@ public class FlowLayoutEditPolicy extends org.eclipse.ve.internal.cde.core.FlowL
 		setHorizontal(Boolean.TRUE);
 		helper.setContainerPolicy(containerPolicy);
 	}
+	
+	public void activate() {
+		super.activate();
+		CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), FlowLayoutLayoutPage.class);
+	}
+	
 	/**
 	 * The child editpart is about to be added to the parent.
 	 */
@@ -49,5 +62,15 @@ public class FlowLayoutEditPolicy extends org.eclipse.ve.internal.cde.core.FlowL
 		Object child = aRequest.getNewObject();
 		EditPart before = getInsertionReference(aRequest);
 		return helper.getCreateChildCommand(child, null, before != null ? before.getModel() : null).getCommand();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
+	 */
+	public boolean testAttribute(Object target, String name, String value) {
+		if (name.startsWith(CustomizeLayoutPage.LAYOUT_POLICY_KEY) && value.equals(LAYOUT_ID))
+			return true;
+		
+		return false;
 	}
 }
