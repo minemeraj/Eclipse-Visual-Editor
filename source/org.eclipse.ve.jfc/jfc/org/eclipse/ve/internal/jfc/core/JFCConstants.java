@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JFCConstants.java,v $
- *  $Revision: 1.13 $  $Date: 2006-02-19 01:32:34 $ 
+ *  $Revision: 1.14 $  $Date: 2006-02-19 14:09:11 $ 
  */
 
 import org.eclipse.emf.common.util.URI;
@@ -25,6 +25,12 @@ import org.eclipse.emf.ecore.*;
  */
 public class JFCConstants {
 	public static final URI
+		SF_BORDERLAYOUT_HGAP,   // java.awt.BorderLayout, hgap, vgap
+		SF_BORDERLAYOUT_VGAP,
+		
+		SF_CARDLAYOUT_HGAP,     // java.awt.CardLayout, hgap, vgap
+		SF_CARDLAYOUT_VGAP,
+	
 		SF_COMPONENT_VISIBLE,	// java.awt.Component, visible
 		SF_COMPONENT_LOCATION,	// java.awt.Component, location
 		SF_COMPONENT_SIZE,		// java.awt.Component, size
@@ -114,6 +120,12 @@ public class JFCConstants {
 	}
 		
 	static {
+		SF_BORDERLAYOUT_HGAP = URI.createURI("java:/java.awt#BorderLayout/hgap");		 //$NON-NLS-1$
+		SF_BORDERLAYOUT_VGAP = URI.createURI("java:/java.awt#BorderLayout/vgap");		 //$NON-NLS-1$
+		
+		SF_CARDLAYOUT_HGAP = URI.createURI("java:/java.awt#CardLayout/hgap");		 //$NON-NLS-1$
+		SF_CARDLAYOUT_VGAP = URI.createURI("java:/java.awt#CardLayout/vgap");		 //$NON-NLS-1$
+		
 		SF_COMPONENT_VISIBLE = URI.createURI("java:/java.awt#Component/visible");		 //$NON-NLS-1$
 		SF_COMPONENT_LOCATION = URI.createURI("java:/java.awt#Component/location");		 //$NON-NLS-1$
 		SF_COMPONENT_SIZE = URI.createURI("java:/java.awt#Component/size");				 //$NON-NLS-1$
