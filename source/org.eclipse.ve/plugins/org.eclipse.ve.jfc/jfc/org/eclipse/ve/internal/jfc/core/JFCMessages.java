@@ -145,4 +145,9 @@ public final class JFCMessages extends NLS {
 	public static String JFCVisualPlugin_layout_Box_XAxis;
 	public static String JFCVisualPlugin_layout_Box_YAxis;
 	public static String JFCVisualPlugin_layout_Card;
+	public static String FlowLayoutLayoutPage_AlignmentGroupTitle;
+	public static String FlowLayoutLayoutPage_LeftAlign;
+	public static String FlowLayoutLayoutPage_CenterAlign;
+	public static String FlowLayoutLayoutPage_RightAlign;
+	public static String FlowLayoutLayoutPage_SpacingGroupTitle;
 }
