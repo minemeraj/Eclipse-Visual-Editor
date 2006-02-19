@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: CardLayoutEditPolicy.java,v $
- *  $Revision: 1.11 $  $Date: 2005-11-04 17:30:48 $ 
+ *  $Revision: 1.12 $  $Date: 2006-02-19 14:09:11 $ 
  */
 import java.util.*;
 
@@ -27,6 +27,7 @@ import org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.*;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
@@ -57,7 +58,10 @@ import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
  * not it's children. This is to re-select the card and force a refresh when the
  * constraint is changed. Without the re
  */
-public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
+public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements IActionFilter {
+	
+	public final static String LAYOUT_ID = "java.awt.CardLayout"; //$NON-NLS-1$
+	
 	private EditPartListener cardListener;
 	protected CardLayoutPolicyHelper helper = new CardLayoutPolicyHelper();
 	protected VisualContainerPolicy containerPolicy;		// Handles the containment functions
@@ -109,6 +113,7 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 				}
 			});
 		}
+		CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), CardLayoutLayoutPage.class);
 	}
 	
 	protected void addCardListenerToChildren(EditPart ep) {
@@ -361,5 +366,14 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 	protected Command createAddCommand(EditPart child, Object constraint) {
 		return null;	// Never called. We override getAddCommand.
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
+	 */
+	public boolean testAttribute(Object target, String name, String value) {
+		if (name.startsWith(CustomizeLayoutPage.LAYOUT_POLICY_KEY) && value.equals(LAYOUT_ID))
+			return true;
+		
+		return false;
+	}
 }

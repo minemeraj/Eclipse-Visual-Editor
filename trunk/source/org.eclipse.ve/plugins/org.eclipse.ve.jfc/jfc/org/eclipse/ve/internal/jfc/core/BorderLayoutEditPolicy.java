@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutEditPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-11-04 17:30:48 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-19 14:09:11 $ 
  */
 
 import java.util.*;
@@ -27,8 +27,10 @@ import org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -39,7 +41,10 @@ import org.eclipse.jem.internal.proxy.core.IStringBeanProxy;
 /**
  * Layout input policy for a java.awt.BorderLayoutManager.
  */
-public class BorderLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
+public class BorderLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements IActionFilter {
+	
+	public final static String LAYOUT_ID = "java.awt.BorderLayout"; //$NON-NLS-1$
+	
 	protected VisualContainerPolicy fPolicy;
 	protected BorderLayoutPolicyHelper fLayoutPolicyHelper;
 	protected BorderLayoutFeedback fBorderLayoutFeedback = null;
@@ -58,6 +63,7 @@ public BorderLayoutEditPolicy(VisualContainerPolicy aContainerPolicy) {
 public void activate() {
 	super.activate();
 	fPolicy.setContainer(getHost().getModel());
+	CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), BorderLayoutLayoutPage.class);
 }
 
 public void deactivate() {
@@ -305,4 +311,14 @@ protected Command getOrphanChildrenCommand(Request aRequest) {
 protected void showLayoutTargetFeedback(Request request) {
 	getBorderLayoutFeedback(request);
 }
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
+	 */
+	public boolean testAttribute(Object target, String name, String value) {
+		if (name.startsWith(CustomizeLayoutPage.LAYOUT_POLICY_KEY) && value.equals(LAYOUT_ID))
+			return true;
+		
+		return false;
+	}
 }
