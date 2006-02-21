@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ResolveSuite.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:54:15 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-21 17:16:41 $ 
  */
 package org.eclipse.ve.tests.codegen.resolve;
 
@@ -69,8 +69,8 @@ public class ResolveSuite extends TestSetup {
 		System.out.println("-- Initializing the Codegen Resolve test data --"); //$NON-NLS-1$
 		oldAutoBuildingState = JavaProjectUtil.setAutoBuild(true);
 		String[] zipPaths = new String[2];
-		zipPaths[0] = Platform.asLocalURL(VETestsPlugin.getPlugin().getBundle().getEntry("resources/testdata/resolvetests.zip")).getFile();
-		zipPaths[1] = Platform.asLocalURL(VETestsPlugin.getPlugin().getBundle().getEntry("resources/testdata/resolvetests2.zip")).getFile();
+		zipPaths[0] = FileLocator.toFileURL(VETestsPlugin.getPlugin().getBundle().getEntry("resources/testdata/resolvetests.zip")).getFile();
+		zipPaths[1] = FileLocator.toFileURL(VETestsPlugin.getPlugin().getBundle().getEntry("resources/testdata/resolvetests2.zip")).getFile();
 		IProject[] projects = JavaProjectUtil.importProjects(new String[] { RESOLVE_TESTDATA_PROJECT, RESOLVE_TESTDATA2_PROJECT}, zipPaths);
 		assertNotNull(projects[0]);
 		assertNotNull(projects[1]);

@@ -83,7 +83,7 @@ public class PerfSuiteJDT extends TestSetup {
 			System.out.println("-- Initializing the performance test data --"); //$NON-NLS-1$
 			oldAutoBuildingState = JavaProjectUtil.setAutoBuild(true);
 			String[] zipPaths = new String[1];
-			zipPaths[0] = Platform.asLocalURL(VETestsPlugin.getPlugin().getBundle().getEntry("resources/testdata/" + TESTDATA_PROJECT + ".zip"))
+			zipPaths[0] = FileLocator.toFileURL(VETestsPlugin.getPlugin().getBundle().getEntry("resources/testdata/" + TESTDATA_PROJECT + ".zip"))
 					.getFile();
 			IProject[] projects = JavaProjectUtil.importProjects(new String[] { TESTDATA_PROJECT}, zipPaths);
 			assertNotNull(projects[0]);
@@ -109,7 +109,7 @@ public class PerfSuiteJDT extends TestSetup {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < extensions.length; ++i) {
 			IExtension extension = extensions[i];
-			sb.append(extension.getNamespace());
+			sb.append(extension.getContributor().getName());
 			sb.append(";");
 		}
 		WorkbenchPlugin.getDefault().getPluginPreferences().setValue(IPreferenceConstants.PLUGINS_NOT_ACTIVATED_ON_STARTUP, sb.toString());

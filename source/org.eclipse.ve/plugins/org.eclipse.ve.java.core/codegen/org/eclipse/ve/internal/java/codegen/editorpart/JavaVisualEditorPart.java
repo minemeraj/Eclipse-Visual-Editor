@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.165 $  $Date: 2006-02-16 17:45:43 $ 
+ *  $Revision: 1.166 $  $Date: 2006-02-21 17:16:35 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -1210,7 +1210,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				return false;
 			String bundleName = null;
 			if (cat.charAt(0) != '/')
-				bundleName = paletteContribution.getDeclaringExtension().getNamespace();
+				bundleName = paletteContribution.getDeclaringExtension().getContributor().getName();
 			else {
 				if (cat.length() > 4) {
 					int pend = cat.indexOf('/', 1);
@@ -1642,7 +1642,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						final Map.Entry entry = (Map.Entry) iter.next();
 						if (((Boolean) entry.getValue()).booleanValue())
 							if (entry.getKey() instanceof IVEContributor) {
-								Platform.run(new ISafeRunnable() {
+								SafeRunner.run(new ISafeRunnable() {
 									public void handleException(Throwable exception) {
 										// Default logs fro us.
 									}
@@ -1651,7 +1651,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 									}
 								});
 							} else if (entry.getKey() instanceof IVEContributor1) {
-								Platform.run(new ISafeRunnable() {
+								SafeRunner.run(new ISafeRunnable() {
 									public void handleException(Throwable exception) {
 										// Default logs fro us.
 									}
@@ -1676,7 +1676,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					if (!visibleContainerContributors.isEmpty()) {
 						for (int i = 0; i < visibleContainerContributors.size(); i++) {
 							final IConfigurationElement element = (IConfigurationElement) visibleContainerContributors.get(i);
-							Platform.run(new ISafeRunnable() {
+							SafeRunner.run(new ISafeRunnable() {
 								public void handleException(Throwable exception) {
 									// Default logs exception for us.
 								}
@@ -1707,7 +1707,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 								if (contributors != null) {
 									for (int i = 0; i < contributors.length; i++) {
 										final int ii = i;
-										Platform.run(new ISafeRunnable() {
+										SafeRunner.run(new ISafeRunnable() {
 											public void handleException(Throwable exception) {
 												// Default logs exception for us.
 											}
@@ -1742,7 +1742,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						final Map.Entry entry = (Map.Entry) iter.next();
 						if (((Boolean) entry.getValue()).booleanValue())
 							if (entry.getKey() instanceof IVEContributor1) {
-								Platform.run(new ISafeRunnable() {
+								SafeRunner.run(new ISafeRunnable() {
 									public void handleException(Throwable exception) {
 										// Default logs fro us.
 									}
@@ -1757,7 +1757,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					if (!visibleContainerContributors.isEmpty()) {
 						for (int i = 0; i < visibleContainerContributors.size(); i++) {
 							final IConfigurationElement element = (IConfigurationElement) visibleContainerContributors.get(i);
-							Platform.run(new ISafeRunnable() {
+							SafeRunner.run(new ISafeRunnable() {
 								public void handleException(Throwable exception) {
 									// Default logs exception for us.
 								}
@@ -1786,7 +1786,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 								if (contributors != null) {
 									for (int i = 0; i < contributors.length; i++) {
 										final int ii = i;
-										Platform.run(new ISafeRunnable() {
+										SafeRunner.run(new ISafeRunnable() {
 											public void handleException(Throwable exception) {
 												// Default logs exception for us.
 											}
@@ -2554,7 +2554,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			Object[] listeners = this.listeners.getListeners();
 			for (int i = 0; i < listeners.length; ++i) {
 				final ISelectionChangedListener l = (ISelectionChangedListener)listeners[i];
-				Platform.run(new SafeRunnable() {
+				SafeRunner.run(new SafeRunnable() {
 					public void run() {
 						l.selectionChanged(parentEvent);
 					}

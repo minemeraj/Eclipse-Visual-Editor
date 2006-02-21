@@ -10,14 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SetToNullAction.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:44:29 $ 
+ *  $Revision: 1.11 $  $Date: 2006-02-21 17:16:49 $ 
  */
 package org.eclipse.ve.internal.propertysheet;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -32,11 +31,11 @@ public class SetToNullAction extends EToolsPropertySheetAction {
 	public SetToNullAction(EToolsPropertySheetPage page) {
 		super(page);
 		if (NULL_RESET_IMAGE == null) {
-			URL url = Platform.find(PSheetPlugin.getPlugin().getBundle(), new Path("images/full/elcl16/nullreset16.gif")); //$NON-NLS-1$
+			URL url = FileLocator.find(PSheetPlugin.getPlugin().getBundle(), new Path("images/full/elcl16/nullreset16.gif"), null); //$NON-NLS-1$
 			NULL_RESET_IMAGE = url != null ? ImageDescriptor.createFromURL(url) : ImageDescriptor.getMissingImageDescriptor();
 		}	
 		if (NULL_RESET_DISABLE_IMAGE == null) {
-			URL url = Platform.find(PSheetPlugin.getPlugin().getBundle(), new Path("images/full/dlcl16/nullreset16.gif")); //$NON-NLS-1$
+			URL url = FileLocator.find(PSheetPlugin.getPlugin().getBundle(), new Path("images/full/dlcl16/nullreset16.gif"), null); //$NON-NLS-1$
 			NULL_RESET_DISABLE_IMAGE = url != null ? ImageDescriptor.createFromURL(url) : ImageDescriptor.getMissingImageDescriptor();
 		}		
 

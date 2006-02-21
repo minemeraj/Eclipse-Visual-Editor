@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.17 $  $Date: 2005-12-14 16:47:01 $ 
+ *  $Revision: 1.18 $  $Date: 2006-02-21 17:16:35 $ 
  */
 package org.eclipse.ve.internal.java.codegen.wizards;
 
@@ -138,7 +138,7 @@ public class VisualClassExampleWizard extends Wizard implements INewWizard, IExe
 		if(!"class".equals(propertyName)) //$NON-NLS-1$
 			return;
 		if ( data instanceof String ) {
-			setInitializationData(config.getDeclaringExtension().getNamespace(), (String) data);
+			setInitializationData(config.getDeclaringExtension().getContributor().getName(), (String) data);
 		}else if(data instanceof Hashtable){
 			Hashtable hash = (Hashtable) data;
 			if(hash.containsKey("exampleFile")) //$NON-NLS-1$
@@ -147,7 +147,7 @@ public class VisualClassExampleWizard extends Wizard implements INewWizard, IExe
 				containerPlugin = (String) hash.get("classpathContainerPlugin"); //$NON-NLS-1$
 			if(hash.containsKey("classpathContainerName")) //$NON-NLS-1$
 				containerName = (String) hash.get("classpathContainerName"); //$NON-NLS-1$
-			setInitializationData(config.getDeclaringExtension().getNamespace(), exampleClassName, containerPlugin, containerName);
+			setInitializationData(config.getDeclaringExtension().getContributor().getName(), exampleClassName, containerPlugin, containerName);
 		}
 	}
 	

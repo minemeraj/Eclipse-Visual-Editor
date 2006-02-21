@@ -11,13 +11,12 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: ClassDescriptorDecoratorPolicy.java,v $
- *  $Revision: 1.13 $  $Date: 2005-11-15 23:30:02 $ 
+ *  $Revision: 1.14 $  $Date: 2006-02-21 17:16:32 $ 
  */
 
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.gef.*;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -61,7 +60,7 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
  * default ClassDescriptorDecorator for classes that don't have a decorator anywhere in their heirarchy.
  */
 public class ClassDescriptorDecoratorPolicy {
-	private static final String DEFAULT_ICON_PATH = Platform.find(CDEPlugin.getPlugin().getBundle(), new Path("images/somepart.gif")).toString(); //$NON-NLS-1$
+	private static final String DEFAULT_ICON_PATH = FileLocator.find(CDEPlugin.getPlugin().getBundle(), new Path("images/somepart.gif"), null).toString(); //$NON-NLS-1$
 	public static final String CLASS_DESCRIPTOR_DECORATOR_POLICY_KEY = "org.eclipse.ve.internal.cde.core.classdescriptordecoratorpolicykey"; //$NON-NLS-1$
 
 	/**

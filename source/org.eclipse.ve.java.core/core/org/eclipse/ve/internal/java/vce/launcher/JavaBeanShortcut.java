@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.16 $  $Date: 2005-12-09 21:55:57 $ 
+ *  $Revision: 1.17 $  $Date: 2006-02-21 17:16:35 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -24,7 +24,6 @@ import org.eclipse.debug.ui.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -95,17 +94,9 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 	 * Launches a configuration for the given type
 	 */
 	protected void launch(IType type, String mode) {
-		try { 
-			ILaunchConfiguration config = findLaunchConfiguration(type, mode);
-			if (config != null) {
-				DebugUITools.saveAndBuildBeforeLaunch();
-				config.launch(mode, null);
-			}			
-		} catch (CoreException e) {
-			Shell shell = getShell();
-			if (shell != null) {
-				ErrorDialog.openError(shell, VCELauncherMessages.ErrorDialog_Title, VCELauncherMessages.Shortcut_ErrDlg_Msg_LaunchFailed_ERROR_, e.getStatus());  
-			}
+		ILaunchConfiguration config = findLaunchConfiguration(type, mode);
+		if (config != null) {
+			DebugUITools.launch(config, mode);
 		}
 	}
 	

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizardPage.java,v $
- *  $Revision: 1.11 $  $Date: 2005-12-14 16:47:01 $ 
+ *  $Revision: 1.12 $  $Date: 2006-02-21 17:16:35 $ 
  */
 package org.eclipse.ve.internal.java.codegen.wizards;
 
@@ -144,7 +144,7 @@ public class VisualClassExampleWizardPage extends NewTypeWizardPage {
 		if (b == null)
 		   b = JavaVEPlugin.getPlugin().getBundle();
 		String fileLocation = "Examples/" + getTypeName() + ".java"; //$NON-NLS-1$ //$NON-NLS-2$
-		return Platform.find(b, new Path(fileLocation));
+		return FileLocator.find(b, new Path(fileLocation), null);
 	}
 
 	/*

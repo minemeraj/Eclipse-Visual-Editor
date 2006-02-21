@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialogUtilities.java,v $
- *  $Revision: 1.13 $  $Date: 2005-12-09 21:55:57 $ 
+ *  $Revision: 1.14 $  $Date: 2006-02-21 17:16:35 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -114,7 +114,7 @@ public class ChooseBeanDialogUtilities {
 		for (int i = 0; configs!=null && i < configs.length; i++) {
 			try {
 				IChooseBeanContributor contributor = (IChooseBeanContributor) configs[i].createExecutableExtension("class"); //$NON-NLS-1$
-				if (configs[i].getNamespace().equals(JAVA_VE_SYMBOLICNAME))
+				if (configs[i].getContributor().getName().equals(JAVA_VE_SYMBOLICNAME))
 					veContributorList.add(contributor);
 				else
 					contributorList.add(contributor);

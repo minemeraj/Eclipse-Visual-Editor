@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RegisteredClasspathContainer.java,v $
- *  $Revision: 1.7 $  $Date: 2005-12-09 21:55:56 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-21 17:16:35 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -73,7 +73,7 @@ class RegisteredClasspathContainer implements IClasspathContainer {
 		IPath libpath =  null;
 		if (lib.charAt(0) != '/') {
 			// Relative to declaring bundle.
-			bundle = Platform.getBundle(ce.getDeclaringExtension().getNamespace());
+			bundle = Platform.getBundle(ce.getDeclaringExtension().getContributor().getName());
 			libpath = new Path(lib);
 		} else {
 			int pathNdx = lib.indexOf('/', 1);

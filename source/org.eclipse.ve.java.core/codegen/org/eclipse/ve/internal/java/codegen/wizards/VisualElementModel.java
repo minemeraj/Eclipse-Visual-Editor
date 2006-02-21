@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualElementModel.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-17 23:36:56 $ 
+ *  $Revision: 1.13 $  $Date: 2006-02-21 17:16:35 $ 
  */
 import java.util.logging.Level;
 
@@ -90,7 +90,7 @@ public class VisualElementModel {
 	 */
 	public String getContributorBundleName() {
 		if (configElement != null)
-			return configElement.getDeclaringExtension().getNamespace();
+			return configElement.getDeclaringExtension().getContributor().getName();
 		return null;
 	}
 

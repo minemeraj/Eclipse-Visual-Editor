@@ -11,15 +11,14 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.18 $  $Date: 2006-02-06 23:38:37 $ 
+ *  $Revision: 1.19 $  $Date: 2006-02-21 17:16:32 $ 
  */
 
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -456,7 +455,7 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 			SafeRunnable safe = new SafeRunnable();
 			for (int i = 0; i < listenerList.length; i++) {
 				safe.listener = (InverseReferenceListener) listenerList[i];
-				Platform.run(safe);
+				SafeRunner.run(safe);
 			}
 		}
 	}

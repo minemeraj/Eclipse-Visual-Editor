@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: UserOverideRuleProvider.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-21 17:16:35 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
@@ -35,7 +35,7 @@ import org.eclipse.ve.internal.java.vce.templates.TemplateUtil;
  */
 public class UserOverideRuleProvider implements IRuleProvider {
 	
-	public static final IPath DEFAULT_SCRATCH_PATH = Platform.getPluginStateLocation(JavaVEPlugin.getPlugin()).append("Rules")  ; //$NON-NLS-1$ //$NON-NLS-2$
+	public static final IPath DEFAULT_SCRATCH_PATH = JavaVEPlugin.getPlugin().getStateLocation().append("Rules")  ; //$NON-NLS-1$ //$NON-NLS-2$
     public static final IPath DEFAULT_SCRATCH_SRC_PATH = DEFAULT_SCRATCH_PATH.append("src") ; //$NON-NLS-1$
 
 
