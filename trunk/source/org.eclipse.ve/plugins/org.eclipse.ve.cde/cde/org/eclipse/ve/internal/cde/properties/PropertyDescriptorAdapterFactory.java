@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: PropertyDescriptorAdapterFactory.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-21 17:16:32 $ 
  */
 
 import java.text.MessageFormat;
@@ -60,7 +60,7 @@ public class PropertyDescriptorAdapterFactory extends AdapterFactoryImpl {
 			fDecoratorTypeName = typeName.substring(slashNdx + 1, colonNdx == -1 ? typeName.length() : colonNdx);
 			fFullDecoratorTypeName = typeName;
 			fConfigElement = config;
-			declaringBundle = Platform.getBundle(config.getDeclaringExtension().getNamespace());
+			declaringBundle = Platform.getBundle(config.getDeclaringExtension().getContributor().getName());
 
 			String decTypePlugin = typeName.substring(0, slashNdx == -1 ? 0 : slashNdx);
 			if (decTypePlugin.length() == 0)

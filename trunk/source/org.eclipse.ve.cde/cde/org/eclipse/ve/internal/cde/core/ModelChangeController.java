@@ -10,14 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ModelChangeController.java,v $
- *  $Revision: 1.12 $  $Date: 2006-02-06 23:38:37 $ 
+ *  $Revision: 1.13 $  $Date: 2006-02-21 17:16:32 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
@@ -364,7 +363,7 @@ public abstract class ModelChangeController {
 			};
 			for (int i = 0; i < ll.length; i++) {
 				index[0] = i;
-				Platform.run(safeRunnable);
+				SafeRunner.run(safeRunnable);
 			}
 		}
     }
@@ -464,7 +463,7 @@ public abstract class ModelChangeController {
 			
 			for (int i = 0; i < runnables.length; i++) {
 				sr.runnable = runnables[i];
-				Platform.run(sr);
+				SafeRunner.run(sr);
 			}
 
 			synchronized (this) {

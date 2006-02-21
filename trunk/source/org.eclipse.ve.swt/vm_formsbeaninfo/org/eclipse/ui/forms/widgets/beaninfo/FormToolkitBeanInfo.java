@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormToolkitBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2006-02-21 15:26:13 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-21 17:16:40 $ 
  */
 package org.eclipse.ui.forms.widgets.beaninfo;
 
@@ -78,7 +78,7 @@ public class FormToolkitBeanInfo extends IvjBeanInfo {
 				new Object[] {
 					"createTree", "org.eclipse.swt.widgets.Tree", Boolean.FALSE, new Object[] {"parentComposite", "style"}
 				},					
-			} , BaseBeanInfo.FACTORY_COPY_CONTRIBUTOR , "org.eclipse.ve.swt/org.eclipse.ve.internal.forms.FormToolkitCopyContributor"
+			}
 		}
 		);
 	}

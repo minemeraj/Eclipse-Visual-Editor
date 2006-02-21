@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.20 $  $Date: 2005-12-14 21:27:11 $ 
+ *  $Revision: 1.21 $  $Date: 2006-02-21 17:16:32 $ 
  */
 
 import java.net.MalformedURLException;
@@ -247,7 +247,7 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	 * @since 1.0.0
 	 */
 	static public Image getImageFromBundle(Bundle bundle, String file) {
-		URL url = Platform.find(bundle, new Path(file));
+		URL url = FileLocator.find(bundle, new Path(file), null);
 		if (url != null)
 			return ImageDescriptor.createFromURL(url).createImage();
 		else
@@ -275,7 +275,7 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	 * @since 1.0.0
 	 */
 	static public ImageDescriptor getImageDescriptorFromPlugin(Plugin plugin, String file) {
-		URL url = Platform.find(plugin.getBundle(), new Path(file));
+		URL url = FileLocator.find(plugin.getBundle(), new Path(file), null);
 		if (url != null)
 			return ImageDescriptor.createFromURL(url);
 		else

@@ -10,18 +10,18 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ItemChildTreeLabelDecorator.java,v $
- *  $Revision: 1.3 $  $Date: 2006-02-06 23:38:34 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-21 17:16:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.text.MessageFormat;
 
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
@@ -84,7 +84,7 @@ public class ItemChildTreeLabelDecorator extends Object implements ILabelDecorat
 		final LabelProviderChangedEvent labelProviderChangeEvent = new LabelProviderChangedEvent(this);
 		for (int i = 0; i < listeners.length; ++i) {
 			final ILabelProviderListener l = (ILabelProviderListener) listeners[i];
-			Platform.run(new SafeRunnable() {
+			SafeRunner.run(new SafeRunnable() {
 
 				public void run() {
 					l.labelProviderChanged(labelProviderChangeEvent);

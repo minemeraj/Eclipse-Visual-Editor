@@ -10,15 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainerProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-11-02 20:32:33 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-21 17:16:35 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
@@ -346,7 +345,7 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 			// Get existing adapter, if it doesn't have one, don't create it.
 			final IInternalBeanProxyHost value = (IInternalBeanProxyHost) EcoreUtil.getExistingAdapter((Notifier) v, IBeanProxyHost.BEAN_PROXY_TYPE);
 			if (value != null) {
-				Platform.run(new ISafeRunnable() {
+				SafeRunner.run(new ISafeRunnable() {
 
 					public void handleException(Throwable exception) {
 						JavaVEPlugin.getPlugin().getLogger().log(exception, Level.WARNING);

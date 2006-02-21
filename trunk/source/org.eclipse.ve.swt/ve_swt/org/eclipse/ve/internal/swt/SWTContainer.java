@@ -172,7 +172,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		public String getPlatformPath() {
 			if (platformPath==null)
 				try {
-				   platformPath = SWTConfigurationContributor.getFilePath(Platform.resolve(Platform.getBundle(swtLibraries[0].getPluginID()).getEntry("/"))).toOSString(); //$NON-NLS-1$
+				   platformPath = SWTConfigurationContributor.getFilePath(FileLocator.resolve(Platform.getBundle(swtLibraries[0].getPluginID()).getEntry("/"))).toOSString(); //$NON-NLS-1$
 				} catch (IOException e) {}
 			return platformPath;
 		}

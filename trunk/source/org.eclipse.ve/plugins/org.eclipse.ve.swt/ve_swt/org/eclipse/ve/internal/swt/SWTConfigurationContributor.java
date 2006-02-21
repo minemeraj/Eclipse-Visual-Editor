@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.40 $  $Date: 2006-02-15 16:11:37 $ 
+ *  $Revision: 1.41 $  $Date: 2006-02-21 17:16:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -574,7 +574,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		ArrayList result = new ArrayList();
 		IConfigurationElement[] ces = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.pde.core.source"); //$NON-NLS-1$
 		for (int i = 0; i < ces.length; i++) {	
-            if (!fragNames.contains((ces[i].getDeclaringExtension().getNamespace()))) 
+            if (!fragNames.contains((ces[i].getDeclaringExtension().getContributor().getName()))) 
 				continue;
 			String p = ces[i].getAttributeAsIs("path"); //$NON-NLS-1$
 			if (!result.contains(p))
@@ -618,7 +618,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 					if (u!=null) break;					
 				}
 			if (u!=null) {
-			    result = getFilePath(Platform.resolve(u));
+			    result = getFilePath(FileLocator.resolve(u));
 				platformSrcPath.put(bundle,result);
 				return result;
 			}
@@ -633,15 +633,15 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 			String rel[] = getSrcConfig(srcBundle);
 			URL u = null;
 			if (rel.length==0)
-				u = Platform.find(srcBundle, new Path(pkgName).append(srcFile));
+				u = FileLocator.find(srcBundle, new Path(pkgName).append(srcFile), null);
 			else
 				for (int i = 0; i < rel.length; i++) {
-					u = Platform.find(srcBundle, new Path(rel[i]).append(pkgName).append(srcFile));
+					u = FileLocator.find(srcBundle, new Path(rel[i]).append(pkgName).append(srcFile), null);
 					if (u!=null) break;					
 				}
 			if (u!=null) {
 			   try {
-				result = getFilePath(Platform.resolve(u));
+				result = getFilePath(FileLocator.resolve(u));
 				platformSrcPath.put(bundle,result);
 				return result;
 			   } catch (IOException e) {}			   
@@ -671,7 +671,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		IPath location = null;
 		try {				
 			// .jared fragment
-			URL l = Platform.resolve(bundle.getEntry("/"));	 //$NON-NLS-1$
+			URL l = FileLocator.resolve(bundle.getEntry("/"));	 //$NON-NLS-1$
 			boolean project = l.getProtocol().equals("file"); // This library is inside the workbench... 			 //$NON-NLS-1$
 			location = new Path(ProxyPlugin.getFilePath(l).getFile()).removeTrailingSeparator();
 			// not supporting a worbench project at this time ... .jar only

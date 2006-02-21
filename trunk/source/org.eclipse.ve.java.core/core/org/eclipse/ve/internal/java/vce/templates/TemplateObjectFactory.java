@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateObjectFactory.java,v $
- *  $Revision: 1.8 $  $Date: 2005-12-09 21:55:57 $ 
+ *  $Revision: 1.9 $  $Date: 2006-02-21 17:16:35 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -65,7 +65,7 @@ public class TemplateObjectFactory {
 				URL url;
 				try {
 					url = new URL(templateAbsoluteURI);
-					url = ProxyPlugin.getFilePath(Platform.resolve(url));
+					url = ProxyPlugin.getFilePath(FileLocator.resolve(url));
 				} catch (MalformedURLException exception) {
 					url = new URL("file:" + templateAbsoluteURI); //$NON-NLS-1$
 				}

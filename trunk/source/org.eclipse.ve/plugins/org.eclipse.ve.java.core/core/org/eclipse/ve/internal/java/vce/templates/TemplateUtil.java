@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.20 $  $Date: 2005-10-26 22:14:02 $ 
+ *  $Revision: 1.21 $  $Date: 2006-02-21 17:16:35 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -194,7 +194,7 @@ public class TemplateUtil {
 	  
 	  try {
 		// class (if it were a resource file)
-		  url = Platform.resolve(url);
+		  url = FileLocator.resolve(url);
 	  } catch (IOException e) {}
 	  
 	  String path = url.getFile();          // string representing location of this

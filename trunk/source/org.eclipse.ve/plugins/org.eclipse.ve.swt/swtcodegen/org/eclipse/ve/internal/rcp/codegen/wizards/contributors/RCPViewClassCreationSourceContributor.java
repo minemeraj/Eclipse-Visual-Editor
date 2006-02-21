@@ -10,12 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RCPViewClassCreationSourceContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 17:33:42 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-21 17:16:40 $ 
  */
 package org.eclipse.ve.internal.rcp.codegen.wizards.contributors;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 
 import org.eclipse.ve.internal.swt.SwtPlugin;
@@ -26,6 +27,6 @@ public class RCPViewClassCreationSourceContributor extends AbstractRCPClassCreat
 	 * @see org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceContributor#getTemplateLocation()
 	 */
 	public URL getTemplateLocation() {
-		return SwtPlugin.getDefault().find(new Path("templates/org/eclipse/ve/internal/swt/codegen/jjet/wizards/contributors/RCPViewTemplate.javajet")); //$NON-NLS-1$
+		return FileLocator.find(SwtPlugin.getDefault().getBundle(), new Path("templates/org/eclipse/ve/internal/swt/codegen/jjet/wizards/contributors/RCPViewTemplate.javajet"), null); //$NON-NLS-1$
 	}
 }

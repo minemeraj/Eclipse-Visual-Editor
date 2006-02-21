@@ -12,17 +12,17 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: JTabbedPaneChildTreeLabelDecorator.java,v $
- *  $Revision: 1.9 $  $Date: 2006-02-06 23:38:32 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-21 17:16:37 $ 
  */
 
 import java.text.MessageFormat;
 
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
@@ -86,7 +86,7 @@ public class JTabbedPaneChildTreeLabelDecorator extends Object implements ILabel
 		final LabelProviderChangedEvent labelProviderChangeEvent = new LabelProviderChangedEvent(this);
 		for (int i = 0; i < listeners.length; ++i) {
 			final ILabelProviderListener l = (ILabelProviderListener) listeners[i];
-			Platform.run(new SafeRunnable() {
+			SafeRunner.run(new SafeRunnable() {
 
 				public void run() {
 					l.labelProviderChanged(labelProviderChangeEvent);
