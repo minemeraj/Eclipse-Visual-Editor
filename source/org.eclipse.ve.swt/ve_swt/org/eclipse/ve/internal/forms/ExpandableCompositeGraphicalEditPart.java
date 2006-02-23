@@ -14,8 +14,7 @@ import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
-import org.eclipse.ve.internal.swt.CompositeGraphicalEditPart;
-import org.eclipse.ve.internal.swt.UnknownLayoutInputPolicy;
+import org.eclipse.ve.internal.swt.*;
 
 /**
  * Graphical EditPart for Expandable Composite.
@@ -29,7 +28,7 @@ public class ExpandableCompositeGraphicalEditPart extends CompositeGraphicalEdit
 	}
 	
 	protected void createLayoutEditPolicy() {
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new UnknownLayoutInputPolicy(new ExpandableCompositeContainerPolicy(EditDomain.getEditDomain(this))));
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DefaultLayoutEditPolicy(new ExpandableCompositeContainerPolicy(EditDomain.getEditDomain(this))));
 	}
 
 }
