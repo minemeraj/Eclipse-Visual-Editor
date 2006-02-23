@@ -15,7 +15,9 @@ import java.util.Iterator;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.EAnnotationImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
@@ -275,7 +277,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(int featureID) {
+	private boolean eIsSetGen(int featureID) {
 		switch (featureID) {
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__HIDDEN:
 				return ((eFlags & HIDDEN_EFLAG) != 0) != HIDDEN_EDEFAULT;
@@ -497,18 +499,18 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * 
 	 * @since 1.1.0
 	 */
-	public boolean eIsSet(EStructuralFeature feature) {
+	public boolean eIsSet(int featureId) {
 		// Must override eIsSet and not eIsSetGen because of an infinite loop due to a subclass (ClassDescriptorDecorator for instance)
 		// If overrode eIsSet(int) then when this is called on the subclass we get the following loop:
 		// cd.eIsSet(int)
 		//   cd.eIsSetGen(int)
 		//     super.eIsSet(int) which is fd.eIsSet(int)
 		//       eIsSetGen(int) in fd, but this is actually cd.isSetGen(int) because of override. And now we have our loop.
-		switch (eDerivedStructuralFeatureID(feature)) {
+		switch (featureId) {
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__SOURCE:
-				return source != null && !getClass().getName().equals(source);
+				return source != null && !eClass().getInstanceClassName().equals(source);
 			default:
-				return super.eIsSet(feature);
+				return eIsSetGen(featureId);
 		}
 	}
 	

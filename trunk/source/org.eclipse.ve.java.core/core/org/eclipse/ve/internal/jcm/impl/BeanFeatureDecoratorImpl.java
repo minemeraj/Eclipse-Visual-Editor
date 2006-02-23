@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanFeatureDecoratorImpl.java,v $
- *  $Revision: 1.14 $  $Date: 2006-02-07 17:21:37 $ 
+ *  $Revision: 1.15 $  $Date: 2006-02-23 22:36:41 $ 
  */
 
 import java.util.logging.Level;
@@ -363,7 +363,7 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(int featureID) {
+	private boolean eIsSetGen(int featureID) {
 		switch (featureID) {
 			case JCMPackage.BEAN_FEATURE_DECORATOR__KEYED_VALUES:
 				return keyedValues != null && !keyedValues.isEmpty();
@@ -389,12 +389,12 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * 
 	 * @since 1.1.0
 	 */
-	public boolean eIsSet(EStructuralFeature feature) {
-		switch (eDerivedStructuralFeatureID(feature)) {
+	public boolean eIsSet(int feature) {
+		switch (feature) {
 			case JCMPackage.BEAN_FEATURE_DECORATOR__SOURCE:
-				return source != null && !getClass().getName().equals(source);
+				return source != null && !eClass().getInstanceClassName().equals(source);
 			default:
-				return super.eIsSet(feature);
+				return eIsSetGen(feature);
 		}
 	}
 

@@ -11,12 +11,11 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: PropertySourceAdapterInformationImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2006-02-07 17:21:33 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-23 22:36:39 $ 
  */
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EAnnotationImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
@@ -179,7 +178,7 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(int featureID) {
+	private boolean eIsSetGen(int featureID) {
 		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_SOURCE_ADAPTER_INFORMATION__PROPERTY_SOURCE_ADAPTER_CLASSNAME:
 				return isSetPropertySourceAdapterClassname();
@@ -199,12 +198,12 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	 * 
 	 * @since 1.1.0
 	 */
-	public boolean eIsSet(EStructuralFeature feature) {
-		switch (eDerivedStructuralFeatureID(feature)) {
+	public boolean eIsSet(int feature) {
+		switch (feature) {
 			case DecoratorsPackage.PROPERTY_SOURCE_ADAPTER_INFORMATION__SOURCE:
-				return source != null && !getClass().getName().equals(source);
+				return source != null && !eClass().getInstanceClassName().equals(source);
 			default:
-				return super.eIsSet(feature);
+				return eIsSetGen(feature);
 		}
 	}
 

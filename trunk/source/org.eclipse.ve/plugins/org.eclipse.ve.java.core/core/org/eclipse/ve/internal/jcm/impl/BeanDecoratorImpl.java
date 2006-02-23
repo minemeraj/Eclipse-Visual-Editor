@@ -11,15 +11,13 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanDecoratorImpl.java,v $
- *  $Revision: 1.16 $  $Date: 2006-02-07 17:21:37 $ 
+ *  $Revision: 1.17 $  $Date: 2006-02-23 22:36:41 $ 
  */
 
 import java.lang.reflect.Constructor;
 import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.*;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -44,8 +42,6 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 
 /**
  * <!-- begin-user-doc -->
@@ -400,7 +396,7 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(int featureID) {
+	private boolean eIsSetGen(int featureID) {
 		switch (featureID) {
 			case JCMPackage.BEAN_DECORATOR__KEYED_VALUES:
 				return keyedValues != null && !keyedValues.isEmpty();
@@ -426,12 +422,12 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	 * 
 	 * @since 1.1.0
 	 */
-	public boolean eIsSet(EStructuralFeature feature) {
-		switch (eDerivedStructuralFeatureID(feature)) {
+	public boolean eIsSet(int feature) {
+		switch (feature) {
 			case JCMPackage.BEAN_DECORATOR__SOURCE:
-				return source != null && !getClass().getName().equals(source);
+				return source != null && !eClass().getInstanceClassName().equals(source);
 			default:
-				return super.eIsSet(feature);
+				return eIsSetGen(feature);
 		}
 	}
 	
