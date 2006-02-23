@@ -11,12 +11,14 @@
 package org.eclipse.ve.examples.cdm.dept.dinner.ui;
 /*
  *  $RCSfile: DinnerGraphicalEditorPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:16:43 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-23 15:17:05 $ 
  */
 
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -122,5 +124,8 @@ public class DinnerGraphicalEditorPart extends EMFGraphicalEditorPart {
 			return new DinnerContentsGraphicalEditPart(d);
 		}
 		return null;
+	}
+
+	protected void initialize(IFile file) throws CoreException {
 	}
 }
