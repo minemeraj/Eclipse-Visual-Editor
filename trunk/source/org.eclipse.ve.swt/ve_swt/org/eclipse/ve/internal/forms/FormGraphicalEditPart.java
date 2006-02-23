@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2006-02-06 17:14:41 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-23 18:05:54 $ 
  */
 package org.eclipse.ve.internal.forms;
 
@@ -21,11 +21,9 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.core.ContentPaneFigure;
 import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
@@ -71,6 +69,7 @@ public class FormGraphicalEditPart extends ControlGraphicalEditPart {
 	protected void createEditPolicies() {
 		super.createEditPolicies();
 		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(false));
+//		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new UnknownLayoutInputPolicy(getContainerPolicy());		
 	}
 
 	protected List getModelChildren() {
@@ -82,8 +81,7 @@ public class FormGraphicalEditPart extends ControlGraphicalEditPart {
 		super.setModel(model);
 		IJavaObjectInstance javaModel = (IJavaObjectInstance) model;
 		if (javaModel.eResource() != null && javaModel.eResource().getResourceSet() != null) {
-			ResourceSet rset = ((IJavaObjectInstance) model).eResource().getResourceSet();
-			sf_body = JavaInstantiation.getReference(rset, FormsConstants.SF_FORM_BODY);
+			sf_body = javaModel.eClass().getEStructuralFeature("body");
 		}
 	}
 }

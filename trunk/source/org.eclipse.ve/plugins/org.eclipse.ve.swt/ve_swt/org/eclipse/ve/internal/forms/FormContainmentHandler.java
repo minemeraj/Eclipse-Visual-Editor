@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2006-02-06 17:14:42 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-23 18:05:54 $ 
  */
 package org.eclipse.ve.internal.forms;
 
@@ -57,7 +57,7 @@ public class FormContainmentHandler extends CompositeContainmentHandler {
 			// and we don't want to mess that up.
 			IJavaInstance jChild = (IJavaInstance) child;
 			ResourceSet rset = EMFEditDomainHelper.getResourceSet(domain);
-			EStructuralFeature sf_body = JavaInstantiation.getSFeature(rset, FormsConstants.SF_FORM_BODY);
+			EStructuralFeature sf_body =jChild.eClass().getEStructuralFeature("body"); 
 			if (!jChild.eIsSet(sf_body)) {
 				ImplicitAllocation allocation = InstantiationFactory.eINSTANCE.createImplicitAllocation(jChild, sf_body);
 				IJavaInstance body = BeanUtilities.createJavaObject((JavaHelpers) sf_body.getEType(), rset, allocation);

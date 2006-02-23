@@ -41,6 +41,10 @@
         prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Form.xmi#Form_1">
       <entryLabel xsi:type="utility:ConstantString" string="Form"/>
     </children>   
+   <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/scrolledform_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/ScrolledForm.xmi#ScrolledForm_1">
+      <entryLabel xsi:type="utility:ConstantString" string="ScrolledForm"/>
+    </children>       
     <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/text_obj.gif"
         prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Text.xmi#Text_1">
       <entryLabel xsi:type="utility:ConstantString" string="Text"/>

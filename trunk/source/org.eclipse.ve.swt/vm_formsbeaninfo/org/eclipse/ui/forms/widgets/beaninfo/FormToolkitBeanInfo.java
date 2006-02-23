@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormToolkitBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2006-02-21 17:16:40 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-23 18:05:54 $ 
  */
 package org.eclipse.ui.forms.widgets.beaninfo;
 
@@ -59,7 +59,10 @@ public class FormToolkitBeanInfo extends IvjBeanInfo {
 				},				
 				new Object[] {
 					"createForm", "org.eclipse.ui.forms.widgets.Form", Boolean.FALSE, new Object[] {"parentComposite"},
-				},				
+				},	
+				new Object[] {
+						"createScrolledForm", "org.eclipse.ui.forms.widgets.ScrolledForm", Boolean.FALSE, new Object[] {"parentComposite"},
+					},					
 				new Object[] {
 					"createLabel", "org.eclipse.swt.widgets.Label", Boolean.FALSE, new Object[] {"parentComposite", "text"}, new Object[] {"parentComposite", "text", "style"}
 				},
