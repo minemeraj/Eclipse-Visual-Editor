@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: ClassDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.12 $  $Date: 2006-02-07 17:21:33 $ 
+ *  $Revision: 1.13 $  $Date: 2006-02-23 22:36:39 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -555,7 +555,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(int featureID) {
+	private boolean eIsSetGen(int featureID) {
 		switch (featureID) {
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES:
 				return keyedValues != null && !keyedValues.isEmpty();
@@ -589,14 +589,14 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * 
 	 * @since 1.1.0
 	 */
-	public boolean eIsSet(EStructuralFeature feature) {
+	public boolean eIsSet(int featureId) {
 		// See the FeatureDescriptorDecoratorImpl.eIsSet(EStructuralFeature) for why need 
 		// to do it this way.
-		switch (eDerivedStructuralFeatureID(feature)) {
+		switch (featureId) {
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__SOURCE:
-				return source != null && !getClass().getName().equals(source);
+				return source != null && !eClass().getInstanceClassName().equals(source);
 			default:
-				return super.eIsSet(feature);
+				return eIsSetGen(featureId);
 		}
 	}
 

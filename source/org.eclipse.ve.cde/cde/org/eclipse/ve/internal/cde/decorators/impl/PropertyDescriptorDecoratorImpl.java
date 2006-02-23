@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -410,7 +409,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(int featureID) {
+	private boolean eIsSetGen(int featureID) {
 		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
 				return cellEditorValidatorClassnames != null && !cellEditorValidatorClassnames.isEmpty();
@@ -442,12 +441,12 @@ public class PropertyDescriptorDecoratorImpl
 	 * 
 	 * @since 1.1.0
 	 */
-	public boolean eIsSet(EStructuralFeature feature) {
-		switch (eDerivedStructuralFeatureID(feature)) {
+	public boolean eIsSet(int featureId) {
+		switch (featureId) {
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__SOURCE:
-				return source != null && !getClass().getName().equals(source);
+				return source != null && !eClass().getInstanceClassName().equals(source);
 			default:
-				return super.eIsSet(feature);
+				return eIsSetGen(featureId);
 		}
 	}
 
