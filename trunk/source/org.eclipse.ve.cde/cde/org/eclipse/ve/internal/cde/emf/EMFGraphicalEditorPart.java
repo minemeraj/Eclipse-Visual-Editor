@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.19 $  $Date: 2006-02-06 23:38:37 $ 
+ *  $Revision: 1.20 $  $Date: 2006-02-23 12:22:27 $ 
  */
 
 
@@ -174,7 +174,7 @@ class ResourceTracker implements IResourceChangeListener, IResourceDeltaVisitor 
 }
 
 private ActionRegistry actionRegistry;
-private DefaultEditDomain domain;
+protected DefaultEditDomain domain;
 protected EToolsPropertySheetPage fPropertySheetPage;
 protected ListenerList fPropertySheetSelectionListeners = new ListenerList(ListenerList.IDENTITY);
 
@@ -772,15 +772,13 @@ protected final void setPaletteRoot() {
 		// Use default CDE pallete.
 		try {
 			palette = (PaletteRoot) getResourceSet().getEObject(URI.createURI("platform:/plugin/org.eclipse.ve.cde/cde_palette.xmi#cde_palette"), true); //$NON-NLS-1$
+			// TODO For now we just automatically have all of the drawers closed. Randy may of fixed this so the default is not open for PaletteDrawer.
+			closeDrawers(palette);			
+			getDomain().setPaletteRoot(palette);
 		} catch (RuntimeException e) {
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));//$NON-NLS-1$
 		}
 	}
-	
-	// TODO For now we just automatically have all of the drawers closed. Randy may of fixed this so the default is not open for PaletteDrawer.
-	closeDrawers(palette);
-	
-	getDomain().setPaletteRoot(palette);
 }
 protected String getPaletteHRef(){
 	return getConfigurationElement().getAttributeAsIs("palette"); //$NON-NLS-1$
@@ -1337,6 +1335,7 @@ protected void setInput(IEditorInput input) {
 			}
 			if (rootModel != null) {
 				EditPart baseEditPart = getEditPart(rootModel);
+				((RootEditPart)baseEditPart).setViewer(getPrimaryViewer());
 				getPrimaryViewer().setContents(baseEditPart);
 				// Validate the model. It's here that the editorpart 
 				// should create any errors as markers to be shown
@@ -1346,7 +1345,7 @@ protected void setInput(IEditorInput input) {
 				if (oldResource != null)
 					getResourceSet().getResources().remove(oldResource);
 			}
-			
+			initialize(file);
 		} catch (Exception exc) {
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", exc)); //$NON-NLS-1$
 		}
@@ -1355,6 +1354,8 @@ protected void setInput(IEditorInput input) {
 	// when the user saves a file as itself.
 	setDirty(false);	// Mark not dirty
 }
+
+protected abstract void initialize(IFile file) ;	
 
 /*
  * A new root model has been retrieved. This is called just before
