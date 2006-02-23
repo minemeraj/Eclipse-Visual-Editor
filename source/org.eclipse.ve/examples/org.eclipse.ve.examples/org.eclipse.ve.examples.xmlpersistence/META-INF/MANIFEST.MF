@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Xmlpersistence Plug-in
+Bundle-SymbolicName: org.eclipse.ve.examples.xmlpersistence;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.ve.examples.xmlpersistence.Activator
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ve.swt,
+ org.eclipse.gef,
+ org.eclipse.ve.cde,
+ org.eclipse.ui.ide,
+ org.eclipse.core.resources,
+ org.eclipse.ve,
+ org.eclipse.ve.java.core,
+ org.eclipse.emf,
+ org.eclipse.emf.ecore,
+ org.eclipse.jem.beaninfo,
+ org.eclipse.jem.util,
+ org.eclipse.jdt.core,
+ org.eclipse.jem,
+ org.eclipse.jem.proxy
+Eclipse-LazyStart: true

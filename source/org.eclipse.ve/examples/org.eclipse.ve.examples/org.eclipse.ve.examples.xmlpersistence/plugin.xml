@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+  
+ <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.ve.examples.xmlpersistence.JavaVisualEMFEditorPart"
+            icon="javabean.gif"
+            default="false"
+            name="Visual Editor EMF (test)"
+            id="org.eclipse.ve.internal.examples.xmlpersistence.editorpart.JavaVisualEMFEditor"
+			palette="platform:/plugin/org.eclipse.ve.examples.xmlpersistence/basic_palette.xmi#basic_palette"
+            extensions="ve_emf">
+      </editor>
+   </extension>   
+
+</plugin>
