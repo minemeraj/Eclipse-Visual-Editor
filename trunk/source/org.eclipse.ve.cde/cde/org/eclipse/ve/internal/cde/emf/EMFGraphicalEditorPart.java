@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.20 $  $Date: 2006-02-23 12:22:27 $ 
+ *  $Revision: 1.21 $  $Date: 2006-02-23 14:50:28 $ 
  */
 
 
@@ -80,7 +80,7 @@ import org.eclipse.ve.internal.propertysheet.command.CommandStackPropertySheetEn
  * redesigned and may go away.
  */
 public abstract class EMFGraphicalEditorPart
-	extends EditorPart
+	extends GraphicalEditorWithFlyoutPalette
 {
 protected boolean wantResourceListener = true;
 // This class listens to changes to the file system in the workspace, and 
@@ -772,12 +772,13 @@ protected final void setPaletteRoot() {
 		// Use default CDE pallete.
 		try {
 			palette = (PaletteRoot) getResourceSet().getEObject(URI.createURI("platform:/plugin/org.eclipse.ve.cde/cde_palette.xmi#cde_palette"), true); //$NON-NLS-1$
-			// TODO For now we just automatically have all of the drawers closed. Randy may of fixed this so the default is not open for PaletteDrawer.
 			closeDrawers(palette);			
 			getDomain().setPaletteRoot(palette);
 		} catch (RuntimeException e) {
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));//$NON-NLS-1$
 		}
+	} else {
+		getDomain().setPaletteRoot(palette);		
 	}
 }
 protected String getPaletteHRef(){
@@ -865,6 +866,8 @@ protected void initialize() {
 		getSite().getWorkbenchWindow().getPartService().addPartListener(partListener);
 	}
 }
+
+
 
 public boolean isDirty() {
 	return fDirtyState;
@@ -1051,21 +1054,14 @@ public final Resource getResource() {
  * Create the ResourceSet to use and initialize it
  */
 protected ResourceSet createResourceSet() {
-//	ResourceSet rs = new HierarchicalResourceSet();
 	ResourceSet rs = new ResourceSetImpl();
-//	context.setURIConverter(new EMFWorkbenchURIConverterImpl());
-// TODO Not sure what to use now for uri converter. Check w/Dan later.
-//	context.setURIConverter(new WorkbenchURIConverterImpl());
-//	rs.setContext(context);
 	return rs;
 }
 
 protected void initializeResourceSet(ResourceSet rs){
-// TODO Don't have contexts any more, we aren't using the global at the moment anyway.
-//	rs.getContext().setParent(getGlobalResourceSet().getContext());
 	EMFEditDomainHelper.setResourceSet(rs,(org.eclipse.ve.internal.cde.core.EditDomain)getDomain());	
 }	
-	
+
 /**
  * The global resourceSet is where we store resources that are to be available
  * to all MOF Editors.
@@ -1096,35 +1092,6 @@ protected Resource  readDocument(String uri, InputStream is) throws Exception {
 protected String getErrorTextMessage() {
 	return CDEEmfMessages.Error_text_message_ERROR_; 
 }
-//protected String getErrorMessageFrom(WarningException exc){
-//	String msg = ""; //$NON-NLS-1$
-//	if ( exc instanceof BadTypeException ){
-//		msg = MessageFormat.format(CDEEmfMessages.getString("Warning_exception_bad_type_EXC_"),  //$NON-NLS-1$
-//				new Object[] {((BadTypeException)exc).getValue()});
-//	} else if ( exc instanceof BadValueException ) {
-//		msg = MessageFormat.format(CDEEmfMessages.getString("Warning_exception_bad_value_EXC_"),  //$NON-NLS-1$
-//				new Object[] {((BadValueException)exc).getValue()});
-//	} else if ( exc instanceof com.ibm.xmi.base.ClassNotFoundException ) {
-//		msg = MessageFormat.format(CDEEmfMessages.getString("Warning_exception_missing_class_EXC_"),  //$NON-NLS-1$
-//				new Object[] {((com.ibm.xmi.base.ClassNotFoundException)exc).getName()});
-//	} else if ( exc instanceof FeatureNotFoundException ) {
-//		msg = MessageFormat.format(CDEEmfMessages.getString("Warning_exception_missing_feature_EXC_"),  //$NON-NLS-1$
-//				new Object[] {((FeatureNotFoundException)exc).getName()});
-//	} else if ( exc instanceof NamespaceNotFoundException ) {
-//		msg = MessageFormat.format(CDEEmfMessages.getString("Warning_exception_missing_namespace_EXC_"),  //$NON-NLS-1$
-//				new Object[] {((NamespaceNotFoundException)exc).getName()});
-//	} else if ( exc instanceof PackageNotFoundException ) {
-//		msg = MessageFormat.format(CDEEmfMessages.getString("Warning_exception_missing_package_EXC_"),  //$NON-NLS-1$
-//				new Object[] {((PackageNotFoundException)exc).getPrefix()});
-//	} else if ( exc instanceof UnresolvedReferenceException ) {
-//		msg = MessageFormat.format(CDEEmfMessages.getString("Warning_exception_bad_reference_EXC_"),  //$NON-NLS-1$
-//				new Object[] {((UnresolvedReferenceException)exc).getId()});
-//	} else {
-//		msg = MessageFormat.format(CDEEmfMessages.getString("Warning_exception_error_EXC_"),  //$NON-NLS-1$
-//				new Object[] {exc.getLocalizedMessage()});
-//	}
-//	return msg;
-//}
 /**
  * Subclasses need to handle when a marker is selected from the task list.
  * Basically, find the edit part for this model and select it so the user
@@ -1178,10 +1145,6 @@ protected void save(IProgressMonitor monitor) {
 				IFile file = ((IFileEditorInput) getEditorInput()).getFile();
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
 				try {
-					EObject rootmodel = getModel(fResource);
-					if (rootmodel != null) {
-						validateModel(rootmodel);
-					}
 					fResource.save(os, XML_TEXT_OPTIONS);
 				} catch (Exception e) {
 					throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.SAVE_FAIL_ERROR_, new Object[] {file.getFullPath().toString()}), e));		 
@@ -1337,10 +1300,6 @@ protected void setInput(IEditorInput input) {
 				EditPart baseEditPart = getEditPart(rootModel);
 				((RootEditPart)baseEditPart).setViewer(getPrimaryViewer());
 				getPrimaryViewer().setContents(baseEditPart);
-				// Validate the model. It's here that the editorpart 
-				// should create any errors as markers to be shown
-				// in the task list.
-				validateModel(rootModel);
 				getCommandStack().flush();	// Clear the command stack
 				if (oldResource != null)
 					getResourceSet().getResources().remove(oldResource);
@@ -1355,13 +1314,15 @@ protected void setInput(IEditorInput input) {
 	setDirty(false);	// Mark not dirty
 }
 
-protected abstract void initialize(IFile file) ;	
+protected abstract void initialize(IFile file) throws CoreException;	
 
 /*
  * A new root model has been retrieved. This is called just before
  * the model is wrappered within edit parts.
  */
 protected void initializeWithNewRoot(EObject newModel){
+	GraphicalViewer viewer = getGraphicalViewer();
+	viewer.setContents(newModel);		
 }
 
 protected void showErrorMessage( String message ) {
@@ -1394,14 +1355,6 @@ protected void superSetInput( IEditorInput input ){
 		setPartName( file.getName() );
 	}
 }
-/**
- * Validate the model. It's here that subclasses should create any soft (or severe)
- * errors as markers to be shown in the task list. 
- *
- * Note: Plugin specific markers can be used here to allow editor parts to create 
- *       and manage only those markers (errors) that are relevent to them.
- */
-protected abstract void validateModel(EObject model);
 /**
  * This code is temporary and should be removed once a MOF bug is fixed.
  * See the resourceTracker for more information.
