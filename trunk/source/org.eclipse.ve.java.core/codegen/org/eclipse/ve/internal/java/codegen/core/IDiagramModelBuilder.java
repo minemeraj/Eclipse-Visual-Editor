@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: IDiagramModelBuilder.java,v $
- *  $Revision: 1.16 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.17 $  $Date: 2006-02-23 18:08:28 $ 
  */
 
 
@@ -20,7 +20,7 @@ import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.ve.internal.cdm.Diagram;
 
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+import org.eclipse.ve.internal.jcm.BeanComposition;
 
 import org.eclipse.ve.internal.java.codegen.java.ISynchronizerListener;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -50,7 +50,7 @@ public interface IDiagramModelBuilder  {
 	 * 
 	 * @since 1.0.0
 	 */
-	public BeanSubclassComposition getModelRoot() ;
+	public BeanComposition getModelRoot() ;
 	
 	/**
 	 * Get the diagram for this model.

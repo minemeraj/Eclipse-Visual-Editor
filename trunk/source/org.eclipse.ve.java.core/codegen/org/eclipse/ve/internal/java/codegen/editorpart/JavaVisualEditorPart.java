@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.166 $  $Date: 2006-02-21 17:16:35 $ 
+ *  $Revision: 1.167 $  $Date: 2006-02-23 18:08:28 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -1112,7 +1112,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					PerformanceMonitorUtil.getMonitor().snapshot(118);
 				if (d != null) {
 					editDomain.setViewerData(primaryViewer, EditDomain.DIAGRAM_KEY, d);
-					setRootModel(modelBuilder.getModelRoot()); // Set into viewers.
+					setRootModel((BeanSubclassComposition) modelBuilder.getModelRoot()); // Set into viewers.
 				}
 				loadingFigureController.showLoadingFigure(false);
 				setReloadEnablement(true);

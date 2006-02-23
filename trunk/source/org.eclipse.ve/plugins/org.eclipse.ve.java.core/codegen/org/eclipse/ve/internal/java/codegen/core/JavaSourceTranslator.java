@@ -37,8 +37,7 @@ import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
-import org.eclipse.ve.internal.jcm.JavaCacheData;
+import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.codegen.editorpart.CodegenEditorPartMessages;
 import org.eclipse.ve.internal.java.codegen.java.*;
@@ -1254,7 +1253,7 @@ public void setSynchronizerSyncDelay(int delay) {
       fSrcSync.setDelay(fSrcSyncDelay) ;
 }
 
-public  BeanSubclassComposition getModelRoot() {
+public BeanComposition getModelRoot() {
 	if (fVEModel!=null && fmodelLoaded)
 		 return fVEModel.getModelRoot();
 	else
