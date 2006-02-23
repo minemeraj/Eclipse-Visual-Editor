@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.20 $  $Date: 2006-02-06 23:37:58 $ 
+ *  $Revision: 1.21 $  $Date: 2006-02-23 18:08:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -546,7 +546,7 @@ public class JavaVisualEditorVMController {
 	 * 
 	 * @since 1.0.0
 	 */
-	static RegistryResult getRegistry(IFile file) throws CoreException {
+	public static RegistryResult getRegistry(IFile file) throws CoreException {
 stopDeadlock(file);		
 		if (IN_DEBUG_MODE)
 			return createRegistryForDebug(file);
