@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2006-02-06 17:14:41 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-23 18:05:54 $ 
  */
 package org.eclipse.ve.internal.forms;
 
@@ -19,10 +19,8 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.swt.ControlTreeEditPart;
  
@@ -51,8 +49,7 @@ public class FormTreeEditPart extends ControlTreeEditPart {
 		super.setModel(model);
 		IJavaObjectInstance javaModel = (IJavaObjectInstance) model;
 		if (javaModel.eResource() != null && javaModel.eResource().getResourceSet() != null) {
-			ResourceSet rset = ((IJavaObjectInstance) model).eResource().getResourceSet();
-			sf_body = JavaInstantiation.getReference(rset, FormsConstants.SF_FORM_BODY);
+			sf_body = javaModel.eClass().getEStructuralFeature("body");
 		}
 	}
 
