@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RenameRequestCollector.java,v $
- *  $Revision: 1.5 $  $Date: 2005-11-22 16:36:52 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-24 17:32:18 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -24,6 +24,9 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
+
+import org.eclipse.jem.util.CharacterUtil;
+import org.eclipse.jem.util.CharacterUtil.StringBufferIterator;
 
 import org.eclipse.ve.internal.java.codegen.java.AnnotationDecoderAdapter.BeanPartNodesFinder;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
@@ -137,6 +140,7 @@ public class RenameRequestCollector implements Runnable {
 					public boolean visit(TextElement node) {
 						boolean changesMade = false;
 						StringBuffer comment = new StringBuffer(node.getText());
+						StringBufferIterator charIter = new StringBufferIterator(comment);
 						int nameIndex = comment.indexOf(oldName);
 						while(nameIndex>-1 && nameIndex<comment.length()){
 							// prefix ?
@@ -144,8 +148,9 @@ public class RenameRequestCollector implements Runnable {
 							if(nameIndex==0){
 								isCorrectPrefix = true; // beginning of line
 							} else {
-								char prefixChar = comment.charAt(nameIndex-1);
-								if(! (Character.isJavaIdentifierPart(prefixChar) || Character.isJavaIdentifierStart(prefixChar)) )
+								charIter.setIndex(nameIndex);
+								int prefixChar = charIter.previous();
+								if(! (CharacterUtil.isJavaIdentifierPart(prefixChar) || CharacterUtil.isJavaIdentifierStart(prefixChar)) )
 									isCorrectPrefix = true;
 							}
 
@@ -154,8 +159,9 @@ public class RenameRequestCollector implements Runnable {
 							if((nameIndex+oldName.length())==comment.length()){
 								isCorrectSuffix = true;
 							} else{
-								char suffixChar = comment.charAt(nameIndex+oldName.length());
-								if(!Character.isJavaIdentifierPart(suffixChar))
+								charIter.setIndex(nameIndex+oldName.length());
+								int suffixChar = charIter.next();
+								if(!CharacterUtil.isJavaIdentifierPart(suffixChar))
 									isCorrectSuffix = true;
 							}
 							

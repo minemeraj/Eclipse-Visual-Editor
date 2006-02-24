@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.66 $  $Date: 2006-02-15 16:11:47 $ 
+ *  $Revision: 1.67 $  $Date: 2006-02-24 17:32:18 $ 
  */
 
 
@@ -32,6 +32,7 @@ import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
 import org.eclipse.jem.java.*;
+import org.eclipse.jem.util.CharacterUtil;
 
 import org.eclipse.ve.internal.cdm.*;
 import org.eclipse.ve.internal.cdm.Annotation;
@@ -53,6 +54,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.rules.IEditorStyle;
 import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
 
+import com.ibm.icu.text.UTF16;
 import com.ibm.icu.util.StringTokenizer;
 
 
@@ -72,7 +74,7 @@ public class CodeGenUtil {
 	if(index>=main.length())
 		return true;
 	// Any more characters present?
-	if(Character.isJavaIdentifierPart(main.charAt(index)))
+	if(CharacterUtil.isJavaIdentifierPart(UTF16.charAt(main, index)))
 		return false;
 	else
 		return true;
@@ -533,8 +535,8 @@ public static int getExactJavaIndex(String searchIn, String seachFor){
 	while(searchIn.indexOf(seachFor, indexEnd)>-1){
 		index = searchIn.indexOf(seachFor, indexEnd);
 		indexEnd = index+seachFor.length();
-		boolean startAllright = index==0 || (index>0 && !Character.isJavaIdentifierPart(searchIn.charAt(index-1)));
-		boolean endAllright = indexEnd==searchIn.length() || (indexEnd<searchIn.length()&&!Character.isJavaIdentifierPart(searchIn.charAt(indexEnd+1)));
+		boolean startAllright = index==0 || (index>0 && !CharacterUtil.isJavaIdentifierPart(UTF16.charAt(searchIn, index-1)));
+		boolean endAllright = indexEnd==searchIn.length() || (indexEnd<searchIn.length()&&!CharacterUtil.isJavaIdentifierPart(UTF16.charAt(searchIn, indexEnd+1)));
 		if(startAllright && endAllright)
 			return index;
 	}
