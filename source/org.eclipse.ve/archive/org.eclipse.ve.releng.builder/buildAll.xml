@@ -235,7 +235,9 @@
 		</exec>
 	</target>
 	
-	<target name="publishdevupdate" depends="init">
+	<target name="publishpushupdate" depends="init,publishpushreleaseupdatesite,publishpushdevupdate"/>
+	
+	<target name="publishpushdevupdate" depends="init" unless="isReleaseBuild">
 		<property name="updateRemoteDirectory" value="updates/1.0/development"/>
 		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}"/>
 		<property name="devtype" value="-cats ${updateLocalDirectory}/catsdev.properties -catxml ${updateLocalDirectory}/catdevxml.xml -add4thPart"/>
