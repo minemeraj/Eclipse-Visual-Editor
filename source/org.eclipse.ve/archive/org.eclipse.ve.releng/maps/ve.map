@@ -11,7 +11,7 @@ feature@phony.perfcore=N20050114f,:pserver:anonymous@dev.eclipse.org:/home/tools
 
 !*** The standard contributions
 
-plugin@org.eclipse.jem=I20060224a,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem=v20060224a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.beaninfo=I20060224a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.ui=I20060224a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.util=I20060224a,:pserver:anonymous@dev.eclipse.org:/home/tools,
@@ -31,7 +31,7 @@ plugin@org.eclipse.ve.tests=I20060224a,:pserver:anonymous@dev.eclipse.org:/home/
 plugin@org.eclipse.ve.doc=I20060224a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.sdk=I20060224a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk
 
-feature@org.eclipse.jem=I20060224a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
+feature@org.eclipse.jem=v20060224a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
 feature@org.eclipse.jem.sdk=I20060224a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/org.eclipse.jem.sdk-feature
 feature@org.eclipse.jem.tests=I20060224a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
 
