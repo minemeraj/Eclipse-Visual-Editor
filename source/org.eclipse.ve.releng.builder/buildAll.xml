@@ -240,14 +240,22 @@
 	<target name="publishpushdevupdate" depends="init" unless="isReleaseBuild">
 		<property name="updateRemoteDirectory" value="updates/1.0/development"/>
 		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}"/>
-		<property name="devtype" value="-cats ${updateLocalDirectory}/catsdev.properties -catxml ${updateLocalDirectory}/catdevxml.xml -add4thPart"/>
+		<property name="devtype" value="-cats ${updateLocalDirectory}/catsdev.properties -catxml ${updateLocalDirectory}/catdevxml.xml"/>
 		<antcall target="publishupdatesite"/>
+		<antcall target="pushupdatesite"/>		
 	</target>
 	
 	<target name="publishpushreleaseupdatesite" if="isReleaseBuild" description="Puplish and push the update site for a release. Only available for a release build.">
 		<antcall target="publishupdatesite"/>
 		<antcall target="pushupdatesite"/>
 	</target>
+	
+	<property name="eclipse.version" value="3.2.0"/>
+	<path id="osgi.jar">
+		<fileset dir="${eclipse.home}/plugins">
+			<include name="org.eclipse.osgi_${eclipse.version}*.jar"/>
+		</fileset>
+	</path>
 	
 	<target name="publishupdatesite" if="rsyncPWFile" depends="init">
 		<!-- Publish to update site, but not push it. -->
@@ -264,11 +272,10 @@
 		
 		<!-- Now build the update program. -->
 	    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-		<property name="eclipse.version" value="3.2.0"/>
-		<available file="${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}.jar" property="versionFound"/>
+		<property name="versionFound" refid="osgi.jar"/>
 		<fail unless="versionFound" message="Failed due to ${eclipse.version} Eclipse not being used. If upgraded, need to upgrade this buildAll.xml too."/>
 		<mkdir dir="${updateLocalDirectory}/bin"/>
-	    <javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpath="${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
+	    <javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpathref="osgi.jar"/>
 
 		<!-- Now get the latest build SDK and unzip into the local directory for processing. -->
 		<exec dir="${updateLocalDirectory}" executable="unzip">
@@ -285,7 +292,8 @@
 	    <java classname="org.eclipse.releng.generators.UpdateBuilder" failonerror="true">
 	         <arg line="-root ${updateLocalDirectory}/eclipse -site ${updateLocalDirectory}/site -sitexml ${updateLocalDirectory}/site.xml -build ${buildId} -size ${devtype}" /> 
 	         <classpath>
-	            	<pathelement path="${updateLocalDirectory}/bin:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}.jar" />
+	            	<pathelement path="${updateLocalDirectory}/bin"/>
+	         		<path refid="osgi.jar"/>
 	         </classpath>
 	    </java>
 
