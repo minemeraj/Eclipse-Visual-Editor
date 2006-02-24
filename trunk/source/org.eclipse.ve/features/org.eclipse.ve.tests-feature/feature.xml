@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.ve.tests"
       label="%featureName"
-      version="1.2"
+      version="1.2.0.qualifier"
       provider-name="%featureProvider"
       image="eclipse_update_120.jpg">
 
@@ -19,8 +19,6 @@
       <import feature="org.eclipse.ve" version="1.2.0"/>
    </requires>
 
-   <!-- We need to manually include the JEM tests in here for the automated build/test to work. So
-        any new ones must be added here too. -->
    <plugin
          id="org.eclipse.ve.tests"
          download-size="0"
@@ -44,7 +42,7 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-         
+
    <plugin
          id="org.eclipse.jem.tests"
          download-size="0"
@@ -56,6 +54,6 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"/>       
+         fragment="true"/>
 
 </feature>
