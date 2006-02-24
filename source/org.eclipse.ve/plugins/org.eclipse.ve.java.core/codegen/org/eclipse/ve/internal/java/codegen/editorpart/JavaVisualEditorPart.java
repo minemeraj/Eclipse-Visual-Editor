@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.167 $  $Date: 2006-02-23 18:08:28 $ 
+ *  $Revision: 1.168 $  $Date: 2006-02-24 17:32:18 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -78,8 +78,8 @@ import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 import org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo.ContainerPaths;
-import org.eclipse.jem.util.PerformanceMonitorUtil;
-import org.eclipse.jem.util.TimerTests;
+import org.eclipse.jem.util.*;
+import org.eclipse.jem.util.CharacterUtil.StringIterator;
 import org.eclipse.jem.util.plugin.JEMUtilPlugin;
 
 import org.eclipse.ve.internal.cdm.Diagram;
@@ -651,10 +651,16 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						int caretLocation = textSelection.getOffset();
 						int start = caretLocation;
 						int end = caretLocation;
-						while(start > 0 && Character.isJavaIdentifierPart(content.charAt(start-1)))
-							start--;
-						while(end < content.length() && Character.isJavaIdentifierPart(content.charAt(end)))
-							end++;
+						StringIterator charIter = new StringIterator(content);
+						charIter.setIndex(start);
+						while(charIter.hasPrevious() && CharacterUtil.isJavaIdentifierPart(charIter.previous()))
+							start = charIter.getPosition();	
+						charIter.setIndex(end);	
+						while(charIter.hasNext() && CharacterUtil.isJavaIdentifierPart(charIter.next()));
+						if (charIter.hasNext())
+							end = charIter.getPosition();	// We've walked all valid identifier chars. At this point the pos is the first invalid.
+						else
+							end = content.length();	// Else we reached the end of input, so the end is the end.
 						if(start>=0 && end<content.length() && end>=start){
 							String name =  content.substring(start, end);
 							if(JavaConventions.validateIdentifier(name).isOK()){

@@ -10,12 +10,10 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventsParser.java,v $
- *  $Revision: 1.14 $  $Date: 2005-11-23 19:55:25 $ 
+ *  $Revision: 1.15 $  $Date: 2006-02-24 17:32:18 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 import java.util.*;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -26,6 +24,8 @@ import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
 import org.eclipse.jem.java.*;
+import org.eclipse.jem.util.CharacterUtil;
+import org.eclipse.jem.util.CharacterUtil.StringIterator;
 
 import org.eclipse.ve.internal.java.codegen.java.rules.IEventProcessingRule;
 import org.eclipse.ve.internal.java.codegen.java.rules.IVisitorFactoryRule;
@@ -138,15 +138,16 @@ public class EventsParser {
 						
 						// determine exact method name
 						int startIndex=-1, endIndex=-1;
-						StringCharacterIterator ci = new StringCharacterIterator(invocation);
-						for(char c = ci.first(); c != CharacterIterator.DONE; c = ci.next()) {
+						StringIterator ci = new StringIterator(invocation);
+						while (ci.hasNext()) {
+							int c = ci.next();
 							if(startIndex<0){
-								if(Character.isJavaIdentifierStart(c)){
-									startIndex = ci.getIndex();
+								if(CharacterUtil.isJavaIdentifierStart(c)){
+									startIndex = ci.getPosition();
 								}
 							}else{
-								if(!Character.isJavaIdentifierPart(c)){
-									endIndex = ci.getIndex();
+								if(!CharacterUtil.isJavaIdentifierPart(c)){
+									endIndex = ci.getPosition();
 									break;
 								}
 							}

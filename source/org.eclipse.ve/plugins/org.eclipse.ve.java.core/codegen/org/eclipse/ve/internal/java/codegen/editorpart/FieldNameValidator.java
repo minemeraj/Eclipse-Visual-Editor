@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FieldNameValidator.java,v $
- *  $Revision: 1.9 $  $Date: 2005-12-09 21:12:42 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-24 17:32:18 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -25,6 +25,9 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
+
+import org.eclipse.jem.util.CharacterUtil;
+import org.eclipse.jem.util.CharacterUtil.StringIterator;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
@@ -141,15 +144,14 @@ public class FieldNameValidator implements ICellEditorValidator, ISourced {
 	public static String isValidName(String name){
 		if(name==null || name.length()<1)
 			return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
-		if(name.length()>0 && !Character.isJavaIdentifierStart(name.charAt(0)))
-			return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
-		if(name.length()>1){
-			if (KEYWORDS.contains(name))
-				return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_;
-			for (int cc = 1; cc < name.length(); cc++) {
-				if(!Character.isJavaIdentifierPart(name.charAt(cc)))
-					return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
-			}
+		if (KEYWORDS.contains(name))
+			return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_;
+		StringIterator charIter = new StringIterator(name);
+		if(!CharacterUtil.isJavaIdentifierStart(charIter.next()))
+			return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 			
+		while (charIter.hasNext()) {
+			if(!CharacterUtil.isJavaIdentifierPart(charIter.next()))
+				return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
 		}
 		return null;
 	}
