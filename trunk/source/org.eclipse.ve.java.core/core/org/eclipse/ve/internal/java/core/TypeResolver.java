@@ -10,9 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.11 $  $Date: 2006-02-15 16:11:47 $ 
+ *  $Revision: 1.1 $  $Date: 2006-02-25 23:32:06 $ 
  */
-package org.eclipse.ve.internal.java.codegen.util;
+package org.eclipse.ve.internal.java.core;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -23,7 +23,6 @@ import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.workbench.utility.JavaModelListener;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 import com.ibm.icu.util.StringTokenizer;
  
@@ -38,9 +37,36 @@ import com.ibm.icu.util.StringTokenizer;
  * Note: This doesn't handle ambiguous. It will just return first one found. The compiler will mark it as ambiguous
  * and it is the responsibility of the user to correct it there.
  * 
- * @since 1.0.0
+ * @since 1.1.0
  */
 public class TypeResolver {
+	
+	/**
+	 * Key for data in edit domain to find the current type resolver. It is so that anyone in the domain can do type resolving efficiently.
+	 * The value of the entry in the edit domain will be an instance of {@link TypeResolverRetriever}. The accessor method
+	 * can then be used to retrieve the resolver. It is done this way so that the resolver can be recreated as needed without
+	 * continually updating the edit domain.
+	 * @since 1.2.0
+	 */
+	public static final Object TYPE_RESOLVER_EDIT_DOMAIN_KEY = TypeResolver.class;
+	
+	/**
+	 * Interface for resolver retriever. An implementation of this should be placed into the edit domain under the
+	 * key {@link TypeResolver#TYPE_RESOLVER_EDIT_DOMAIN_KEY}. It should return the current resolver using the
+	 * accessor method {@link #getResolver()}.
+	 * 
+	 * @since 1.2.0
+	 */
+	public interface TypeResolverRetriever {
+		
+		/**
+		 * Return the current resolver.
+		 * @return the current resolver or <code>null</code> if there isn't any.
+		 * 
+		 * @since 1.2.0
+		 */
+		public TypeResolver getResolver();
+	}
 	
 	/**
 	 * The base resolved return. The subclasses provide the actual

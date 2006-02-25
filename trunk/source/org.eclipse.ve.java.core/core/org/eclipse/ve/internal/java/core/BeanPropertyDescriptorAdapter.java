@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 
 /*
- * $RCSfile: BeanPropertyDescriptorAdapter.java,v $ $Revision: 1.28 $ $Date: 2005-12-01 23:42:56 $
+ * $RCSfile: BeanPropertyDescriptorAdapter.java,v $ $Revision: 1.29 $ $Date: 2006-02-25 23:32:06 $
  */
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -45,6 +45,7 @@ import org.eclipse.ve.internal.cde.decorators.DecoratorsPackage;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.properties.AbstractPropertyDescriptorAdapter;
 
+import org.eclipse.ve.internal.java.core.TypeResolver.*;
 import org.eclipse.ve.internal.java.vce.JavaBeanLabelProvider;
 
 import org.eclipse.ve.internal.propertysheet.DefaultWrapperedValidator;
@@ -76,11 +77,12 @@ public class BeanPropertyDescriptorAdapter extends AbstractPropertyDescriptorAda
 	 * For it to work the allocation must be an InitStringAllocation and it must be a standalone
 	 * expression, fully-qualified classes, no non-static methods/fields (In other words, what standard Java Bean property editor getJavaInitializationString() returns).
 	 * @param value value to change the allocation of.
+	 * @param domain TODO
 	 * @return the parse tree allocation if it could be changed, else <code>null</code> if it should be left alone. 
 	 * 
 	 * @since 1.2.0
 	 */
-	public static ParseTreeAllocation changeToParseTreeAllocation(IJavaInstance value) {
+	public static ParseTreeAllocation changeToParseTreeAllocation(IJavaInstance value, EditDomain domain) {
 		if (value.isSetAllocation() && value.getAllocation() instanceof InitStringAllocation) {
 			// To do this we need to ast parse it and then build the parse tree from that.
 			ASTParser parser = ASTParser.newParser(AST.JLS2);
@@ -89,20 +91,91 @@ public class BeanPropertyDescriptorAdapter extends AbstractPropertyDescriptorAda
 			ASTNode astnode = parser.createAST(null);
 			if (!(astnode instanceof Expression))
 				return null;	// It had parse errors, so leave unchanged.
-			return InstantiationFactory.eINSTANCE.createParseTreeAllocation(new ParseTreeCreationFromAST(new NoASTResolver()).createExpression((Expression) astnode));
+			return InstantiationFactory.eINSTANCE.createParseTreeAllocation(new ParseTreeCreationFromAST(getParseTreeResolver(domain)).createExpression((Expression) astnode));
 		}
 		return null;
 	}
 	
+	private static ParseTreeCreationFromAST.Resolver getParseTreeResolver(EditDomain domain) {
+		if (domain != null) {
+			TypeResolver.TypeResolverRetriever retriever = (TypeResolverRetriever) domain.getData(TypeResolver.TYPE_RESOLVER_EDIT_DOMAIN_KEY);
+			if (retriever != null) {
+				TypeResolver resolver = retriever.getResolver();
+				if (resolver != null)
+					return new ParseTreeResolver(resolver);
+			}
+		}
+		return new NoASTResolver();
+	}
+	
+	private static class ParseTreeResolver extends ParseTreeCreationFromAST.Resolver {
+		
+		private final TypeResolver typeResolver;
+
+		public ParseTreeResolver(TypeResolver typeResolver) {
+			this.typeResolver = typeResolver;
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveName(org.eclipse.jdt.core.dom.Name)
+		 */
+		public PTExpression resolveName(Name name) {
+			FieldResolvedType r = typeResolver.resolveWithPossibleField(name);					
+			if (r != null) {
+				PTName ptname = InstantiationFactory.eINSTANCE.createPTName(r.resolvedType.getName());					
+				if (r.fieldAccessors.length == 0) {
+					// Just a type.
+					return ptname;
+				}
+				// It is a field access. Put the resolved PTName as the receiver of the field access.
+				// Now we will walk back up creating field accesses.
+				PTExpression exp = ptname;
+				for (int i = 0; i < r.fieldAccessors.length; i++) {
+					exp = InstantiationFactory.eINSTANCE.createPTFieldAccess(exp, r.fieldAccessors[i]);
+				}
+				return exp;
+			}
+			return InstantiationFactory.eINSTANCE.createPTName(name.getFullyQualifiedName());	// Couldn't figure it out, just send out as is.
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveType(org.eclipse.jdt.core.dom.Type)
+		 */
+		public String resolveType(Type type) {
+			Resolved r = typeResolver.resolveType(type);
+			return r != null ? r.getName() : null;
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveThis()
+		 */
+		public PTExpression resolveThis() {
+			return InstantiationFactory.eINSTANCE.createPTThisLiteral();
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveType(org.eclipse.jdt.core.dom.Name)
+		 */
+		public String resolveType(Name name) {
+			Resolved r = typeResolver.resolveType(name);
+			return r != null ? r.getName() : null;
+		}
+		
+	}
+	
 	/**
-	 * Like {@link #changeToParseTreeAllocation(IJavaInstance)} except it takes an initstring directly. It will create either a parse tree
+	 * Like {@link #changeToParseTreeAllocation(IJavaInstance, EditDomain)} except it takes an initstring directly. It will create either a parse tree
 	 * allocation if it can, otherwise it will create an initstring allocation. Unless initString is null, then it will return.
+	 * <p>
+	 * The init string must be a standalone
+	 * expression, fully-qualified classes, no non-static methods/fields (In other words, what standard Java Bean property editor getJavaInitializationString() returns).
 	 * @param initString initialization string, or <code>null</code> for no initialization string
+	 * @param domain 
 	 * @return an allocation, either a {@link InitStringAllocation} or a {@link ParseTreeAllocation} if it can create one, or <code>null</code> if initString was null.
 	 * 
 	 * @since 1.2.0
 	 */
-	public static JavaAllocation createAllocation(String initString) {
+	public static JavaAllocation createAllocation(String initString, EditDomain domain) {
 		if (initString != null) {
 			// To do this we need to ast parse it and then build the parse tree from that.
 			ASTParser parser = ASTParser.newParser(AST.JLS2);
@@ -111,7 +184,7 @@ public class BeanPropertyDescriptorAdapter extends AbstractPropertyDescriptorAda
 			ASTNode astnode = parser.createAST(null);
 			if (!(astnode instanceof Expression))
 				return InstantiationFactory.eINSTANCE.createInitStringAllocation(initString); // It had parse errors, so leave as init string allocation.
-			return InstantiationFactory.eINSTANCE.createParseTreeAllocation(new ParseTreeCreationFromAST(new NoASTResolver())
+			return InstantiationFactory.eINSTANCE.createParseTreeAllocation(new ParseTreeCreationFromAST(getParseTreeResolver(domain))
 					.createExpression((Expression) astnode)); 
 		} else
 			return null;

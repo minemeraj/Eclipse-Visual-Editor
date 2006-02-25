@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.31 $  $Date: 2005-11-01 20:15:18 $ 
+ *  $Revision: 1.32 $  $Date: 2006-02-25 23:32:06 $ 
  */
 
 import java.util.*;
@@ -31,6 +31,7 @@ import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableCreationRule;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver;
 
 
 

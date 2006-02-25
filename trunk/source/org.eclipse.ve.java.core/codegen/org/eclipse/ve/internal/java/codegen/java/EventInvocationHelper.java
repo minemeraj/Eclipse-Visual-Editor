@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.16 $  $Date: 2005-09-06 16:40:32 $ 
+ *  $Revision: 1.17 $  $Date: 2006-02-25 23:32:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -30,8 +30,8 @@ import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.rules.IEventMethodParsingRule;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
+import org.eclipse.ve.internal.java.core.TypeResolver;
+import org.eclipse.ve.internal.java.core.TypeResolver.Resolved;
 
 /**
  * @author gmendel

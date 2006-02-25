@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeTypeRef.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-29 18:47:06 $ 
+ *  $Revision: 1.9 $  $Date: 2006-02-25 23:32:06 $ 
  */
 
 
@@ -25,7 +25,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
 import org.eclipse.ve.internal.java.codegen.java.JavaBeanModelBuilder;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.ResolvedType;
+import org.eclipse.ve.internal.java.core.TypeResolver.ResolvedType;
 
 
 public class CodeTypeRef {

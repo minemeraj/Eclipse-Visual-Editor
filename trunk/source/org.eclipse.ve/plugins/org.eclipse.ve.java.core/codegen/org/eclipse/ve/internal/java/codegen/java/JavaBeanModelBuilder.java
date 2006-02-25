@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.36 $  $Date: 2005-11-11 22:30:50 $ 
+ *  $Revision: 1.37 $  $Date: 2006-02-25 23:32:06 $ 
  */
 
 import java.util.*;
@@ -37,6 +37,7 @@ import org.eclipse.ve.internal.java.codegen.java.rules.IVisitorFactoryRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver;
 
 
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.73 $  $Date: 2005-11-17 23:21:38 $ 
+ *  $Revision: 1.74 $  $Date: 2006-02-25 23:32:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -34,9 +34,10 @@ import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.ResolvedType;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver;
+import org.eclipse.ve.internal.java.core.TypeResolver.Resolved;
+import org.eclipse.ve.internal.java.core.TypeResolver.ResolvedType;
  
 /**
  * 

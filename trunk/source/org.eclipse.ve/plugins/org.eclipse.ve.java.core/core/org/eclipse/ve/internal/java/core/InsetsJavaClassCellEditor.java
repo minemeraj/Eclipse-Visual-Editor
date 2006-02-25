@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: InsetsJavaClassCellEditor.java,v $
- *  $Revision: 1.10 $  $Date: 2006-02-15 16:11:47 $ 
+ *  $Revision: 1.11 $  $Date: 2006-02-25 23:32:06 $ 
  */
 
 import org.eclipse.swt.widgets.Composite;
@@ -58,14 +58,14 @@ protected String getJavaInitializationString(String insetsString) {
  * @see org.eclipse.ve.internal.java.core.DefaultJavaClassCellEditor#getJavaAllocation(java.lang.String)
  */
 protected JavaAllocation getJavaAllocation(String value) {
-	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(value));
+	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(value), fEditDomain);
 }
 
 /* (non-Javadoc)
  * @see org.eclipse.ve.internal.java.core.IJavaCellEditor2#getJavaAllocation()
  */
 public JavaAllocation getJavaAllocation() {
-	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
+	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(), fEditDomain);
 }
 
 /**

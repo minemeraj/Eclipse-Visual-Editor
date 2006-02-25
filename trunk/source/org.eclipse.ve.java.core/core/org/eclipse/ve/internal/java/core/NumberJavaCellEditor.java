@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 
 /*
- * $RCSfile: NumberJavaCellEditor.java,v $ $Revision: 1.11 $ $Date: 2005-12-09 21:55:56 $
+ * $RCSfile: NumberJavaCellEditor.java,v $ $Revision: 1.12 $ $Date: 2006-02-25 23:32:06 $
  */
 
 import java.text.MessageFormat;
@@ -140,7 +140,7 @@ public class NumberJavaCellEditor extends NumberCellEditor implements INeedData,
 	 */
 	public JavaAllocation getJavaAllocation() {
 		// This we can make into an allocation because there are no field accesses.
-		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
+		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(), fEditDomain);
 	}
 	
 	/**

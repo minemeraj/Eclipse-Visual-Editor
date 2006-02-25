@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.22 $  $Date: 2005-12-09 21:12:42 $ 
+ *  $Revision: 1.23 $  $Date: 2006-02-25 23:32:06 $ 
  */
 
 import java.util.*;
@@ -24,8 +24,8 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver.Resolved;
 
 public class TypeVisitor extends SourceVisitor {
 	

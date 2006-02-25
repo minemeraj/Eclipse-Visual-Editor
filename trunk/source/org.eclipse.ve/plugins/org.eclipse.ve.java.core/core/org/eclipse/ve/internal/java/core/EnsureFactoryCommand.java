@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EnsureFactoryCommand.java,v $
- *  $Revision: 1.3 $  $Date: 2006-02-10 21:53:45 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-25 23:32:06 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -189,7 +189,7 @@ public class EnsureFactoryCommand extends CommandWrapper {
 									alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(InstantiationFactory.eINSTANCE
 											.createPTClassInstanceCreation(classname, null));
 								} else {
-									alloc = BeanPropertyDescriptorAdapter.createAllocation(initString);
+									alloc = BeanPropertyDescriptorAdapter.createAllocation(initString, ed);
 								}
 								factory = BeanUtilities.createJavaObject(factoryType, EMFEditDomainHelper.getResourceSet(ed), alloc);
 								// TODO If the child is GLOBAL_GLOBAL and factory is not, then codegen will fail because it does not

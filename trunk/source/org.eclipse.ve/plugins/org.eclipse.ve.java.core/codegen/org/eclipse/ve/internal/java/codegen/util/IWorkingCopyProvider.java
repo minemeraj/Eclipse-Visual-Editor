@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IWorkingCopyProvider.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-25 23:32:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -19,6 +19,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
+
+import org.eclipse.ve.internal.java.core.TypeResolver;
 
 
 

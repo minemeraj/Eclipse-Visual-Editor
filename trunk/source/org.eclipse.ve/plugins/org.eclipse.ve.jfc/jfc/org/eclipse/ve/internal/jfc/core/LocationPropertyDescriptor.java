@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LocationPropertyDescriptor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-11-15 18:53:31 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-25 23:32:13 $ 
  */
 
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -30,8 +30,8 @@ import org.eclipse.ve.internal.java.visual.*;
 import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
 
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.XYLayoutUtility;
 /**
  * Provide some specific overrides for Location property.
@@ -48,7 +48,8 @@ public class LocationPropertyDescriptor extends BeanPropertyDescriptorAdapter im
 		// they interfere with each other.
 		IJavaObjectInstance comp = (IJavaObjectInstance) source.getEditableValue();
 		IBeanProxyHost h = BeanProxyUtilities.getBeanProxyHost(comp);
-		RuledCommandBuilder cb = new RuledCommandBuilder(h.getBeanProxyDomain().getEditDomain());	
+		EditDomain editDomain = h.getBeanProxyDomain().getEditDomain();
+		RuledCommandBuilder cb = new RuledCommandBuilder(editDomain);	
 		EStructuralFeature sfComponentBounds = JavaInstantiation.getSFeature(comp, JFCConstants.SF_COMPONENT_BOUNDS);		
 		if (comp.eIsSet(sfComponentBounds)) {
 			cb.cancelAttributeSetting(comp, sfComponentBounds);
@@ -76,14 +77,14 @@ public class LocationPropertyDescriptor extends BeanPropertyDescriptorAdapter im
 			if (XYLayoutUtility.constraintContainsPreferredSettings(x, y, 0, 0, true, false)) {
 				ApplyNullLayoutConstraintCommand apply = new ApplyNullLayoutConstraintCommand();
 				apply.setTarget(comp);
-				apply.setDomain(h.getBeanProxyDomain().getEditDomain());
+				apply.setDomain(editDomain);
 				apply.setConstraint(new Rectangle(x, y, 0, 0), true, false);
 				cb.append(apply);
 				return cb.getCommand();
 			}
 		}
 
-		ParseTreeAllocation alloc = changeToParseTreeAllocation(setJavaInstanceValue);
+		ParseTreeAllocation alloc = changeToParseTreeAllocation(setJavaInstanceValue, editDomain);
 		if (alloc != null)
 			cb.applyAttributeSetting(setJavaInstanceValue, JavaInstantiation.getAllocationFeature(setJavaInstanceValue), alloc);
 		cb.applyAttributeSetting(comp, (EStructuralFeature) getTarget(), setValue);

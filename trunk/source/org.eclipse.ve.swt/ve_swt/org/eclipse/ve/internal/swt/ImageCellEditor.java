@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ImageCellEditor.java,v $
- *  $Revision: 1.11 $  $Date: 2006-02-15 16:11:37 $ 
+ *  $Revision: 1.12 $  $Date: 2006-02-25 23:32:21 $ 
  */
 
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -72,7 +72,7 @@ public class ImageCellEditor extends DialogCellEditor
 	 * @return @since 1.0.0
 	 */
 	public JavaAllocation getJavaAllocation() {
-		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
+		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(), fEditDomain);
 	}
 
 	/*

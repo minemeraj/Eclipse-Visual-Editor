@@ -12,7 +12,7 @@ package org.eclipse.ve.tests.codegen.java.rules;
 
 /*
  *  $RCSfile: TestRule.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-24 23:54:15 $ 
+ *  $Revision: 1.15 $  $Date: 2006-02-25 23:32:17 $ 
  */
 
 import java.util.HashMap;
@@ -29,9 +29,9 @@ import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver;
+import org.eclipse.ve.internal.java.core.TypeResolver.Resolved;
 
 public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 

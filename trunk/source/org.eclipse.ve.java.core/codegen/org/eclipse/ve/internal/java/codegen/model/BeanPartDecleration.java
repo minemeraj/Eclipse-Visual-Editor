@@ -18,7 +18,7 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.15 $  $Date: 2005-12-09 21:15:05 $ 
+ *  $Revision: 1.16 $  $Date: 2006-02-25 23:32:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -32,7 +32,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
+import org.eclipse.ve.internal.java.core.TypeResolver.Resolved;
  
 
 /**

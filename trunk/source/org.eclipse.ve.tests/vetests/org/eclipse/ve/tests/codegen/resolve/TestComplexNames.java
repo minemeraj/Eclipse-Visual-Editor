@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TestComplexNames.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:54:15 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-25 23:32:17 $ 
  */
 package org.eclipse.ve.tests.codegen.resolve;
 
@@ -19,9 +19,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.*;
 
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.FieldResolvedType;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.ResolvedType;
+import org.eclipse.ve.internal.java.core.TypeResolver;
+import org.eclipse.ve.internal.java.core.TypeResolver.FieldResolvedType;
+import org.eclipse.ve.internal.java.core.TypeResolver.ResolvedType;
  
 
 /**

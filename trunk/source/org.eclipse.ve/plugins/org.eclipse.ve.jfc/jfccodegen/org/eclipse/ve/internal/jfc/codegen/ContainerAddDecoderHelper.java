@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.31 $  $Date: 2005-11-15 18:53:31 $ 
+ *  $Revision: 1.32 $  $Date: 2006-02-25 23:32:13 $ 
  */
 
 import java.util.*;
@@ -32,8 +32,9 @@ import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver;
+import org.eclipse.ve.internal.java.core.TypeResolver.Resolved;
 
 public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHelper {
 

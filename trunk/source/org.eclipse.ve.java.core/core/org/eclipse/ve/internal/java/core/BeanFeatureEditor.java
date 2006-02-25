@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanFeatureEditor.java,v $
- *  $Revision: 1.10 $  $Date: 2005-11-15 18:53:28 $ 
+ *  $Revision: 1.11 $  $Date: 2006-02-25 23:32:06 $ 
  */
 
 import java.text.MessageFormat;
@@ -420,7 +420,7 @@ public class BeanFeatureEditor
 	 * @see org.eclipse.ve.internal.java.core.IJavaCellEditor2#getJavaAllocation()
 	 */
 	public JavaAllocation getJavaAllocation() {
-		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
+		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(), fEditDomain);
 	}
 
 	/**
@@ -468,14 +468,14 @@ public class BeanFeatureEditor
 						newProxy,
 						(JavaDataType) getFeatureType(),
 						JavaEditDomainHelper.getResourceSet(fEditDomain),
-						BeanPropertyDescriptorAdapter.createAllocation(fPropertyEditorWrapperProxy.getJavaInitializationString()));
+						BeanPropertyDescriptorAdapter.createAllocation(fPropertyEditorWrapperProxy.getJavaInitializationString(), fEditDomain));
 			} else {
 				bean =
 					BeanProxyUtilities.wrapperBeanProxy(
 						newProxy,
 						JavaEditDomainHelper.getResourceSet(fEditDomain),
 						true,
-						BeanPropertyDescriptorAdapter.createAllocation(fPropertyEditorWrapperProxy.getJavaInitializationString()));
+						BeanPropertyDescriptorAdapter.createAllocation(fPropertyEditorWrapperProxy.getJavaInitializationString(), fEditDomain));
 			}
 			fValue = bean;
 			fLastKnownBeanProxy = newProxy;

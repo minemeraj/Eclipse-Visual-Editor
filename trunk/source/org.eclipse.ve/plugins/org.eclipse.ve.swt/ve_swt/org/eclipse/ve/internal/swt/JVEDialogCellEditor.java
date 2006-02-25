@@ -14,21 +14,20 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IFileEditorInput;
 
-import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.workbench.utility.NoASTResolver;
-import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.core.*;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 
 /**
@@ -60,33 +59,7 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 	}
 
 	public JavaAllocation getJavaAllocation() {
-		ASTParser parser = ASTParser.newParser(AST.JLS2);
-		String initString = getJavaInitializationString();
-		parser.setSource(initString.toCharArray());
-		parser.setSourceRange(0, initString.length());
-		parser.setKind(ASTParser.K_EXPRESSION);
-		ASTNode ast = parser.createAST(null);
-		if (ast == null)
-			return null; // It didn't parse.
-	
-		ParseTreeCreationFromAST.Resolver res = new NoASTResolver() {
-			public PTExpression resolveName(Name name) {
-				if (name instanceof QualifiedName) {
-					QualifiedName qualifiedName = (QualifiedName)name;
-					String fullyQualified = qualifiedName.getQualifier().getFullyQualifiedName();
-					if (fullyQualified.equals("org.eclipse.swt.SWT") || //$NON-NLS-1$
-							fullyQualified.equals("org.eclipse.jface.resource.JFaceResources") || //$NON-NLS-1$
-							fullyQualified.equals("org.eclipse.jface.preference.JFacePreferences")) { //$NON-NLS-1$
-						PTExpression receiver = InstantiationFactory.eINSTANCE.createPTName(fullyQualified);
-						return InstantiationFactory.eINSTANCE.createPTFieldAccess(receiver, qualifiedName.getName().getIdentifier());
-					}
-				}
-				return super.resolveName(name);			
-			}
-		};
-		ParseTreeAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-		alloc.setExpression(new ParseTreeCreationFromAST(res).createExpression((Expression) ast));
-		return alloc;
+		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(), fEditDomain);
 	}
 	
 	public Object openDialogBox(Control cellEditorWindow) {
