@@ -44,6 +44,7 @@ import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver;
 
 
 
@@ -538,6 +539,13 @@ IDiagramSourceDecoder fSourceDecoder = null;
 	 */
 	public JavaSourceTranslator(EditDomain ed) {
 		fEDomain=ed;
+		fEDomain.setData(TypeResolver.TYPE_RESOLVER_EDIT_DOMAIN_KEY, new TypeResolver.TypeResolverRetriever() {
+			
+			public TypeResolver getResolver() {
+				return fBeanModel != null ? fBeanModel.getResolver() : null;
+			}
+		
+		});
 	}  
   
 /**
@@ -1184,6 +1192,8 @@ public synchronized void dispose() {
 	   fWorkingCopy.dispose() ;
 	
 	fWorkingCopy = null ;
+	
+	fEDomain.removeData(TypeResolver.TYPE_RESOLVER_EDIT_DOMAIN_KEY);
 }
 
 

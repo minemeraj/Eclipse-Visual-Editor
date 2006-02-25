@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.28 $  $Date: 2006-02-15 16:11:47 $ 
+ *  $Revision: 1.29 $  $Date: 2006-02-25 23:32:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -36,9 +36,9 @@ import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaBeanEventUtilities;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver.Resolved;
 
 import com.ibm.icu.util.StringTokenizer;
 

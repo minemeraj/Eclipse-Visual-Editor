@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.23 $  $Date: 2005-11-15 18:53:31 $ 
+ *  $Revision: 1.24 $  $Date: 2006-02-25 23:32:13 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -30,8 +30,8 @@ import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver.Resolved;
 
 /**
  * @version 	1.0

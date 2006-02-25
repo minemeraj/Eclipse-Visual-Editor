@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkingCopyProvider.java,v $
- *  $Revision: 1.14 $  $Date: 2005-09-14 21:22:55 $ 
+ *  $Revision: 1.15 $  $Date: 2006-02-25 23:32:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -28,6 +28,7 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver;
 
 /**
  * This class provides a primitive factory to hook with to the working copy and associated IDocument that is used by the JavaEditor Note: It is the

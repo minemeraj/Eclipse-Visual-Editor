@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeInvocationHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-10-03 19:20:56 $ 
+ *  $Revision: 1.13 $  $Date: 2006-02-25 23:32:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -28,9 +28,9 @@ import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.ResolvedType;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver;
+import org.eclipse.ve.internal.java.core.TypeResolver.ResolvedType;
 
 /**
  * @author gmendel

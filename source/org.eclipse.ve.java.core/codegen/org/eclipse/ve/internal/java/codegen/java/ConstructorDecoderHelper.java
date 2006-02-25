@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.70 $  $Date: 2006-02-06 17:14:38 $ 
+ *  $Revision: 1.71 $  $Date: 2006-02-25 23:32:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -32,9 +32,9 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.FieldResolvedType;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.core.TypeResolver.FieldResolvedType;
+import org.eclipse.ve.internal.java.core.TypeResolver.Resolved;
  
 /**
  * @author Gili Mendel

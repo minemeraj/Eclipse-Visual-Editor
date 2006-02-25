@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartMethodVisitor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-12-14 21:38:13 $ 
+ *  $Revision: 1.3 $  $Date: 2006-02-25 23:32:20 $ 
  */
 package org.eclipse.ve.internal.rcp.codegen;
 
@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.ve.internal.java.codegen.java.MethodVisitor;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.IMethodArgumentCodegenHelper;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
+import org.eclipse.ve.internal.java.core.TypeResolver;
 
  
 

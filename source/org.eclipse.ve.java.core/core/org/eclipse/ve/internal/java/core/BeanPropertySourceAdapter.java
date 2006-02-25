@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.19 $ $Date: 2006-02-10 19:11:15 $
+ * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.20 $ $Date: 2006-02-25 23:32:06 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -31,6 +31,7 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.java.JavaClass;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
@@ -206,7 +207,9 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter {
 				if (alloc instanceof ParseTreeAllocation)
 					return ((ParseTreeAllocation) alloc).getExpression();
 				else if (alloc instanceof InitStringAllocation) {
-					alloc = BeanPropertyDescriptorAdapter.createAllocation(((InitStringAllocation) alloc).getInitString());
+					IBeanProxyHost h = BeanProxyUtilities.getBeanProxyHost(getBean());
+					EditDomain editDomain = h.getBeanProxyDomain().getEditDomain();
+					alloc = BeanPropertyDescriptorAdapter.createAllocation(((InitStringAllocation) alloc).getInitString(), editDomain);
 					// If not a parsetree alloc then we can't assign it.
 					if (alloc instanceof ParseTreeAllocation)
 						return ((ParseTreeAllocation) alloc).getExpression();

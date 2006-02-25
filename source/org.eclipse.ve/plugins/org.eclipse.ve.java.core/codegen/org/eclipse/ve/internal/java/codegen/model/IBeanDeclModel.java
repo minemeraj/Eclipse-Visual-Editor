@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.20 $  $Date: 2005-10-19 22:14:52 $ 
+ *  $Revision: 1.21 $  $Date: 2006-02-25 23:32:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -28,6 +28,7 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.JavaSourceSynchronizer;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.TypeResolver;
 
 public interface IBeanDeclModel {
 	

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: IMethodVariableRule.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.9 $  $Date: 2006-02-25 23:32:07 $ 
  */
 
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
@@ -19,7 +19,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.ve.internal.cde.rules.IRule;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
+import org.eclipse.ve.internal.java.core.TypeResolver;
 
 
 

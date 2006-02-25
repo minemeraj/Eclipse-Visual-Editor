@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.27 $  $Date: 2005-09-16 13:34:38 $ 
+ *  $Revision: 1.28 $  $Date: 2006-02-25 23:32:20 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -32,8 +32,8 @@ import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.TypeResolver.Resolved;
  
 /**
  * @author Gili Mendel

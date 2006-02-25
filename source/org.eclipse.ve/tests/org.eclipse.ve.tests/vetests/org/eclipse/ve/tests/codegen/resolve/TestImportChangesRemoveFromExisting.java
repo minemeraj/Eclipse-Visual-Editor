@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TestImportChangesRemoveFromExisting.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:54:15 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-25 23:32:17 $ 
  */
 package org.eclipse.ve.tests.codegen.resolve;
 
@@ -26,8 +26,8 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.ResolvedType;
+import org.eclipse.ve.internal.java.core.TypeResolver;
+import org.eclipse.ve.internal.java.core.TypeResolver.ResolvedType;
  
 
 /**

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ImageIconCellEditor.java,v $
- *  $Revision: 1.14 $  $Date: 2006-02-15 16:11:41 $ 
+ *  $Revision: 1.15 $  $Date: 2006-02-25 23:32:13 $ 
  */
 
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -68,7 +68,7 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 	 * @since 1.0.0
 	 */
 	public JavaAllocation getJavaAllocation() {
-		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
+		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(), fEditDomain);
 	}
 	
 	/*
