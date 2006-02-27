@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodParser.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-27 22:57:28 $ 
  */
 
 import java.util.logging.Level;
@@ -102,6 +102,10 @@ public class MethodParser {
 			   	if (methodName.equals(node.getName().getIdentifier()))
 			   	     result[0] = true ;
 			   	return false ;
+			   }
+			   public boolean visit(ConstructorInvocation ci){
+				   result[0] = true; // We dont want to insert initialize() for constructors with this(..) calls
+				   return false;
 			   }
 		             }) ;
 		             
