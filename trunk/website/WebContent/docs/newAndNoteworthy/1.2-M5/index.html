@@ -1,0 +1,600 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+  
+  <meta http-equiv="Content-Language" content="en-us">
+
+  
+  <meta http-equiv="Content-Type" content="text/html">
+
+  
+  <link rel="stylesheet" type="text/css" href="newnoteworthy.css">
+
+  
+  <title>Eclipse Visual Editor Project 1.2 M1 - New and Noteworthy</title>
+</head>
+
+
+<body style="">
+
+<h1>Eclipse Visual Editor Project 1.2 M1 - New and Noteworthy</h1>
+
+<table style="width: 80%;" border="0" cellpadding="10" cellspacing="0">
+
+  <tbody>
+
+    <tr>
+
+      <td colspan="2">
+      
+      <hr> </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top; text-align: right;"><b><a name="Support_for_Eclipse_3.1_M6"></a>Support
+for Eclipse Forms tooolkit<br>
+
+      </b></td>
+
+      <td style="vertical-align: top;" align="left">The Visual Editor
+now has support for the Eclipse forms toolkit. &nbsp;To use the toolkit
+with the Visual Editor the plug-in project <span style="font-style: italic;">org.eclipse.ui.forms </span>should be a dependent project.<br>
+      <br>
+&nbsp; <img style="width: 316px; height: 210px;" alt="" src="depndencies.png"><br>
+      <br>
+The Visual Editor queries the build path of the project when it is opened against a .java file, and if <span style="font-style: italic;">org.eclipse.ui.forms </span>is present then a palette drawer for the <span style="font-weight: bold;">Eclipse Form Toolkit </span>will be shown.<br>
+      <br>
+      <img style="width: 512px; height: 544px;" alt="" src="palette.png"><br>
+      <br>
+The first time an entry is dropped from the palette two objects will be
+created, one for the control and one for an instance of the factory <span style="font-style: italic;">org.eclipse.ui.forms.FormToolkit.<br>
+      <br>
+      </span><br>
+      <br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <br>
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="text-align: right;" valign="top" width="30%">
+      
+      <p><b><a name="Ability_to_create_and_edit_RCP_Views"></a>Ability
+to create and edit JFace viewers<br>
+
+      </b></p>
+
+      </td>
+
+      <td valign="top" width="70%"><span style="font-weight: bold;"></span>The
+Visual Editor can now be used to create and edit JFace viewers. <br>
+
+Specifically the JFace <span style="font-style: italic;">TableViewer</span>,
+      <span style="font-style: italic;">TreeViewer</span> and the <span style="font-style: italic;">ComboViewer</span>. <br>
+
+      <br>
+
+Brand new viewers can be dropped, or existing controls converted to use
+them.<br>
+
+      <br>
+
+      <img alt="Viewer stub" src="viewerstub.gif" style="width: 278px; height: 202px;"><br>
+
+      <img alt="Attach viewer" src="attachViewer.gif" style="width: 418px; height: 211px;"><br>
+
+      <img alt="TableViewer" src="tableviewer.gif" style="width: 291px; height: 211px;"><br>
+
+      <br>
+
+The Visual Editor handles a variety of viewer source patterns like :<br>
+
+      <br>
+
+1. Completely implicit control<br>
+
+      <br>
+
+      <span style="font-style: italic;"></span><span style="font-weight: bold;"></span>&nbsp; <img alt="ii" src="treeviewer-ii.gif" style="width: 720px; height: 55px;"><br>
+
+      <br>
+
+2. Explicit usage of the implicit control<br>
+
+      <br>
+
+&nbsp; <img alt="ie" src="treeviewer-ie.gif" style="width: 588px; height: 71px;"><br>
+
+      <br>
+
+3. Completely explicit control wrapped by a viewer<br>
+
+      <br>
+
+&nbsp; <img alt="ee" src="treeviewer-ee.gif" style="width: 586px; height: 69px;"><br>
+
+      <br>
+
+In the case of the completely explicit control, removal of the viewer
+does not remove the control. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=112335">112335</a>]
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="text-align: right; vertical-align: top;"><span style="font-weight: bold;">Enhanced
+SWT Gridlayout</span></td>
+
+      <td style="vertical-align: top;"> The Visual Editor has a
+vastly
+improved SWT Gridlayout mechanism which behaves more like laying out a
+table and thus making it much more intuitive. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=116540">116540</a>,
+      <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=119674">119674</a>]<br>
+
+      <br>
+
+The improved layout feedback will allow one to easily to <br>
+
+      
+      <table style="width: 100%; text-align: left;" border="0" cellpadding="2" cellspacing="2">
+
+        <tbody>
+
+          <tr>
+
+            <td style="vertical-align: middle;">Add a Row<br>
+
+            </td>
+
+            <td style="vertical-align: middle;"><img alt="add row" src="grid-insert-row.gif" style="width: 279px; height: 205px;"><br>
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td style="vertical-align: middle;">Add a Column<br>
+
+            </td>
+
+            <td style="vertical-align: middle;"><img alt="add column" src="grid-insert-column.gif" style="width: 273px; height: 206px;"><br>
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td style="vertical-align: middle;">Add a single cell
+Column<br>
+
+            </td>
+
+            <td style="vertical-align: middle;"><img alt="add cell column" src="grid-insert-cell.gif" style="width: 275px; height: 203px;"><br>
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td style="vertical-align: middle;">Insert into a
+blank cell<br>
+
+            </td>
+
+            <td style="vertical-align: middle;"><img alt="empty cell" src="grid-insert-empty.gif" style="width: 275px; height: 203px;"><br>
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td style="vertical-align: middle;">Append a Row<br>
+
+            </td>
+
+            <td style="vertical-align: middle;"><img alt="add row" src="grid-insert-row2.gif" style="width: 274px; height: 230px;"><br>
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td style="vertical-align: middle;">Append a Column<br>
+
+            </td>
+
+            <td style="vertical-align: middle;"><img alt="add column" src="grid-insert-col2.gif" style="width: 304px; height: 204px;"><br>
+
+            </td>
+
+          </tr>
+
+        
+        </tbody>
+      
+      </table>
+
+      <br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="text-align: right; vertical-align: top;"><span style="font-weight: bold;">Support for Mac OSX</span><br>
+
+      </td>
+
+      <td style="vertical-align: top;">The Visual Editor now supports
+the creation and editing of SWT files on Mac OSX. Also improvements are
+being made in better supporting Swing components.[<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=47716">47716</a>]<br>
+
+      <br>
+
+      <img alt="os x" src="swt-osx1.jpg" style="width: 813px; height: 832px;"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="text-align: right; vertical-align: top;"><span style="font-weight: bold;">Default layout for controls</span><br>
+
+      </td>
+
+      <td style="vertical-align: top;">The Visual Editor now allows one
+to choose a default layout for containers through the preference page.
+The default layout is <span style="font-style: italic;">GridBagLayout </span>for
+Swing, and <span style="font-style: italic;">GridLayout </span>for
+SWT components. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110145">110145</a>,
+      <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=111671">111671</a>]<br>
+
+      <br>
+
+Layouts for Swing containers:<br>
+
+      <img alt="layout-swing" src="layout-swing.gif" style="width: 529px; height: 321px;"><br>
+
+      <br>
+
+Layout for SWT containers:<br>
+
+      <img alt="layout-swt" src="layout-swt.gif" style="width: 529px; height: 321px;"><br>
+
+      <br>
+
+      <br>
+
+Also the layout can now be changed from a drop-down menu under the
+customize layout action in the toolbar. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=111670">111670</a>]<br>
+
+      <br>
+
+      <img alt="layout dropdown" src="dropdown.gif" style="width: 206px; height: 152px;"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="text-align: right; vertical-align: top;"><span style="font-weight: bold;">Caret location selects graphical components</span><br>
+
+      </td>
+
+      <td style="vertical-align: top;">The Visual Editor now
+continuously tracks the location of the caret in the source, and
+automatically selects a graphical component on whose variable name or
+return method the caret is on. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=113572">113572]<br>
+
+      </a><br>
+
+      <img alt="caret 1" src="caret1.gif" style="width: 433px; height: 419px;"><br>
+
+      <br>
+
+      <br>
+
+This behavior can be turned off by unchecking the synchronize toggle in
+the <span style="font-style: italic;">Java Beans </span>view <br>
+
+      <br>
+
+      <img alt="caret 2" src="caret2.gif" style="width: 231px; height: 69px;"><br>
+
+      <br>
+
+Or by unchecking in the Visual Editor's preference page<br>
+
+      <br>
+
+      <img alt="caret 3" src="caret3.gif" style="width: 303px; height: 29px;"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="text-align: right; vertical-align: top;"><span style="font-weight: bold;">Support for SWT TreeColumn</span><br>
+
+      </td>
+
+      <td style="vertical-align: top;">The Visual Editor now supports
+the use of SWT TreeColumns. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=111624">111624</a>]<br>
+
+      <br>
+
+An entry exists in the palette for dropping a TreeColumn on a Tree.<br>
+
+      <br>
+
+      <img alt="tc1" src="treecolumn.gif" style="width: 236px; height: 42px;"><br>
+
+      <br>
+
+      <img alt="tc2" src="treecolumn2.gif" style="width: 231px; height: 107px;"><br>
+
+      <br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top; text-align: right;"><span style="font-weight: bold;">Ability to drop </span><span style="font-style: italic; font-weight: bold;">abstract<span style="font-style: italic;"><span style="font-style: italic;"><span style="font-style: italic;"> </span></span></span></span><span style="font-weight: bold;"><span style="font-style: italic;">Classes </span>and
+      <span style="font-style: italic;">Interfaces</span></span><br>
+
+      </td>
+
+      <td style="vertical-align: top;">The Visual Editor's ChooseBean
+Dialog now allows one to drop <span style="font-style: italic;">abstract</span>
+      <span style="font-style: italic;">Classes </span>and <span style="font-style: italic;">Interfaces</span>. This allows a user to
+easily extend such a bean, or select such a property if they choose. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=113298">113298</a>]<br>
+
+      <br>
+
+      <img alt="choose interface" src="choosebean-interface.gif" style="width: 334px; height: 430px;">&nbsp;&nbsp;&nbsp; <img alt="choose abs class" src="choosebean-absclass.gif" style="width: 334px; height: 430px;"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top; text-align: right;"><span style="font-weight: bold;">Improved New Java Visual Class wizard</span><br>
+
+      </td>
+
+      <td style="vertical-align: top;">The Visual Editor's <span style="font-style: italic;">New Java Visual Class </span>wizard now
+has categories for <span style="font-style: italic;">SWT</span> and <span style="font-style: italic;">RCP</span> styles. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=100145">100145</a>]<br>
+
+      <br>
+
+      <img alt="new visual wizard" src="new-visual.gif" style="width: 592px; height: 627px;"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="text-align: right; vertical-align: top;"><span style="font-weight: bold;">Increased delay when working with source</span><br>
+
+      </td>
+
+      <td style="vertical-align: top;">The Visual Editor has now
+increased by a magnitude of four, the delay it takes to kickstart
+processing the changes made in source, when working with the source
+view maximized. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=111777">111777</a>]<br>
+
+      <br>
+
+This happens when one is working with the source section maximized in
+the split pane mode<br>
+
+      <br>
+
+      <img alt="delay 1" src="delay1.gif" style="width: 530px; height: 393px;"><br>
+
+      <br>
+
+and when in the seperate notebook tabs mode<br>
+
+      <br>
+
+      <img alt="notebook" src="delay2.gif" style="width: 531px; height: 393px;"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="text-align: right; vertical-align: top;"><span style="font-weight: bold;">AWT/Swing parent selection</span><br>
+
+      </td>
+
+      <td style="vertical-align: top;">The Visual Editor now provides
+for the selection of an appropriate parent when dropping Dialog,
+JDialog, Window or JWindow onto the freeform area. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=112354">112354</a>]<br>
+
+      <br>
+
+When such a component is dropped on the freeform area, a dialog pops up
+providing valid parents.<br>
+
+      <br>
+
+      <img alt="parent" src="parent.gif" style="width: 438px; height: 244px;"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2">
+      
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top; text-align: right;"><span style="font-weight: bold;">Developers: Internal API cleanup</span><br>
+
+      </td>
+
+      <td style="vertical-align: top;">The Visual Editor has cleaned up
+usage of other component's internal APIs. This results in a much more
+stable implementation which others can reliably extend on. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109390">109390</a>,
+      <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109310">109310</a>,
+      <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=107627">107627</a>,
+      <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109306">109306</a>,
+      <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109305">109305</a>]<br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      
+      <hr style="width: 100%; height: 2px;"></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="text-align: right;" valign="top" width="30%"><span style="font-weight: bold;">Developers: VE Model XMI View</span><br>
+
+      </td>
+
+      <td valign="top" width="70%">The Visual Editor now provides a
+helpful VE Model view which shows in XMI the EMF model of the file
+currently being edited. [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=111668">111668</a>]<br>
+
+      <br>
+
+The view can be seen under the <span style="font-style: italic;">Visual
+Editor </span>category<br>
+
+      <br>
+
+      <img alt="xmi 1" src="xmi.gif" style="width: 276px; height: 401px;"><br>
+
+      <br>
+
+Once shown, one can see the helpful XMI view of the EMF model which can
+be used for debugging.<br>
+
+      <br>
+
+      <img alt="xmi 2" src="xmi2.gif" style="width: 822px; height: 547px;"><br>
+
+      </td>
+
+    </tr>
+
+  
+  </tbody>
+</table>
+
+&nbsp;
+</body>
+</html>
