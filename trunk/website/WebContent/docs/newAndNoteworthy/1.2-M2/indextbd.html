@@ -1,39 +1,56 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-
-  <meta content="en-us" http-equiv="Content-Language">
-
-  <meta content="text/html" http-equiv="Content-Type">
-
-  <link href="newnoteworthy.css" type="text/css" rel="stylesheet">
-  <title>Eclipse Visual Editor Project 1.2 M1 - New and Noteworthy</title>
-
-
+  <meta http-equiv="Content-Language" content="en-us">
+  <meta http-equiv="Content-Type" content="text/html">
+  <link rel="stylesheet" href="default_style.css">
+  <title>Eclipse Visual Editor Project 1.2 M2 - New and Noteworthy</title>
 </head>
-
-
-<body style="">
-
-<h1>Eclipse Visual Editor Project 1.2 M1 - New and Noteworthy</h1>
-
-<table style="width: 80%;" border="0" cellpadding="10" cellspacing="0">
-
+<body>
+<h1>Eclipse Visual Editor Project 1.2 - New and Noteworthy</h1>
+<table border="0" cellpadding="10" cellspacing="0" width="80%">
   <tbody>
-
     <tr>
-
-      <td>
+      <td colspan="2">
       <hr> </td>
-
     </tr>
-
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>VE 1.1 M1
+New and Noteworthy<br>
+      </b></td>
+      <td style="vertical-align: top;">Visual Editor 1.2 M1 introduced
+many <a href="../1.2-M1/index.html">New
+and Noteworthy</a> features, namely<br>
+      <br>
+      <ul>
+        <li>Support for Eclipse 3.2</li>
+        <li>Ability to create and edit JFace viewers</li>
+        <li>Enhanced SWT GridLayout</li>
+        <li>Support for Mac OSX</li>
+        <li>Default layout for SWT Composites and AWT/Swing Containers</li>
+        <li>Java source caret location tracks graphical components</li>
+        <li>Support for SWT TreeColumn</li>
+        <li>AWT/Swing parent control selection</li>
+        <li>XMI View for developers to see internals of EMF model</li>        
+      </ul>
+      </td>
+    </tr>
+   <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>    
     <tr>
 
       <td style="vertical-align: top; text-align: right;"><b><a name="Support_for_Eclipse_3.1_M6"></a>Support
 for Eclipse Forms tooolkit<br>
 
+
+
+
       </b></td>
+
+
+
 
       <td style="vertical-align: top;" align="left">The
 Visual Editor now has support for the Eclipse forms toolkit.
@@ -41,31 +58,63 @@ Visual Editor now has support for the Eclipse forms toolkit.
       <span style="font-style: italic;">org.eclipse.ui.forms
       </span>should be a dependent project.<br>
 
+
+
+
       <br>
+
+
+
 
 &nbsp; <img style="width: 316px; height: 210px;" alt="" src="depndencies.png"><br>
 
+
+
+
       <br>
+
+
+
 
 The Visual Editor queries the build path of the project when it is
 opened against a .java file, and if <span style="font-style: italic;">org.eclipse.ui.forms </span>is
 present then a palette drawer for the <span style="font-weight: bold;">Eclipse Form Toolkit </span>will
 be shown.<br>
 
+
+
+
       <br>
+
+
+
 
       <img style="width: 512px; height: 544px;" alt="" src="palette.png"><br>
 
-      <br>
 
+
+
+      <br>
 The first time an entry is dropped from the palette two objects will be
 created, one for the control and one for an instance of the factory <span style="font-style: italic;">org.eclipse.ui.forms.FormToolkit.<br>
 
+
+
+
       <br>
 
-      </span><img style="width: 757px; height: 325px;" alt="" src="button.gif"><br>
+
+
+
+      </span><img style="width: 757px; height: 325px;" alt="" src="button.png"><br>
+
+
+
 
       <br>
+
+
+
 
 The instantiation of the forms toolkit control is done using the form
 toolkit factory <span style="font-family: monospace;">createXXX
@@ -73,41 +122,240 @@ toolkit factory <span style="font-family: monospace;">createXXX
 instead of the usual SWT technique of a two argument constructor of
 parent composite and style bit. &nbsp;Where the factory method has
 additional arguments such as <span style="font-family: monospace;">createButton(Composite
-parent, String text, int styleBit)</span> which has the <span style="font-family: monospace;">text</span> property
-as a third factory argument this is used to set the text <br>
+parent, String text, int styleBit)</span> the Visual Editor
+recognizes that the <span style="font-family: monospace;">text</span>
+property of the button is the&nbsp;third factory argument and uses
+it when the text is set.<br>
+
+
+
 
       <br>
+
+
+
 
       <span style="font-family: monospace;"><span style="color: rgb(204, 0, 0);">private void</span>
 createButton() {</span><br style="font-family: monospace;">
 
+
+
+
       <span style="font-family: monospace;">&nbsp; <span style="color: rgb(51, 51, 255);">button</span> =
 getFormToolkit().createButton(top, <span style="color: rgb(51, 51, 255);">"OK"</span>, SWT.<span style="color: rgb(51, 51, 255); font-style: italic;">PUSH</span>);</span><br style="font-family: monospace;">
 
+
+
+
       <span style="font-family: monospace;">}<br>
 
+
+
+
       <br>
+
+
+
+
+      </span>When a second and subsequent form toolkit controls
+are
+dropped from the palette a prompt is used to indicate which of the
+existing&nbsp;formToolkit factories should be used. &nbsp;This
+allows
+more than one toolkit to be used per class.<br>
+
+
+
+
+      <br>
+
+
+
+
+      <img style="width: 438px; height: 244px;" alt="" src="formtoolkitprompt.png"><br>
+
+
+
+
+      <br>
+The list of currently supported forms factory methods are:<br>
+      <ul>
+        <li>createButton(Composite parent, String text, int style);</li>
+        <li>createComposite(Composite parent, int style);</li>
+        <li>createCompositeSeparator(Composite parent, int style);</li>
+        <li>createExpandableComposite(Composite section, int style);</li>
+        <li>createSection(Composite parent, int style);</li>
+        <li>createForm(Composite parent, int style);</li>
+        <li>createScrolledForm(Composite parent, int style);</li>
+        <li>createLabel(Composite parent, String text, int style);</li>
+        <li>createText(Composite parent, String text, int style);</li>
+        <li>createHyperlink(Composite parent, String text, int style);</li>
+        <li>createImageHyperlink(Composite parent, int style);</li>
+        <li>createText(Composite parent, int style);</li>
+        <li>createTree(Composite parent, int style);</li>
+      </ul>
+      <h1>Expandable Composite and Section</h1>
+The ExpandableComposite control has custom behavior, whereby it has a
+priveledge child control that is its client. With the Visual Editor the
+first control that is dropped onto an ExpandableComposite becomes the
+client. &nbsp;Subsequent controls cannot be dropped onto the
+ExpandableComposite, although the client can be deleted. &nbsp;This is
+shown in the example below where an ExpandableComposite has been
+dropped onto the composite in an Eclipse view part. &nbsp;A Composite
+from the forms palette has been dropped onto the ExpandableComposite
+and become the argument to its setClient(Control) method. &nbsp;<br>
+
+
+
+      <br>
+
+
+
+      <img style="width: 760px; height: 324px;" alt="" src="compositechild.png"><br>
+
+
+
+
+      <br>
+      <span style="font-family: monospace;">
+
+
+
+      <br>
+
+
+
+      <span style="font-family: monospace;"><span style="color: rgb(204, 0, 0);">private void</span> createExpandableComposite() {</span><br style="font-family: monospace;">
+
+
+
+      <span style="font-family: monospace;">&nbsp; expandableComposite = getFormToolkit().createExpandableComposite(top,</span><br style="font-family: monospace;">
+
+
+
+      <span style="font-family: monospace;">&nbsp; &nbsp; ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);</span><br style="font-family: monospace;">
+
+
+
+      <span style="font-family: monospace;">&nbsp;&nbsp;expandableComposite.setExpanded(true);</span><br style="font-family: monospace;">
+
+
+
+      <span style="font-family: monospace;">&nbsp;&nbsp;createComposite();</span><br style="font-family: monospace;">
+
+
+
+      <span style="font-family: monospace;">&nbsp;&nbsp;expandableComposite.setClient(composite);</span><br style="font-family: monospace;">
+
+
+
+      <span style="font-family: monospace;">}</span><br style="font-family: monospace;">
+
+
 
       <br style="font-family: monospace;">
 
-      </span><br>
+
+
+      <span style="font-family: monospace;"><span style="color: rgb(204, 0, 0);">private void</span> createComposite() {</span><br style="font-family: monospace;">
+
+
+
+      <span style="font-family: monospace;">&nbsp; composite = getFormToolkit().createComposite(expandableComposite);</span><span style="font-family: monospace;"></span><br style="font-family: monospace;">
+
+
+
+      <span style="font-family: monospace;">}<br>
+
+
 
       <br>
 
+
+
+      </span></span>The Section forms toolkit widget is a
+subclass of ExpandableComposite and inherits this behavior having a
+priveledged client child. &nbsp;A common way in which controls like
+ExpandableComposite and Section are used is that a Composite is added
+as
+the client into which further controls are dropped.<br>
       <br>
+When ExpandableComposite and Section are dropped from the palette the
+expanded property is set to true so that you can compose into the
+client and visually see the result of this. &nbsp;You can set the
+expanded property to false to collpse the composite if required, but
+because of the WYSIWYG nature of the Visual Editor you will no longer
+see the client in the graph viewer.<span style="font-family: monospace;"><br>
+
+
+
+      </span>
+      <h2>Form</h2>
+
+
+
+      Form is similar to ExpandableComposite in that is has a priviledged
+child control, however this is implictly always there rather than
+having to be added. &nbsp;This is the body of the Form and the Visual
+Editor represents this visually on the JavaBeans view as a (composite)
+child of the form. &nbsp;There is no instance variable created to
+represent the form's body. &nbsp;When children are dropped onto the
+(composite) they become children of the form's body.<br>
+
+      <br>
+
+      <span style="font-family: monospace;"><span style="color: rgb(204, 0, 0);">private void</span> createButton() {</span><br style="font-family: monospace;">
+
+      <span style="font-family: monospace;">&nbsp; <span style="color: rgb(51, 102, 255);">button</span> = getFormToolkit().createButton(<span style="color: rgb(51, 102, 255);">form</span>.getBody(), <span style="color: rgb(51, 102, 255);">"OK"</span>, SWT.<span style="color: rgb(51, 102, 255); font-style: italic;">PUSH</span>);</span><br style="font-family: monospace;">
+
+      <span style="font-family: monospace;">}</span><br>
+
+
+
+      <br>
+
+
+
+      <span style="font-family: monospace;"><img style="width: 758px; height: 303px;" alt="" src="form.PNG"><br>
+
+      <br>
+
+      </span>
+
 
       </td>
 
+
+
+
     </tr>
+
+
+
 
     <tr>
 
+
+
+
       <td colspan="2" rowspan="1" style="vertical-align: top;"> </td>
+
+
+
 
     </tr>
 
+
+
+
+  
+  
+  
   </tbody>
 </table>
+
+
+
 
 </body>
 </html>
