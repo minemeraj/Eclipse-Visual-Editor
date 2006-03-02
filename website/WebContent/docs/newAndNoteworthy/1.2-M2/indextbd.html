@@ -1,53 +1,98 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
+
+  
   <meta http-equiv="Content-Language" content="en-us">
+
+  
   <meta http-equiv="Content-Type" content="text/html">
+
+  
   <link rel="stylesheet" href="default_style.css">
+
+  
   <title>Eclipse Visual Editor Project 1.2 M2 - New and Noteworthy</title>
 </head>
+
+
 <body>
+
 <h1>Eclipse Visual Editor Project 1.2 - New and Noteworthy</h1>
+
 <table border="0" cellpadding="10" cellspacing="0" width="80%">
+
   <tbody>
+
     <tr>
+
       <td colspan="2">
+      
       <hr> </td>
+
     </tr>
+
     <tr>
+
       <td style="vertical-align: top; text-align: right;"><b>VE 1.1 M1
 New and Noteworthy<br>
+
       </b></td>
+
       <td style="vertical-align: top;">Visual Editor 1.2 M1 introduced
 many <a href="../1.2-M1/index.html">New
 and Noteworthy</a> features, namely<br>
+
       <br>
+
+      
       <ul>
+
         <li>Support for Eclipse 3.2</li>
+
         <li>Ability to create and edit JFace viewers</li>
+
         <li>Enhanced SWT GridLayout</li>
+
         <li>Support for Mac OSX</li>
+
         <li>Default layout for SWT Composites and AWT/Swing Containers</li>
+
         <li>Java source caret location tracks graphical components</li>
+
         <li>Support for SWT TreeColumn</li>
+
         <li>AWT/Swing parent control selection</li>
-        <li>XMI View for developers to see internals of EMF model</li>        
+
+        <li>XMI View for developers to see internals of EMF model</li>
+        
+      
       </ul>
+
       </td>
+
     </tr>
+
    <tr>
+
       <td colspan="2">
+      
       <hr> </td>
-    </tr>    
+
+    </tr>
+    
     <tr>
 
+
       <td style="vertical-align: top; text-align: right;"><b><a name="Support_for_Eclipse_3.1_M6"></a>Support
-for Eclipse Forms tooolkit<br>
+for Eclipse Forms toolkit<br>
+
 
 
 
 
       </b></td>
+
 
 
 
@@ -61,7 +106,9 @@ Visual Editor now has support for the Eclipse forms toolkit.
 
 
 
+
       <br>
+
 
 
 
@@ -71,7 +118,9 @@ Visual Editor now has support for the Eclipse forms toolkit.
 
 
 
+
       <br>
+
 
 
 
@@ -84,7 +133,9 @@ be shown.<br>
 
 
 
+
       <br>
+
 
 
 
@@ -94,24 +145,30 @@ be shown.<br>
 
 
 
+
       <br>
+
 The first time an entry is dropped from the palette two objects will be
 created, one for the control and one for an instance of the factory <span style="font-style: italic;">org.eclipse.ui.forms.FormToolkit.<br>
 
 
 
 
-      <br>
-
-
-
-
-      </span><img style="width: 757px; height: 325px;" alt="" src="button.png"><br>
-
-
-
 
       <br>
+
+
+
+
+
+      </span><img style="width: 761px; height: 310px;" alt="" src="button.png"><br>
+
+
+
+
+
+      <br>
+
 
 
 
@@ -130,7 +187,9 @@ it when the text is set.<br>
 
 
 
+
       <br>
+
 
 
 
@@ -141,8 +200,10 @@ createButton() {</span><br style="font-family: monospace;">
 
 
 
+
       <span style="font-family: monospace;">&nbsp; <span style="color: rgb(51, 51, 255);">button</span> =
-getFormToolkit().createButton(top, <span style="color: rgb(51, 51, 255);">"OK"</span>, SWT.<span style="color: rgb(51, 51, 255); font-style: italic;">PUSH</span>);</span><br style="font-family: monospace;">
+getFormToolkit().createButton(<span style="color: rgb(51, 102, 255);">sShell</span>, <span style="color: rgb(51, 51, 255);">"OK"</span>, SWT.<span style="color: rgb(51, 51, 255); font-style: italic;">PUSH</span>);</span><br style="font-family: monospace;">
+
 
 
 
@@ -152,7 +213,9 @@ getFormToolkit().createButton(top, <span style="color: rgb(51, 51, 255);">"OK"</
 
 
 
+
       <br>
+
 
 
 
@@ -167,7 +230,9 @@ more than one toolkit to be used per class.<br>
 
 
 
+
       <br>
+
 
 
 
@@ -177,24 +242,51 @@ more than one toolkit to be used per class.<br>
 
 
 
+
       <br>
+
 The list of currently supported forms factory methods are:<br>
+
+      
       <ul>
+
         <li>createButton(Composite parent, String text, int style);</li>
+
         <li>createComposite(Composite parent, int style);</li>
+
         <li>createCompositeSeparator(Composite parent, int style);</li>
+
         <li>createExpandableComposite(Composite section, int style);</li>
+
         <li>createSection(Composite parent, int style);</li>
+
         <li>createForm(Composite parent, int style);</li>
+
         <li>createScrolledForm(Composite parent, int style);</li>
+
         <li>createLabel(Composite parent, String text, int style);</li>
+
         <li>createText(Composite parent, String text, int style);</li>
+
         <li>createHyperlink(Composite parent, String text, int style);</li>
+
         <li>createImageHyperlink(Composite parent, int style);</li>
+
         <li>createText(Composite parent, int style);</li>
+
         <li>createTree(Composite parent, int style);</li>
+
+      
       </ul>
+The Visual Editor shows the forms toolkit widgets in their WYSIWYG
+runtime representation and you can manipulate them in the graph viewer,
+the JavaBeans viewer, the property sheet, or the Java source pane.<br>
+      <img style="width: 617px; height: 369px;" alt="" src="controls.png"><span style="font-weight: bold;"><br>
+      <br>
+      </span>
+The form toolkit controls ExpandableComposite, Section and Form have special Visual Editor behavior to support their API.
       <h1>Expandable Composite and Section</h1>
+
 The ExpandableComposite control has custom behavior, whereby it has a
 priveledge child control that is its client. With the Visual Editor the
 first control that is dropped onto an ExpandableComposite becomes the
@@ -207,16 +299,20 @@ and become the argument to its setClient(Control) method. &nbsp;<br>
 
 
 
-      <br>
-
-
-
-      <img style="width: 760px; height: 324px;" alt="" src="compositechild.png"><br>
-
-
-
 
       <br>
+
+
+
+
+      <img style="width: 763px; height: 309px;" alt="" src="composite_1.png"><br>
+
+
+
+
+
+      <br>
+
       <span style="font-family: monospace;">
 
 
@@ -225,15 +321,19 @@ and become the argument to its setClient(Control) method. &nbsp;<br>
 
 
 
+
       <span style="font-family: monospace;"><span style="color: rgb(204, 0, 0);">private void</span> createExpandableComposite() {</span><br style="font-family: monospace;">
 
 
 
-      <span style="font-family: monospace;">&nbsp; expandableComposite = getFormToolkit().createExpandableComposite(top,</span><br style="font-family: monospace;">
+
+      <span style="font-family: monospace;">&nbsp; <span style="color: rgb(51, 102, 255);">expandableComposite</span> = getFormToolkit().createExpandableComposite(<span style="color: rgb(51, 102, 255);">sShell</span>,</span><br style="font-family: monospace;">
 
 
 
-      <span style="font-family: monospace;">&nbsp; &nbsp; ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);</span><br style="font-family: monospace;">
+
+      <span style="font-family: monospace;">&nbsp; &nbsp; ExpandableComposite.<span style="color: rgb(51, 102, 255);">TWISTIE</span> | ExpandableComposite.<span style="color: rgb(51, 102, 255);">TITLE_BAR</span>);</span><br style="font-family: monospace;">
+
 
 
 
@@ -241,11 +341,14 @@ and become the argument to its setClient(Control) method. &nbsp;<br>
 
 
 
+
       <span style="font-family: monospace;">&nbsp;&nbsp;createComposite();</span><br style="font-family: monospace;">
 
 
 
-      <span style="font-family: monospace;">&nbsp;&nbsp;expandableComposite.setClient(composite);</span><br style="font-family: monospace;">
+
+      <span style="font-family: monospace;">&nbsp;&nbsp;expandableComposite.setClient(<span style="color: rgb(51, 102, 255);">composite</span>);</span><br style="font-family: monospace;">
+
 
 
 
@@ -253,7 +356,9 @@ and become the argument to its setClient(Control) method. &nbsp;<br>
 
 
 
+
       <br style="font-family: monospace;">
+
 
 
 
@@ -261,7 +366,9 @@ and become the argument to its setClient(Control) method. &nbsp;<br>
 
 
 
-      <span style="font-family: monospace;">&nbsp; composite = getFormToolkit().createComposite(expandableComposite);</span><span style="font-family: monospace;"></span><br style="font-family: monospace;">
+
+      <span style="font-family: monospace;">&nbsp; <span style="color: rgb(51, 102, 255);">composite</span> = getFormToolkit().createComposite(<span style="color: rgb(51, 102, 255);">expandableComposite</span>);</span><span style="font-family: monospace;"></span><br style="font-family: monospace;">
+
 
 
 
@@ -269,7 +376,9 @@ and become the argument to its setClient(Control) method. &nbsp;<br>
 
 
 
+
       <br>
+
 
 
 
@@ -279,7 +388,9 @@ priveledged client child. &nbsp;A common way in which controls like
 ExpandableComposite and Section are used is that a Composite is added
 as
 the client into which further controls are dropped.<br>
+
       <br>
+
 When ExpandableComposite and Section are dropped from the palette the
 expanded property is set to true so that you can compose into the
 client and visually see the result of this. &nbsp;You can set the
@@ -289,8 +400,11 @@ see the client in the graph viewer.<span style="font-family: monospace;"><br>
 
 
 
+
       </span>
+      
       <h2>Form</h2>
+
 
 
 
@@ -302,23 +416,31 @@ child of the form. &nbsp;There is no instance variable created to
 represent the form's body. &nbsp;When children are dropped onto the
 (composite) they become children of the form's body.<br>
 
+
       <br>
+
 
       <span style="font-family: monospace;"><span style="color: rgb(204, 0, 0);">private void</span> createButton() {</span><br style="font-family: monospace;">
 
+
       <span style="font-family: monospace;">&nbsp; <span style="color: rgb(51, 102, 255);">button</span> = getFormToolkit().createButton(<span style="color: rgb(51, 102, 255);">form</span>.getBody(), <span style="color: rgb(51, 102, 255);">"OK"</span>, SWT.<span style="color: rgb(51, 102, 255); font-style: italic;">PUSH</span>);</span><br style="font-family: monospace;">
+
 
       <span style="font-family: monospace;">}</span><br>
 
 
 
+
       <br>
+
 
 
 
       <span style="font-family: monospace;"><img style="width: 758px; height: 303px;" alt="" src="form.PNG"><br>
 
+
       <br>
+
 
       </span>
 
@@ -328,7 +450,9 @@ represent the form's body. &nbsp;When children are dropped onto the
 
 
 
+
     </tr>
+
 
 
 
@@ -338,7 +462,9 @@ represent the form's body. &nbsp;When children are dropped onto the
 
 
 
+
       <td colspan="2" rowspan="1" style="vertical-align: top;"> </td>
+
 
 
 
@@ -348,11 +474,14 @@ represent the form's body. &nbsp;When children are dropped onto the
 
 
 
+
+  
   
   
   
   </tbody>
 </table>
+
 
 
 
