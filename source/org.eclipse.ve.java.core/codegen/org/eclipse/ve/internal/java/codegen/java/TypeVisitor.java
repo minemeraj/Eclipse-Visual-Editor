@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.23 $  $Date: 2006-02-25 23:32:06 $ 
+ *  $Revision: 1.24 $  $Date: 2006-03-27 16:32:53 $ 
  */
 
 import java.util.*;
@@ -209,8 +209,8 @@ private boolean skipMethod(MethodDeclaration method) {
 			List params = method.parameters();
 			if(params!=null && params.size()==1 && params.get(0) instanceof SingleVariableDeclaration){
 				SingleVariableDeclaration svd = (SingleVariableDeclaration) params.get(0);
-				if(svd.getType() instanceof ArrayType){
-					Type simpleType = ((ArrayType) svd.getType()).getElementType();
+				if(svd.getType().isArrayType() || svd.getExtraDimensions()==1){
+					Type simpleType = svd.getType().isArrayType() ? ((ArrayType)svd.getType()).getElementType() : svd.getType();
 					if(simpleType.isSimpleType()){
 						if(		"java.lang.String".equals(((SimpleType)simpleType).getName().getFullyQualifiedName()) || //$NON-NLS-1$
 								"String".equals(((SimpleType)simpleType).getName().getFullyQualifiedName())) //$NON-NLS-1$
