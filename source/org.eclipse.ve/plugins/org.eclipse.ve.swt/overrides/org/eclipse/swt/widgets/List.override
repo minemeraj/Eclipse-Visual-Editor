@@ -5,7 +5,7 @@
          <listChanges referenceValues="_eAnnotations"/>
       </value>
    </objectChanges>
-   <objectsToAttach xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+   <objectsToAttach xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator" graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ListGraphicalEditPart">
     <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/listbox_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
   </objectsToAttach>
 </change:ChangeDescription>
