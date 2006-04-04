@@ -160,7 +160,17 @@
            name="BEANTYPEPRESENT"
            value="org.eclipse.jface.viewers.ComboViewer">
          </filter>                   
-      </contributor>   
+     </contributor>
+     <contributor class="org.eclipse.ve.internal.jface.ListViewerEditPartContributorFactory">   
+        <filter
+           name="BEANTYPE"
+           value="org.eclipse.swt.widgets.List">
+         </filter>             
+         <filter
+           name="BEANTYPEPRESENT"
+           value="org.eclipse.jface.viewers.ListViewer">
+         </filter> 
+     </contributor>         
    </extension>
    
    <extension
