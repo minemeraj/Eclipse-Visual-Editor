@@ -39,7 +39,7 @@ public class JContentPaneGenerator implements org.eclipse.ve.internal.java.codeg
 
 public String generateSource(String typeName, String superClassName, HashMap argumentMatrix)
   {
-    StringBuffer stringBuffer = new StringBuffer();
+    final StringBuffer stringBuffer = new StringBuffer();
     
 /*
  * This was created from the javajet file: 

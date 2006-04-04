@@ -44,7 +44,7 @@ public class InitExpressionTemplate implements IExpressionTemplate {
 
  public String generateExpression(AbstractExpressionGenerator.ExprInfo info)
   {
-    StringBuffer stringBuffer = new StringBuffer();
+    final StringBuffer stringBuffer = new StringBuffer();
     
 /*
  * This was created from the javajet file: 
