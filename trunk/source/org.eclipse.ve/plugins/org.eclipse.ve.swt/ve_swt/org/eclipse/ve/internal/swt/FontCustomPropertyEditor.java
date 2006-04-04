@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontCustomPropertyEditor.java,v $
- *  $Revision: 1.13 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.14 $  $Date: 2006-04-04 15:02:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -104,7 +104,9 @@ public class FontCustomPropertyEditor extends Composite {
 	private List jfaceNamesList = null;
 	private List jfaceStylesList = null;
 	private EditDomain fEditDomain = null;
-	private Label initStringLabel = null;
+	
+	// Removing init string label for future redesign - Bug 134347
+	//private Label initStringLabel = null;
 	private boolean lookupIsJFaceProject = true; // lookup JFace plugin only once
 	private boolean isJFaceProject = false;
 
@@ -146,7 +148,7 @@ public class FontCustomPropertyEditor extends Composite {
 	}
 
 	private void initialize() {
-		GridData gridData1 = new org.eclipse.swt.layout.GridData();
+		
 		setSize(new org.eclipse.swt.graphics.Point(322,245));
 		GridLayout grid = new GridLayout();
 		grid.horizontalSpacing = 1;
@@ -159,7 +161,6 @@ public class FontCustomPropertyEditor extends Composite {
 		previewText = new Text(this, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL);
 		previewText.setText(FontPropertyEditorMessages.previewText); 
 		GridData gd03 = new GridData();
-		initStringLabel = new Label(this, SWT.NONE);
 		gd03.horizontalAlignment = GridData.FILL;
 		gd03.verticalAlignment = GridData.FILL;
 		gd03.grabExcessHorizontalSpace = true;
@@ -169,12 +170,17 @@ public class FontCustomPropertyEditor extends Composite {
 		previewText.setLayoutData(gd03);
 
 		grid.numColumns = 3;
+		
+/* Removing init string label for future redesign - Bug 134347
+        GridData gridData1 = new org.eclipse.swt.layout.GridData();
+		initStringLabel = new Label(this, SWT.NONE);
 		initStringLabel.setText(""); //$NON-NLS-1$
 		initStringLabel.setLayoutData(gridData1);
 		initStringLabel.setForeground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_BLUE));
 		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		gridData1.horizontalSpan = 3;
+*/
 		createFontFromProxy(this);
 		updateSelections();
 		if (isJFaceProject())
@@ -755,8 +761,11 @@ public class FontCustomPropertyEditor extends Composite {
 	 * initialzation string based on whether it's a SWT or JFace font.
 	 */
 	private void updateLabelInitializationString() {
+		
+/* Removing init string label for future redesign - Bug 134347
 		if (value == null)
 			return;
+		
 		String SWT_PREFIX = "SWT"; //$NON-NLS-1$
 		String result = ""; //$NON-NLS-1$
 		if (!isJFace) {
@@ -795,6 +804,7 @@ public class FontCustomPropertyEditor extends Composite {
 		}
 		initStringLabel.setText(result);
 		initStringLabel.setToolTipText(result);
+*/	
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

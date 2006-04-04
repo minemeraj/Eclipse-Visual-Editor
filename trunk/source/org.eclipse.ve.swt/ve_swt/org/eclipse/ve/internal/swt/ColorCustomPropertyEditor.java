@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ColorCustomPropertyEditor.java,v $
- *  $Revision: 1.11 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.12 $  $Date: 2006-04-04 15:02:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -138,7 +138,9 @@ public class ColorCustomPropertyEditor extends Composite {
 	private Composite jfaceColorComposite = null;
 
 	private Table jfaceColorTable = null;
-	private Label initStringLabel = null;
+	
+	// Removing init string label for future redesign - Bug 134347
+	//private Label initStringLabel = null;
 	private EditDomain fEditDomain;
 
 	// preview pane fields and constants
@@ -198,12 +200,13 @@ public class ColorCustomPropertyEditor extends Composite {
 		gridData3.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData3.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		preview.setLayoutData(previewGD);
-
+		
+/* Removing init string label for future redesign - Bug 134347
 		initStringLabel = new Label(this, SWT.NONE);
 		initStringLabel.setText(""); //$NON-NLS-1$
 		initStringLabel.setLayoutData(gridData3);
 		initStringLabel.setForeground(org.eclipse.swt.widgets.Display.getCurrent().getSystemColor(org.eclipse.swt.SWT.COLOR_BLUE));
-		
+*/		
 		updateSelections();
 	}
 	
@@ -934,9 +937,11 @@ public class ColorCustomPropertyEditor extends Composite {
 	 * initialzation string based on whether it's a SWT or JFace color.
 	 */
 	private void updateLabelInitializationString() {
+/* Removing init string label for future redesign - Bug 134347
 		if (value == null)
 			return;
-		String result = "null"; //$NON-NLS-1$
+		
+ 		String result = "null"; //$NON-NLS-1$
 		String SWT_PREFIX = "SWT."; //$NON-NLS-1$
 		if (!isNamed) {
 			result = "new Color(Display.getCurrent(), " + value.getRed() + ", " + value.getGreen() + ", " + value.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -952,6 +957,7 @@ public class ColorCustomPropertyEditor extends Composite {
 		}
 		initStringLabel.setText(result);
 		initStringLabel.setToolTipText(result);
+*/
 	}
 
 	/*
