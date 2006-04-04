@@ -43,7 +43,7 @@ public class NoReturnMethodTemplate implements IMethodTemplate {
 
  public String generateMethod(AbstractMethodTextGenerator.MethodInfo info)
   {
-    StringBuffer stringBuffer = new StringBuffer();
+    final StringBuffer stringBuffer = new StringBuffer();
     
 /*
  * This was created from the javajet file: 

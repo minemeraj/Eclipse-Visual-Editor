@@ -49,7 +49,7 @@ public class PropChangeAnonymousPropertyTemplate implements IEventTemplate {
 	}
 	public String generateEvent(AbstractEventSrcGenerator.EventInfo info)
   {
-    StringBuffer stringBuffer = new StringBuffer();
+    final StringBuffer stringBuffer = new StringBuffer();
     
 /*
  * This was created from the javajet file: 

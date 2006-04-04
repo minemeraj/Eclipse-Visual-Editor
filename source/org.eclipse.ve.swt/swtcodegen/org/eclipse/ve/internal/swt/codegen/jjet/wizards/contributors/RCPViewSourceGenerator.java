@@ -33,7 +33,7 @@ public class RCPViewSourceGenerator implements org.eclipse.ve.internal.java.code
 
 public String generateSource(String typeName, String superClassName, HashMap argumentMatrix)
   {
-    StringBuffer stringBuffer = new StringBuffer();
+    final StringBuffer stringBuffer = new StringBuffer();
     
 	String packageName = argumentMatrix != null ? (String)argumentMatrix.get(TARGET_PACKAGE_NAME) : "";
 	if(packageName==null){

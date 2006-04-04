@@ -40,7 +40,7 @@ public class DefaultMethodInvocationTemplate implements IMethodInvocationTemplat
 
  public String generateMethod(DefaultMethodInvocationGenerator.InvocationInfo info)
   {
-    StringBuffer stringBuffer = new StringBuffer();
+    final StringBuffer stringBuffer = new StringBuffer();
     
 /*
  * This was created from the javajet file: 
