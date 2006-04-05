@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-08-24 23:30:46 $
+ * $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $ $Revision: 1.14 $ $Date: 2006-04-05 14:57:33 $
  */
 
 package org.eclipse.ve.internal.java.core;
@@ -182,7 +182,8 @@ public class EventInvocationAndListenerTreeEditPart extends AbstractTreeEditPart
 		// Render us as follows
 		// 1) For an anonymous interface show the event name and the interface it extends ( unqualified )
 		// 2) For an anpnymous class show the event name and the class it extends ( unqualified )
-		if (event != null) {
+		if (event != null && !event.eIsProxy()) {
+			// Proxy happens is the event is now gone, but we havent' rebuild the model yet.
 			// Get the NLS name for the event
 			buffer.append(Utilities.getEventSetDecorator(event).getDisplayName());
 			buffer.append(" - "); //$NON-NLS-1$		
