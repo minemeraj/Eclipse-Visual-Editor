@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderTreeEditPart.java,v $
- *  $Revision: 1.15 $  $Date: 2005-12-16 15:51:30 $ 
+ *  $Revision: 1.16 $  $Date: 2006-04-05 20:57:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -109,16 +109,16 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 	
 	protected void addChild(EditPart child, int index) {
 		super.addChild(child, index);
-		// For a tab item the child's direct edit policy must be replaced with a custom one that lets the "tabText"
-		// property be the one that is affected (and not the child's "text" property for example if it is a Button,Label, etc.
-		EditDomain domain = EditDomain.getEditDomain(this);
-		EditPartViewer viewer = getRoot().getViewer();		
-		((ControlTreeEditPart)child).manager = getDirectEditManager(domain,viewer);
-		
-		// The child is the ControlTreeEditPart which knows how to copy itself, however because the model in fact has a TabItem
-		// inbetween we need to override the edit policy so TabItem itself get copied
-		child.installEditPolicy(CopyAction.REQ_COPY,new TabItemCopyEditPolicy(EditDomain.getEditDomain(this)));		
-		
+		if (child instanceof ControlTreeEditPart) {
+			// For a tab item the child's direct edit policy must be replaced with a custom one that lets the "tabText"
+			// property be the one that is affected (and not the child's "text" property for example if it is a Button,Label, etc.
+			EditDomain domain = EditDomain.getEditDomain(this);
+			EditPartViewer viewer = getRoot().getViewer();
+			((ControlTreeEditPart) child).manager = getDirectEditManager(domain, viewer);
+			// The child is the ControlTreeEditPart which knows how to copy itself, however because the model in fact has a TabItem
+			// inbetween we need to override the edit policy so TabItem itself get copied
+			child.installEditPolicy(CopyAction.REQ_COPY, new TabItemCopyEditPolicy(EditDomain.getEditDomain(this)));
+		}				
 	}
 	
 	public static BeanTreeDirectEditManager getDirectEditManager(EditDomain domain, EditPartViewer viewer) {
@@ -165,14 +165,13 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 	 * @since 1.1.0
 	 */
 	protected void disposeLabelDecorator(EditPart editpart) {
-		try {
+		if (editpart instanceof ControlTreeEditPart) {
 			ControlTreeEditPart ctep = (ControlTreeEditPart) editpart;
 			ILabelDecorator labelDecorator2 = ctep.getLabelDecorator();
 			if (labelDecorator2 != null) {
 				ctep.setLabelDecorator(null);
 				labelDecorator2.dispose();
 			}
-		} catch (ClassCastException e) {
 		}
 	}
 
