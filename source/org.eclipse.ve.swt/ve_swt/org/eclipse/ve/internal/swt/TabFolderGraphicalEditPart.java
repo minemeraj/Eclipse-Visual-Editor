@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.19 $  $Date: 2005-12-15 14:55:17 $ 
+ *  $Revision: 1.20 $  $Date: 2006-04-05 20:57:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -39,8 +39,6 @@ import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 
 import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
 
@@ -85,12 +83,14 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	
 	protected void addChild(EditPart child, int index) {
 		super.addChild(child, index);
-		// For a tab item the child's direct edit policy must be replaced with a custom one that lets the "tabText"
-		// property be the one that is affected (and not the child's "text" property for example if it is a Button,Label, etc.
-		child.installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE,new TabItemDirectEditPolicy());
-		// The child is the ControlGraphicalEditPart which knows how to copy itself, however because the model in fact has a TabItem
-		// inbetween we need to override the edit policy so tabItem itself gets copied
-		child.installEditPolicy(CopyAction.REQ_COPY,new TabItemCopyEditPolicy(EditDomain.getEditDomain(this)));
+		if (child instanceof ControlGraphicalEditPart) {
+			// For a tab item the child's direct edit policy must be replaced with a custom one that lets the "tabText"
+			// property be the one that is affected (and not the child's "text" property for example if it is a Button,Label, etc.
+			child.installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new TabItemDirectEditPolicy());
+			// The child is the ControlGraphicalEditPart which knows how to copy itself, however because the model in fact has a TabItem
+			// inbetween we need to override the edit policy so tabItem itself gets copied
+			child.installEditPolicy(CopyAction.REQ_COPY, new TabItemCopyEditPolicy(EditDomain.getEditDomain(this)));
+		}		
 		
 	}
 
