@@ -27,22 +27,22 @@ import java.awt.event.KeyEvent;
 
 public class <%=typeName%> {
 
-	private JFrame jFrame;
-	private JPanel jContentPane;
-	private JMenuBar jJMenuBar;
-	private JMenu fileMenu;
-	private JMenu editMenu;
-	private JMenu helpMenu;
-	private JMenuItem exitMenuItem;
-	private JMenuItem aboutMenuItem;
-	private JMenuItem cutMenuItem;
-	private JMenuItem copyMenuItem;
-	private JMenuItem pasteMenuItem;
-	private JMenuItem saveMenuItem;
+	private JFrame jFrame = null;
+	private JPanel jContentPane = null;
+	private JMenuBar jJMenuBar = null;
+	private JMenu fileMenu = null;
+	private JMenu editMenu = null;
+	private JMenu helpMenu = null;
+	private JMenuItem exitMenuItem = null;
+	private JMenuItem aboutMenuItem = null;
+	private JMenuItem cutMenuItem = null;
+	private JMenuItem copyMenuItem = null;
+	private JMenuItem pasteMenuItem = null;
+	private JMenuItem saveMenuItem = null;
 	
-	private JDialog aboutDialog;
-	private JPanel aboutContentPane;
-	private JLabel aboutVersionLabel;
+	private JDialog aboutDialog = null;
+	private JPanel aboutContentPane = null;
+	private JLabel aboutVersionLabel = null;
 	
 	/**
 	 * This method initializes jFrame
