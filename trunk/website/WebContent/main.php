@@ -69,7 +69,7 @@
 		<div class="homeitem3col">
 			<h3>What's New</h3>
 			<ul>
-				<li><img src="http://www.eclipse.org/images/new.gif" height="14" width="31"><a href="http://download.eclipse.org/tools/ve/downloads/drops/S-1.2M2-200602271803/">VE v1.2M3 (latest milestone/stable)</a> <span class="dates">Apr 7, 2006</span></li>						
+				<li><img src="http://www.eclipse.org/images/new.gif" height="14" width="31"><a href="http://download.eclipse.org/tools/ve/downloads/drops/S-1.2M3-200604071123/index.html">VE v1.2M3 (latest milestone/stable)</a> <span class="dates">Apr 7, 2006</span></li>						
 				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/S-1.2M2-200602271803/">VE v1.2M2</a> <span class="dates">Feb 28, 2006</span></li>			
 				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/S-1.2M1-200512210749/index.html">VE v1.2M1</a> <span class="dates">12/21/05</span></li>
 				<li><a href="docs/v1.2/plan/vep-plan-1.2.html">VE 1.2 plan posted</a> <span class="dates">11/08/05</span></li>
