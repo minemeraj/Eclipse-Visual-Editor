@@ -54,8 +54,28 @@
      -     </cvs>
     -->
   <cvs repository="/cvsroot/tools/">
-    <module path="org.eclipse.ve" /> 
+    <module path="org.eclipse.ve" />
+    <module path="org.eclipse.ve.cde" />    
+    <module path="org.eclipse.ve.doc" />    
+    <module path="org.eclipse.ve.examples" />
+    <module path="org.eclipse.ve.examples-feature" />
+    <module path="org.eclipse.ve.java.core" />
+    <module path="org.eclipse.ve.jfc" />
+    <module path="org.eclipse.ve.propertysheet" />
+    <module path="org.eclipse.ve.swt" />
+    <module path="org.eclipse.ve.tests" />    
+    <module path="org.eclipse.ve.tests-feature" />
+    <module path="org.eclipse.ve-feature" />
     <module path="org.eclipse.jem" /> 
+    <module path="org.eclipse.jem.beaninfo" />
+    <module path="org.eclipse.jem.beaninfo.ui" />
+    <module path="org.eclipse.jem.proxy" />
+    <module path="org.eclipse.jem.tests" />
+    <module path="org.eclipse.jem.tests-feature" />
+    <module path="org.eclipse.jem.ui" />
+    <module path="org.eclipse.jem.util" />
+    <module path="org.eclipse.jem.owrkbench" />
+    <module path="org.eclipse.jem-feature" />
   </cvs>
 
   <!--
