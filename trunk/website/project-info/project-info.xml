@@ -148,7 +148,7 @@
      - Note that currently mailing lists must be redundantly listed in
      - the separate project-info/maillist file as well.
     -->
-  <mailing-lists>
+  <mailing-lists url="http://dev.eclipse.org/mailman/listinfo/ve-dev">
     <list name="ve-dev"/>
   </mailing-lists>
   
