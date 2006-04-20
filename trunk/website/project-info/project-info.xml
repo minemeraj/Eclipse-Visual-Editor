@@ -54,8 +54,8 @@
      -     </cvs>
     -->
   <cvs repository="/cvsroot/tools/">
-    <module path="ve-dev" /> 
-    <module path="ve-all" /> 
+    <module path="org.eclipse.ve" /> 
+    <module path="org.eclipse.jem" /> 
   </cvs>
 
   <!--
