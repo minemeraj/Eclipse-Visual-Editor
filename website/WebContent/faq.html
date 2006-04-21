@@ -126,14 +126,51 @@ bordercolor="#111111" width="100%">
 		<td colspan="2" valign="middle">
 		<ol>
 			<li><b><a name="install_howto">How do I Install VE?</a></b>
-			<P>VE can now be downloaded through Update Manager. Select
-			&quot;Find and Install...&quot; then select &quot;Search for new
-			features to install...&quot; From there expand Eclipse.org update
-			site, and select EMF, GEF, and Visual Editor updates categories. Then
-			select the Visual Editor (or Visual Editor SDK if you want to do
-			development for the Visual Editor, or see its source). It will tell
-			then tell you what compatible levels of EMF and GEF are required.
-			Select those too, and then finish the install.
+			<P>VE releases can now be downloaded through Update Manager.</P>
+			<p>VE 1.1.0.1 with Eclipse 3.1.2 has become a little complicated because of some Eclipse update site restructuring that has taken place. Because of this here are the instructions for VE 1.1.0.1:</p>
+			<OL>
+				<LI>Install Eclipse SDK 3.1.2 SDK. Download the appropriate <A
+					href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.1.2-200601181600/">zip
+				file </A>  for your system.</LI>
+				<LI>Unzip into a clean directory</LI>
+				<LI>Run the eclipse.exe out of the eclipse directory and select/create a workspace</LI>
+				<LI>Do Help-&gt;Software Updates-&gt;Find and Install...
+</LI>
+				<LI>Select the Search for New features to install... and hit the Next button
+</LI>
+				<LI>Click on New Remote Site... button, and add this site (name it VE): 
+<A class="moz-txt-link-freetext"
+					href="http://update.eclipse.org/tools/ve/updates/1.0">http://update.eclipse.org/tools/ve/updates/1.0</A>
+
+</LI>
+				<LI>Click on New Remote Site... button, and add this site (name it EMF): 
+<A class="moz-txt-link-freetext"
+					href="http://update.eclipse.org/tools/emf/updates">http://update.eclipse.org/tools/emf/updates</A>
+</LI>
+				<LI>Click on New Remote Site... button, and add this site (name it 
+Old Eclipse): <A class="moz-txt-link-freetext"
+					href="http://update.eclipse.org/updates/3.0">http://update.eclipse.org/updates/3.0</A>
+
+</LI>
+				<LI>Select VE, EMF, and Old Eclipse, and Hit Finish
+</LI>
+				<LI>Select the mirrors to use as they are asked for
+</LI>
+				<LI>Expand the tree VE-&gt;VE-&gt;Visual Editor SDK 1.1.0.1, and hit the 
+checkbox on it
+</LI>
+				<LI>Expand EMF tree, EMF-&gt;EMF SDK 2.1.2-&gt;EMF SDK 2.1.2 and hit the 
+checkbox on it
+</LI>
+				<LI>Expand Old Eclipse-&gt;GEF 3.1.1-&gt;Graphical Editing Framework 3.1.1 and 
+hit the checkbox on it
+</LI>
+				<LI>Hit Next, accept the licences, hit Next, hit Finish
+</LI>
+			</OL>
+			<P>This will then allow a clean complete installation of VE</P>
+			<P>With Eclipse 3.2 there is Callisto, which makes it all simpler and one-stop shopping. See <A
+				href="http://www.eclipse.org/projects/callisto.php">Callisto.</A></P>
 			<P>Or you can 
 			<A target="_self"
 				href="http://download.eclipse.org/tools/ve/downloads/">download</A>
@@ -142,8 +179,8 @@ bordercolor="#111111" width="100%">
 			runtime download does not.) You will also need to download the
 			matching version of GEF and EMF. The download page will give this
 			information for you. Exit Eclipse and unzip into the directory that eclipse
-			is installed into. For example, if you have installed into "<code>D:\XYZ\eclipse</code>", 
-			you would unzip into "<code>D:\XYZ</code>". Restart Eclipse using the <B>-clean</B> option (only do
+			is installed into. For example, if you have installed into "<CODE>D:\XYZ\eclipse</CODE>", 
+			you would unzip into "<CODE>D:\XYZ</CODE>". Restart Eclipse using the <B>-clean</B> option (only do
 			this once) to clear the cache and verify that everything is
 			installed. To do so, go to Help-&gt;About Eclipse
 			Platform-&gt;Feature Details. Check the following entries:</P>
