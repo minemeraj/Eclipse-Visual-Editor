@@ -50,12 +50,17 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	public static final String SWT_CONTAINER_SIGNITURE_PATH_PDE = 		"PDE"; //$NON-NLS-1$
 	public static final String SWT_CONTAINER_SIGNITURE_PATH_CUSTOM = 	"CUSTOM";	 //$NON-NLS-1$
 	
+	public final static boolean isGTK = Platform.WS_GTK.equals(Platform.getWS());
+	public final static boolean isCarbon = Platform.WS_CARBON.equals(Platform.getWS());
 	
 	// see FindSupport.findXXX for more info ... may need to use the Internal TargetPlatform
 	public final static IPath  SWT_CONTAINER_WS  = new Path("ws").append(Platform.getWS()); //$NON-NLS-1$
-	public final static IPath  SWT_CONTAINER_OS = new Path("os").append(Platform.getOS()).append(Platform.getOSArch()); //$NON-NLS-1$
-	public final static String SWT_CONTAINER_OS_PLUGIN_EXT = "."+Platform.getOS()+"."+Platform.getWS()+"."+Platform.getOSArch(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	public final static String SWT_CONTAINER_WS_PLUGIN_EXT = "."+Platform.getWS()+"."+Platform.getOS()+"."+Platform.getOSArch(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public final static IPath  SWT_CONTAINER_OS = isCarbon ? new Path("os").append(Platform.getOS()) : //$NON-NLS-1$
+															 new Path("os").append(Platform.getOS()).append(Platform.getOSArch()); //$NON-NLS-1$
+	public final static String SWT_CONTAINER_OS_PLUGIN_EXT = isCarbon ? "."+Platform.getOS()+"."+Platform.getWS() : //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+																		"."+Platform.getOS()+"."+Platform.getWS()+"."+Platform.getOSArch(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public final static String SWT_CONTAINER_WS_PLUGIN_EXT = isCarbon ? "."+Platform.getWS()+"."+Platform.getOS() : //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+																		"."+Platform.getWS()+"."+Platform.getOS()+"."+Platform.getOSArch(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	public final static String SWT_CONTAINER_SRC_PLUGIN = "org.eclipse.rcp.source";	 //$NON-NLS-1$
 	
 	
@@ -358,10 +363,6 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			}
 		}	
 	};
-	
-	
-	public static boolean isGTK = Platform.WS_GTK.equals(Platform.getWS());
-	public static boolean isCarbon = Platform.WS_CARBON.equals(Platform.getWS());
 			
 	/**
 	 * The following path info. provides both pre and post 3.1 locations
