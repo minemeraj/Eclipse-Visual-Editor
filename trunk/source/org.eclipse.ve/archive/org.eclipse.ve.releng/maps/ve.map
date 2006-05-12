@@ -31,8 +31,8 @@ plugin@org.eclipse.ve.tests=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home
 plugin@org.eclipse.ve.doc=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.sdk=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk
 
-feature@org.eclipse.jem=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
-feature@org.eclipse.jem.sdk=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/org.eclipse.jem.sdk-feature
+feature@org.eclipse.jem=v20060512_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
+feature@org.eclipse.jem.sdk=v20060512_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/org.eclipse.jem.sdk-feature
 feature@org.eclipse.jem.tests=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
 
 feature@org.eclipse.ve=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
