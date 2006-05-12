@@ -35,8 +35,8 @@ feature@org.eclipse.jem=v20060512_N,:pserver:anonymous@dev.eclipse.org:/home/too
 feature@org.eclipse.jem.sdk=v20060512_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/org.eclipse.jem.sdk-feature
 feature@org.eclipse.jem.tests=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
 
-feature@org.eclipse.ve=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
+feature@org.eclipse.ve=v20060512_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
 feature@org.eclipse.ve.examples=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
 feature@org.eclipse.ve.tests=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.tests-feature
-feature@org.eclipse.ve.sdk=v20060511_I,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk-feature
+feature@org.eclipse.ve.sdk=v20060512_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk-feature
 
