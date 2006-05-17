@@ -4,13 +4,13 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.72 $  $Date: 2006-05-17 20:14:52 $ 
+ *  $Revision: 1.73 $  $Date: 2006-05-17 22:29:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -96,9 +96,15 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			// Override to try to handle special resolution of methods to local EObject instances.
 			// Doing it here instead of in superclass because general parse tree creation doesn't have a concept of
 			// resolving method invocations in any special way.
+			// Also handles refs to implicit beans (e.g. form.getBody()). It will only find beans that
+			// have been made implicit. If just referencing and assigned to a bean then it will do true invocation.
 			Expression receiver = node.getExpression();
-			if ((receiver == null || receiver.getNodeType() == ASTNode.THIS_EXPRESSION) && node.arguments().isEmpty()) {
-				PTExpression exp = ((CGResolver) resolver).resolveMethodInvocation(node.getName());
+			if (node.arguments().isEmpty()) {
+				PTExpression exp;
+				if (receiver == null || receiver.getNodeType() == ASTNode.THIS_EXPRESSION)
+					exp = ((CGResolver) resolver).resolveMethodInvocation(node.getName());
+				else
+					exp = ((CGResolver) resolver).resolveMethodInvocation(node);
 				if (exp != null) {
 					expression = exp;
 					return false;
@@ -271,6 +277,22 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				return createBeanPartExpression(ref, bp);
 			else
 				return null;
+		}
+		
+		/**
+		 * Used to resolve references to implicit beans through a method invocation.
+		 * E.g. x.setValue(f.getImplicitProperty());  Here it would be called with f.getImplicitProperty().
+		 * @param mi
+		 * @return
+		 * 
+		 * @since 1.2.0
+		 */
+		public PTExpression resolveMethodInvocation(MethodInvocation mi) {
+			BeanPart bp = CodeGenUtil.getBeanPart(bdm, mi.toString(), expMethodRef, offset);
+			if (bp != null)
+				return createBeanPartExpression(ref, bp);
+			else
+				return null;			
 		}
 		
 		/**
