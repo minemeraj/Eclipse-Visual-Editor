@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.41 $ $Date: 2006-02-06 23:38:35 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.42 $ $Date: 2006-05-17 20:15:54 $
  */
 
 package org.eclipse.ve.internal.swt;
