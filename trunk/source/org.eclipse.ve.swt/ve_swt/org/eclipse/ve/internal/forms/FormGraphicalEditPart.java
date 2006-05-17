@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2006-02-23 18:05:54 $ 
+ *  $Revision: 1.3 $  $Date: 2006-05-17 22:29:55 $ 
  */
 package org.eclipse.ve.internal.forms;
 
@@ -22,13 +22,17 @@ import org.eclipse.draw2d.XYLayout;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.ContentPaneFigure;
 import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
 
+import org.eclipse.ve.internal.java.visual.NoChildrenVisualContainerPolicy;
+
 import org.eclipse.ve.internal.swt.ControlGraphicalEditPart;
+import org.eclipse.ve.internal.swt.UnknownLayoutInputPolicy;
  
 
 /**
@@ -69,7 +73,7 @@ public class FormGraphicalEditPart extends ControlGraphicalEditPart {
 	protected void createEditPolicies() {
 		super.createEditPolicies();
 		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(false));
-//		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new UnknownLayoutInputPolicy(getContainerPolicy());		
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new UnknownLayoutInputPolicy(new NoChildrenVisualContainerPolicy(getEditDomain())));		
 	}
 
 	protected List getModelChildren() {

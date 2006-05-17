@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormContainmentHandler.java,v $
- *  $Revision: 1.2 $  $Date: 2006-02-23 18:05:54 $ 
+ *  $Revision: 1.3 $  $Date: 2006-05-17 22:29:55 $ 
  */
 package org.eclipse.ve.internal.forms;
 
@@ -64,7 +64,8 @@ public class FormContainmentHandler extends CompositeContainmentHandler {
 				preCmds.applyAttributeSetting(jChild, sf_body, body);
 				// TODO There is a bug in codegen that causes it to ignore property settings that require a local variable or global local if those
 				// property settings are being created at the same time as the init method for the main object (in this case Form). 
-				// It leaves them as just properties with no variable.
+				// It leaves them as just properties with no variable. So for now leave as implicit.
+				
 //				// Normally implicits are not made local but left implicit. But for convienence and readability we are going to make a local_local.
 //				EStringToStringMapEntryImpl ks =
 //					(EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
