@@ -21,6 +21,7 @@
 	
 	 $Nav->addCustomNav("VE Newsgroup", "http://www.eclipse.org/newsportal/thread.php?group=eclipse.tools.ve", "_self", 2);
 	 $Nav->addCustomNav("VE Test Pass runs", "docs/testpass.html", "_self", 2);
+	 $Nav->addCustomNav("VE IP Log", "docs/ve-log.csv", "_self", 2);
 	
 	# End: page-specific settings
 	#
