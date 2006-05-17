@@ -1,16 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
  *  $RCSfile: ItemChildTreeLabelDecorator.java,v $
- *  $Revision: 1.4 $  $Date: 2006-02-21 17:16:40 $ 
+ *  $Revision: 1.5 $  $Date: 2006-05-17 20:15:53 $ 
  */
 package org.eclipse.ve.internal.swt;
 
