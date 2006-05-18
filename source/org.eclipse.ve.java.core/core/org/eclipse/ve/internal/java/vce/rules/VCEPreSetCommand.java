@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.22 $  $Date: 2006-05-17 20:14:53 $ 
+ *  $Revision: 1.23 $  $Date: 2006-05-18 23:13:49 $ 
  */
 
 import java.util.*;
@@ -487,13 +487,13 @@ public class VCEPreSetCommand extends CommandWrapper {
 					// It wasn't asked to go any where special, so put it in implicits.
 					cbld.applyAttributeSetting(implicitMethod = getMethod(cbld, implicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(),
 						value);
+					cbld.applyAttributeSetting(implicitMethod, JCMPackage.eINSTANCE.getJCMMethod_Initializes(), value);
 				}
 			} else {
 				// KLUDGE the real kludge is we assign to membership and change allocation to default ctor. Note this may fail but this is
 				// what we always did in the past.
 				cbld.cancelAttributeSetting(value, JavaInstantiation.getAllocationFeature(value));
-				cbld.applyAttributeSetting(implicitMethod = getMethod(cbld, implicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Members(),
-						value);
+				promoteLocal(cbld, value, implicitMethod = getMethod(cbld, implicitParent, null, incomingMethod));
 			}
 		} else if (value.eContainer() instanceof JCMMethod){
 			implicitMethod = (JCMMethod) value.eContainer();
