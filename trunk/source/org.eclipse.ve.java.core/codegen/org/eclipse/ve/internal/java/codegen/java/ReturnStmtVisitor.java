@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ReturnStmtVisitor.java,v $
- *  $Revision: 1.14 $  $Date: 2006-05-17 20:14:52 $ 
+ *  $Revision: 1.15 $  $Date: 2006-05-19 15:12:19 $ 
  */
 
 
@@ -46,23 +46,26 @@ public void initialize(CodeMethodRef method,ReturnStatement stmt,IBeanDeclModel 
 
 		Expression exp = fReturnStmt.getExpression();
 
-		String instanceName = null;
-		if (exp.getNodeType() == ASTNode.SIMPLE_NAME) {
-			instanceName = ((SimpleName) exp).getIdentifier();
-		} else if (exp.getNodeType() == ASTNode.FIELD_ACCESS) {
-			FieldAccess fa = (FieldAccess) exp;
-			if (fa.getExpression() != null && fa.getExpression().getNodeType() == ASTNode.THIS_EXPRESSION) {
-				// We have a this.fieldname reference on the return.
-				instanceName = fa.getName().getIdentifier();
+		// If null, then just a return;
+		if (exp != null) {
+			String instanceName = null;
+			if (exp.getNodeType() == ASTNode.SIMPLE_NAME) {
+				instanceName = ((SimpleName) exp).getIdentifier();
+			} else if (exp.getNodeType() == ASTNode.FIELD_ACCESS) {
+				FieldAccess fa = (FieldAccess) exp;
+				if (fa.getExpression() != null && fa.getExpression().getNodeType() == ASTNode.THIS_EXPRESSION) {
+					// We have a this.fieldname reference on the return.
+					instanceName = fa.getName().getIdentifier();
+				}
 			}
-		}
-		if (instanceName != null) {
-			BeanPart bean = CodeGenUtil.getBeanPart(fModel, instanceName, fMethod, fReturnStmt.getStartPosition() - fMethod.getOffset());
-			if (bean != null) {
-				bean.addReturnMethod(fMethod);
-				try {
-					fModel.addMethodReturningABean(fMethod.getDeclMethod().getName().getIdentifier(), bean.getUniqueName());
-				} catch (CodeGenException e) { // Should not be here
+			if (instanceName != null) {
+				BeanPart bean = CodeGenUtil.getBeanPart(fModel, instanceName, fMethod, fReturnStmt.getStartPosition() - fMethod.getOffset());
+				if (bean != null) {
+					bean.addReturnMethod(fMethod);
+					try {
+						fModel.addMethodReturningABean(fMethod.getDeclMethod().getName().getIdentifier(), bean.getUniqueName());
+					} catch (CodeGenException e) { // Should not be here
+					}
 				}
 			}
 		}
