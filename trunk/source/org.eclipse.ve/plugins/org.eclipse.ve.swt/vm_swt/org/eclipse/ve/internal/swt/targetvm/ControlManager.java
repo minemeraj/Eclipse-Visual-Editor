@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.28 $ $Date: 2005-12-02 00:24:03 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.29 $ $Date: 2006-05-19 14:55:53 $
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -918,7 +918,8 @@ public class ControlManager {
 	 * @since 1.1.0
 	 */
 	public void invalidate() {
-		feedbackController.invalidateControl(fControl);
+		if (isValidControl(fControl))
+			feedbackController.invalidateControl(fControl);
 	}
 
 	/**

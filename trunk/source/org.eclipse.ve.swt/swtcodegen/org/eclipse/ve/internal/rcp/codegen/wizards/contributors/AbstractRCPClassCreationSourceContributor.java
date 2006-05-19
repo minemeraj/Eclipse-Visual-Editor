@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractRCPClassCreationSourceContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 17:33:42 $ 
+ *  $Revision: 1.2 $  $Date: 2006-05-19 14:55:51 $ 
  */
 package org.eclipse.ve.internal.rcp.codegen.wizards.contributors;
 
@@ -20,15 +20,13 @@ import java.util.logging.Level;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceContributor;
-import org.eclipse.ve.internal.java.codegen.wizards.StatusInfo;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 import org.eclipse.ve.internal.jface.JFaceMessages;
@@ -66,21 +64,15 @@ public abstract class AbstractRCPClassCreationSourceContributor implements IVisu
 				}
 			} catch (CoreException e) {
 				JavaVEPlugin.log(e, Level.FINEST);
-				return new StatusInfo(
-						IStatus.ERROR,
-						e.getMessage(),
-						SwtPlugin.PLUGIN_ID);
+				return new Status(IStatus.ERROR, SwtPlugin.PLUGIN_ID, 0, e.getMessage(), e);
 			}
 		}
 
 		if(isError){ 	
-			return new StatusInfo(
-					IStatus.ERROR,
-					MessageFormat.format(JFaceMessages.RCPViewCreation_RCP_Project_ERROR_, 
-					new Object[]{project == null ? null : project.getName()}),
-					SwtPlugin.PLUGIN_ID);
+			return new Status(IStatus.ERROR, SwtPlugin.PLUGIN_ID, 0, 
+					MessageFormat.format(JFaceMessages.RCPViewCreation_RCP_Project_ERROR_, new Object[]{project == null ? null : project.getName()}), null);
 		} else {
-			return StatusInfo.OK_STATUS;
+			return Status.OK_STATUS;
 		}
 	}			
 		
