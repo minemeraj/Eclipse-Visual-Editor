@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.29 $  $Date: 2005-12-14 16:47:01 $ 
+ *  $Revision: 1.30 $  $Date: 2006-05-19 14:55:56 $ 
  */
 
 import java.util.HashMap;
@@ -57,8 +57,8 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 	private boolean useSuperClass;
 	private boolean isSelectingTemplate = false;
 	
-	private IStatus fContributorStatus = StatusInfo.OK_STATUS;
-	private IStatus fSourceFolderStatus = StatusInfo.OK_STATUS;
+	private IStatus fContributorStatus = Status.OK_STATUS;
+	private IStatus fSourceFolderStatus = Status.OK_STATUS;
 
 	private final static String PAGE_NAME= "NewVisualClassWizardPage"; //$NON-NLS-1$
 	
@@ -145,7 +145,7 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 							setSuperClass(((VisualElementModel) domain).getSuperClass());							
 							handleFieldChanged(null);
 						} else {
-							fContributorStatus = StatusInfo.OK_STATUS;
+							fContributorStatus = Status.OK_STATUS;
 							handleFieldChanged(null);							
 						}
 					}
@@ -266,7 +266,7 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 	// When the container changes we must re-check whether or not this is a valid project for the template to be created into
 	protected void handleFieldChanged(String fieldName) {
 		if (fieldName == CONTAINER){
-			fSourceFolderStatus = StatusInfo.OK_STATUS;
+			fSourceFolderStatus = Status.OK_STATUS;
 			try{
 				// Check the status of whether or not we are in a proper source folder
 				if(getContainerRoot() != null){
@@ -276,10 +276,7 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 						if(ProxyPlugin.isPDEProject(javaProject)){
 							if (!javaProject.isOnClasspath(getPackageFragmentRoot())){	
 								// TODO Why is this here? It needs to be verified if needed. The root should of already evaluated no matter whether a pde or not.
-								fSourceFolderStatus = new StatusInfo(
-									IStatus.ERROR,
-									"",  //$NON-NLS-1$
-									JavaVEPlugin.PLUGIN_ID);
+								fSourceFolderStatus = new Status(IStatus.ERROR, JavaVEPlugin.PLUGIN_ID, 0, "", null);	//$NON-NLS-1$
 							}
 							else {
 								// TODO KLUDGE https://bugs.eclipse.org/bugs/show_bug.cgi?id=90750
@@ -295,10 +292,7 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 								FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(javaProject);
 								boolean uiIncluded = foundIds.pluginIds.get("org.eclipse.ui") == Boolean.TRUE;//$NON-NLS-1$
 								if (!uiIncluded)
-									fSourceFolderStatus = new StatusInfo(
-											IStatus.ERROR,
-											"",  //$NON-NLS-1$
-											JavaVEPlugin.PLUGIN_ID);
+									fSourceFolderStatus = new Status(IStatus.ERROR, JavaVEPlugin.PLUGIN_ID, 0, "Bundle org.eclipse.ui is required. Must be added as a dependent bundle.", null);
 							}
 						}
 					}
@@ -321,7 +315,7 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 			if(getEnclosingType()!=null){
 				fContributorStatus = new Status(IStatus.ERROR, JavaVEPlugin.PLUGIN_ID, IStatus.ERROR, ERROR_MESSAGE , null);
 			}else if(fContributorStatus!=null && fContributorStatus.getSeverity()==IStatus.ERROR && fContributorStatus.getMessage().equals(ERROR_MESSAGE)){
-				fContributorStatus = StatusInfo.OK_STATUS;
+				fContributorStatus = Status.OK_STATUS;
 			}
 		}
 		super.handleFieldChanged(fieldName);

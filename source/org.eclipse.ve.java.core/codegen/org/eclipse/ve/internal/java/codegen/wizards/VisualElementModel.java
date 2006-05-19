@@ -11,14 +11,13 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualElementModel.java,v $
- *  $Revision: 1.13 $  $Date: 2006-02-21 17:16:35 $ 
+ *  $Revision: 1.14 $  $Date: 2006-05-19 14:55:56 $ 
  */
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.*;
+
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -105,17 +104,17 @@ public class VisualElementModel {
 	 * A null return value implies that the contribution can be used
 	 */
 	public IStatus getStatus(IResource resource) {
-		if(resource == null || configElement.getAttribute("contributor") == null) return StatusInfo.OK_STATUS; //$NON-NLS-1$
+		if(resource == null || configElement.getAttribute("contributor") == null) return Status.OK_STATUS; //$NON-NLS-1$
 		if(contributor == null){
 			try {
 				contributor = (IVisualClassCreationSourceContributor) configElement.createExecutableExtension("contributor"); //$NON-NLS-1$ 
 			} catch (CoreException e) {
 				JavaVEPlugin.log(e, Level.FINEST);
-				return StatusInfo.OK_STATUS;
+				return Status.OK_STATUS;
 			} 
 		}
 		IStatus result = contributor.getStatus(resource);
-		return result == null ? StatusInfo.OK_STATUS : result;				
+		return result == null ? Status.OK_STATUS : result;				
 	}
 	
 }
