@@ -1,7 +1,7 @@
 package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*******************************************************************************
- * Copyright (c) 2004 Red Hat, Inc. and others.
+ * Copyright (c) 2004, 2006 Red Hat, Inc. and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.30 $  $Date: 2006-05-19 14:55:56 $ 
+ *  $Revision: 1.31 $  $Date: 2006-05-19 15:38:28 $ 
  */
 
 import java.util.HashMap;
@@ -292,7 +292,7 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 								FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(javaProject);
 								boolean uiIncluded = foundIds.pluginIds.get("org.eclipse.ui") == Boolean.TRUE;//$NON-NLS-1$
 								if (!uiIncluded)
-									fSourceFolderStatus = new Status(IStatus.ERROR, JavaVEPlugin.PLUGIN_ID, 0, "Bundle org.eclipse.ui is required. Must be added as a dependent bundle.", null);
+									fSourceFolderStatus = new Status(IStatus.ERROR, JavaVEPlugin.PLUGIN_ID, 0, CodegenWizardsMessages.NewVisualClassWizardPage_UI_Bundle_Required, null);
 							}
 						}
 					}
