@@ -28,8 +28,9 @@
       </contributor>
       <!-- If the plugin org.eclipse.jface is in the build path enable the contributor which adds the correct target VM jars -->  
       <contributor
-            plugin="org.eclipse.jface"
-            class="org.eclipse.ve.internal.jface.JFaceConfigurationContributor">
+            class="org.eclipse.ve.internal.jface.JFaceConfigurationContributor"
+            container="SWT_CONTAINER/JFACE"
+            plugin="org.eclipse.jface">
       </contributor>
    </extension>
    
