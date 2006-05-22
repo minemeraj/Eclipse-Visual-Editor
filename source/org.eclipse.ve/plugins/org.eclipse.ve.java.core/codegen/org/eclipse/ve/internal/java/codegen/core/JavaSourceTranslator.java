@@ -764,7 +764,15 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 	
 		BeanPart[] unreferencedBPs = fBeanModel.getUnreferencedBeanParts();
 		for (int bpCount = 0; bpCount < unreferencedBPs.length; bpCount++) {
+		  try {
 			unreferencedBPs[bpCount].deactivate();
+		  }
+		  catch (Exception e) {
+			  if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {					
+		      	JavaVEPlugin.log("Error deactivating bean: "+unreferencedBPs[bpCount].getSimpleName(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$		      		
+		      	JavaVEPlugin.log(e, Level.WARNING);
+		      }
+		  }
 		}
 		
 	      // Decoders have analyzed and acted on the Expressions - 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.30 $  $Date: 2006-05-17 20:14:52 $ 
+ *  $Revision: 1.31 $  $Date: 2006-05-22 15:51:54 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -92,7 +92,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
     		if(fbeanPart.isImplicit()){
     			CodeExpressionRef exp1 = fOwner.getExprRef();
     			BeanPart implicitBean = CodeGenUtil.getBeanPart(fbeanPart.getModel(), r.toString(), exp1.getMethod(), exp1.getOffset());
-    			if(fbeanPart==implicitBean)
+    			if(fbeanPart==implicitBean && fbeanPart.getEObject()!=null)
     				return true;
     		}
     	} else if (e instanceof SimpleName ||

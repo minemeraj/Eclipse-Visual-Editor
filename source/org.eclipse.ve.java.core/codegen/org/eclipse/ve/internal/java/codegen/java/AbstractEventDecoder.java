@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.15 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.16 $  $Date: 2006-05-22 15:51:54 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -220,7 +220,7 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 	}
 
 	public  void dispose() {		
-		if (fhelper != null){
+		if (fhelper != null && fbeanPart.getEObject()!=null){
 			if (!isDeleted()) {
 				deleteFromComposition() ;
 			}
