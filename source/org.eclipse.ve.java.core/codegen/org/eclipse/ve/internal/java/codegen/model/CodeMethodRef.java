@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.51 $  $Date: 2005-10-05 17:58:07 $ 
+ *  $Revision: 1.52 $  $Date: 2006-05-22 17:19:53 $ 
  */
 
 import java.util.*;
@@ -130,20 +130,22 @@ public int isEquivalent(AbstractCodeRef code){
  *  end, and then the method will be 'refreshed' by the expression.
  */
 public  void addExpressionRef(CodeExpressionRef ref) {
-	int offset = ref.getOffset() ;
-	if (fExpressions == null) 
-		fExpressions = new ArrayList() ;
-	if((ref.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)) && //((ref.getState()&CodeExpressionRef.STATE_SRC_LOC_FIXED)==CodeExpressionRef.STATE_SRC_LOC_FIXED) && 
-	   (offset>-1)){
-		int index;
-		for (index=0; index<fExpressions.size(); index++) 
-			if (((CodeExpressionRef)fExpressions.get(index)).getOffset()>offset) break ;
-	      if (index == fExpressions.size())
-		   fExpressions.add(ref) ;
-		else
-		   fExpressions.add(index,ref) ;
-	}else{
-		fExpressions.add(ref);
+	if (!fExpressions.contains(ref)) {
+		int offset = ref.getOffset() ;
+		if (fExpressions == null) 
+			fExpressions = new ArrayList() ;
+		if((ref.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)) && //((ref.getState()&CodeExpressionRef.STATE_SRC_LOC_FIXED)==CodeExpressionRef.STATE_SRC_LOC_FIXED) && 
+		   (offset>-1)){
+			int index;
+			for (index=0; index<fExpressions.size(); index++) 
+				if (((CodeExpressionRef)fExpressions.get(index)).getOffset()>offset) break ;
+		      if (index == fExpressions.size())
+			   fExpressions.add(ref) ;
+			else
+			   fExpressions.add(index,ref) ;
+		}else{
+			fExpressions.add(ref);
+		}
 	}
 }
 

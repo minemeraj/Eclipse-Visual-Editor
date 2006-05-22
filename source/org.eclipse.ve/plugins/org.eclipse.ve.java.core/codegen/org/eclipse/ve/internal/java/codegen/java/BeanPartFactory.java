@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.63 $  $Date: 2005-12-09 21:12:42 $ 
+ *  $Revision: 1.64 $  $Date: 2006-05-22 17:19:53 $ 
  */
 
 import java.util.*;
@@ -951,19 +951,25 @@ public void removeImplicitBeanPart (BeanPart parent, EStructuralFeature sf) {
 public BeanPart restoreImplicitBeanPart (BeanPart parent, EStructuralFeature sf, boolean createImplicitInitExpression) {
 	BeanPart implicitBean = null;
 	try {
-		// Create the implicit bean
 		BeanPartDecleration bpd = new BeanPartDecleration(parent, sf);
-		BeanPartDecleration current = fBeanModel.getModelDecleration(bpd);
-		if (current!= null) {
-			current.setType(bpd.getType());
-			bpd = current;
-			implicitBean = bpd.getBeanParts()[0];			
+		implicitBean = CodeGenUtil.getBeanPart(parent.getModel(), bpd.getName(), parent.getInitMethod(), -1);
+		if (implicitBean==null) {
+			// Create the implicit bean
+			
+			BeanPartDecleration current = fBeanModel.getModelDecleration(bpd);				
+			if (current!= null) {
+				current.setType(bpd.getType());
+				bpd = current;
+				implicitBean = bpd.getBeanParts()[0];			
+			}
+			else {
+			  implicitBean = new BeanPart(bpd);	
+			  implicitBean.setImplicitParent(parent, sf);
+			  parent.getModel().addBean(implicitBean);
+			}
 		}
-		else {
-		  implicitBean = new BeanPart(bpd);	
-		  implicitBean.setImplicitParent(parent, sf);
-		  parent.getModel().addBean(implicitBean);
-		}
+		else 
+			implicitBean.getDecleration().setType(bpd.getType());
 		
 		EObject implicit = (EObject) parent.getEObject().eGet(sf);
 		implicitBean.setEObject(implicit);
