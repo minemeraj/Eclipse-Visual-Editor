@@ -28,10 +28,10 @@
          version="0.0.0"/>
 
    <requires>
-      <import feature="org.eclipse.jdt" version="3.2.0"/>
-      <import feature="org.eclipse.emf" version="2.2.0"/>
-      <import feature="org.eclipse.gef" version="3.1.0"/>
-      <import feature="org.eclipse.pde" version="3.2.0"/>
+      <import feature="org.eclipse.jdt" version="3.2.0" match="compatible"/>
+      <import feature="org.eclipse.emf" version="2.2.0" match="compatible"/>
+      <import feature="org.eclipse.gef" version="3.1.0" match="compatible"/>
+      <import feature="org.eclipse.pde" version="3.2.0" match="compatible"/>
    </requires>
 
    <plugin
