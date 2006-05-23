@@ -33,10 +33,10 @@ plugin@org.eclipse.ve.sdk=v20060518_RC1,:pserver:anonymous@dev.eclipse.org:/home
 
 feature@org.eclipse.jem=v20060523_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
 feature@org.eclipse.jem.sdk=v20060523_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/org.eclipse.jem.sdk-feature
-feature@org.eclipse.jem.tests=v20060519_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
+feature@org.eclipse.jem.tests=v20060523_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
 
 feature@org.eclipse.ve=v20060523_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
-feature@org.eclipse.ve.examples=v20060519_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
+feature@org.eclipse.ve.examples=v20060523_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
 feature@org.eclipse.ve.tests=v20060519_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.tests-feature
 feature@org.eclipse.ve.sdk=v20060523_N,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk-feature
 
