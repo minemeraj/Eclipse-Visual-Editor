@@ -133,7 +133,8 @@
      - other legal information as well, it can use the <legal> element
      - instead and then include the IP Log information on the Legal web page.
     -->
-  <!--  ip-log url="/projects/slides/Web%20Tools%20Platform%201.0%20Project%20IP%20Log.pdf"/ --> 
+  <ip-log url="/vep/WebContent/docs/ve-log.csv"/> 
+  
   <!--  legal url="/projects/slides/Web%20Tools%20Platform%201.0%20Project%20IP%20Log.pdf"/ --> 
 
   <!--
@@ -161,7 +162,7 @@
      - The url is optional; if absent, the url will default to the Eclipse
      - newsgroups page. Multiple <newsgroups>s are allowed.
     -->
-  <newsgroups>
+  <newsgroups url="http://www.eclipse.org/newsportal/thread.php?group=eclipse.tools.ve">
     <newsgroup name="eclipse.tools.ve"/>
   </newsgroups>
   
