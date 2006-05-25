@@ -210,49 +210,49 @@
 		<name>0.5.0</name>
 		<date>12/2003</date>
 		<download>http://archive.eclipse.org/tools/ve/downloads/drops/R-0.5.0-200312051712/index.html</download>
-		<status>completed</status>	
+		<status>complete</status>	
 	</release>
 	<release>
 		<name>1.0</name>
 		<date>9/2004</date>
 		<download>http://archive.eclipse.org/tools/ve/downloads/drops/R-1.0-200409191449/index.html</download>
-		<status>completed</status>	
+		<status>complete</status>	
 	</release>
 	<release>
 		<name>1.0.1.1</name>
 		<date>10/2004</date>
 		<download>http://archive.eclipse.org/tools/ve/downloads/drops/R-1.0.1.1-200410221351/index.html</download>
-		<status>completed</status>
+		<status>complete</status>
 	</release>
 	<release>
 		<name>1.0.2</name>
 		<date>12/2004</date>
 		<download>http://archive.eclipse.org/tools/ve/downloads/drops/R-1.0.2-200412091401/index.html</download>
-		<status>completed</status>	
+		<status>complete</status>	
 	</release>
 	<release>
 		<name>1.0.2.1</name>
 		<date>3/2005</date>
 		<download>http://archive.eclipse.org/tools/ve/downloads/drops/R-1.0.2.1-200503171200/index.html</download>
-		<status>completed</status>
+		<status>complete</status>
 	</release>
 	<release>
 		<name>1.0.2.2</name>
 		<date>29/6/2005</date>
 		<download>http://download.eclipse.org/tools/ve/downloads/drops/R-1.0.2.2-200506291842/index.html</download>
-		<status>completed</status>	
+		<status>complete</status>	
 	</release>
 	<release>
 		<name>1.1</name>
 		<date>22/7/2005</date>
 		<download>http://download.eclipse.org/tools/ve/downloads/drops/R-1.1-200507221721/index.html</download>
-		<status>completed</status>
+		<status>complete</status>
 	</release>
 	<release>
 		<name>1.1.0.1</name>
 		<date>7/9/2005</date>
 		<download>http://download.eclipse.org/tools/ve/downloads/drops/R-1.1.0.1-200509071822/index.html</download>
-		<status>completed</status>
+		<status>complete</status>
 	</release>
 	<release>
 		<name>1.2</name>
