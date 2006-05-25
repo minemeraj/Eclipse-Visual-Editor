@@ -205,7 +205,7 @@
 	<?php
 	if($pi->haslists())
 	{
-	  $url = $pi->newsgroups_url();
+	  $url = $pi->mailing_lists_url();
 	?>
 	<h3><a href="<?= $url ?>" target="_blank">Mailing Lists:</a></h3>
 	<ul>
