@@ -149,7 +149,7 @@
      - Note that currently mailing lists must be redundantly listed in
      - the separate project-info/maillist file as well.
     -->
-  <mailing-lists url="http://dev.eclipse.org/mailman/listinfo/ve-dev">
+  <mailing-lists>
     <list name="ve-dev"/>
   </mailing-lists>
   
@@ -162,7 +162,7 @@
      - The url is optional; if absent, the url will default to the Eclipse
      - newsgroups page. Multiple <newsgroups>s are allowed.
     -->
-  <newsgroups url="http://www.eclipse.org/newsportal/thread.php?group=eclipse.tools.ve">
+  <newsgroups>
     <newsgroup name="eclipse.tools.ve"/>
   </newsgroups>
   
