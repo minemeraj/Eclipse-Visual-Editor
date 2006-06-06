@@ -217,7 +217,7 @@
                value="org.eclipse.swt.widgets.Composite">
          </filter>            
          <action
-               label="Set Layout"
+               label="%PopupMenus.SetLayout.Label Set Layout"
                style="pulldown"
                class="org.eclipse.ve.internal.java.core.SetLayoutObjectActionDelegate"
                menubarPath="additions"
@@ -432,7 +432,7 @@
             id="org.eclipse.ve.swt.SWTExample">
       </category>
       <wizard
-            name="Simple SWT Browser"
+            name="%Visual.Class.Example.SimpleSWTBrowser Simple SWT Browser"
             icon="icons/full/clcl16/browser_obj.gif"
             category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.swt.SWTExample"
             id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.SimpleSWTBrowser">
@@ -446,7 +446,7 @@
          </description>
       </wizard>
       <wizard
-            name="Simple Text Editor"
+            name="%Visual.Class.Example.SimpleTextEditor Simple Text Editor"
             icon="icons/full/clcl16/textarea_obj.gif"
             category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.swt.SWTExample"
             id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.SimpleSWTTextEditor">

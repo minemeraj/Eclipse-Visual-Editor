@@ -122,7 +122,7 @@
             objectClass="org.eclipse.ve.internal.jfc.core.ContainerGraphicalEditPart"
             id="org.eclipse.ve.java.editorpart.container.setlayout.popup.object"> 
          <action
-               label="Set Layout"
+               label="%PopupMenus.SetLayout.Label Set Layout"
                style="pulldown"
                class="org.eclipse.ve.internal.java.core.SetLayoutObjectActionDelegate"
                menubarPath="additions"
