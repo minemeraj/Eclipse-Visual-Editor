@@ -372,13 +372,13 @@
             targetID="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor"
             id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart.BreakpointRulerActions">
          <action
-               label="%Dummy.label"
+               label="%AddBreakpoint.label"
                class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
                actionID="RulerDoubleClick"
                id="org.eclipse.jdt.debug.ui.actions.ManageBreakpointRulerAction">
          </action>
          <action
-               label="%Dummy.label"
+               label="%JavaSelectRulerAction.label"
                class="org.eclipse.jdt.internal.ui.javaeditor.JavaSelectRulerAction"
                actionID="RulerClick"
                id="org.eclipse.jdt.internal.ui.javaeditor.JavaSelectRulerAction">
