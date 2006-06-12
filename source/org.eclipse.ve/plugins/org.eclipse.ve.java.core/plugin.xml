@@ -410,7 +410,7 @@
             fastViewWidthRatio="50"
             icon="icons/full/ctool16/xmlview.gif"
             id="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart"
-            name="VE Model: XMI View">
+            name="%VE.XMI.ViewName VE Model: XMI View">
       </view>
    </extension>   
    
