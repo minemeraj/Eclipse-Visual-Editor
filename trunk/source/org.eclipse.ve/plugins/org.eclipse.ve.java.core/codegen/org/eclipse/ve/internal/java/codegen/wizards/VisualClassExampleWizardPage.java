@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizardPage.java,v $
- *  $Revision: 1.13 $  $Date: 2006-05-17 20:14:53 $ 
+ *  $Revision: 1.14 $  $Date: 2006-06-20 18:21:44 $ 
  */
 package org.eclipse.ve.internal.java.codegen.wizards;
 
@@ -22,6 +22,7 @@ import java.util.List;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -30,6 +31,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.osgi.framework.Bundle;
 
+import org.eclipse.ve.internal.java.codegen.util.DefaultClassGenerator;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
 
@@ -66,15 +68,24 @@ public class VisualClassExampleWizardPage extends NewTypeWizardPage {
 		Dialog.applyDialogFont(overallComposite);
 	}
 	
-	protected String constructCUContent(ICompilationUnit cu, String typeContent, String lineDelimiter) throws CoreException {
-		return super.constructCUContent(cu, getExampleFileContents(), lineDelimiter);
-	}
-	
 	public void createType(IProgressMonitor monitor) throws CoreException, InterruptedException {
 		super.createType(monitor);
 		
-		// Bug 120851 - Imports not added
 		String addedContents = getExampleFileContents();
+		addedContents = DefaultClassGenerator.format(addedContents, CodeFormatter.K_COMPILATION_UNIT, getCreatedType().getJavaProject().getOptions(true), System.getProperties().getProperty("line.separator")); //$NON-NLS-1$
+		ICompilationUnit createdCU = getCreatedType().getCompilationUnit();
+		ICompilationUnit cuWorkingCopy = createdCU.getWorkingCopy(monitor);
+		IPackageDeclaration[] pkgDecls = cuWorkingCopy.getPackageDeclarations();
+		IBuffer buffer = cuWorkingCopy.getBuffer();
+		buffer.replace(0, buffer.getLength(), addedContents);
+		cuWorkingCopy.reconcile(ICompilationUnit.NO_AST, true, null, monitor);
+		if(pkgDecls!=null && pkgDecls.length>0){
+			for (int pkgc = 0; pkgc < pkgDecls.length; pkgc++) {
+				cuWorkingCopy.createPackageDeclaration(pkgDecls[pkgc].getElementName(), monitor);
+			}
+		}
+
+		// Bug 120851 - Imports not added
 		if(addedContents!=null && addedContents.length()>0){
 			ASTParser parser = ASTParser.newParser(AST.JLS3);
 			parser.setSource(addedContents.toCharArray());
@@ -84,10 +95,6 @@ public class VisualClassExampleWizardPage extends NewTypeWizardPage {
 				List imports = cu.imports();
 				if(imports!=null && imports.size()>0){
 					
-					boolean cuChanged = false;
-					ICompilationUnit createdCU = getCreatedType().getCompilationUnit();
-					ICompilationUnit cuWorkingCopy = createdCU.getWorkingCopy(monitor);
-					
 					for (Iterator importItr = imports.iterator(); importItr.hasNext();) {
 						ImportDeclaration importDecl = (ImportDeclaration) importItr.next();
 						String importName = importDecl.getName().getFullyQualifiedName();
@@ -96,16 +103,15 @@ public class VisualClassExampleWizardPage extends NewTypeWizardPage {
 						IImportDeclaration cuImportDecl = cuWorkingCopy.getImport(importName);
 						if(cuImportDecl==null || !cuImportDecl.exists()){
 							cuWorkingCopy.createImport(importName, null, monitor);
-							cuChanged = true;
 						}
 					}
 					
-					if(cuChanged)
-						cuWorkingCopy.commitWorkingCopy(true, monitor);
-					cuWorkingCopy.discardWorkingCopy();
 				}
 			}
 		}
+		
+		cuWorkingCopy.commitWorkingCopy(true, monitor);
+		cuWorkingCopy.discardWorkingCopy();
 	}
 	
 	public String getExampleFileContents(){
