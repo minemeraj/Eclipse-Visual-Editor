@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.42 $  $Date: 2006-05-17 20:15:53 $ 
+ *  $Revision: 1.43 $  $Date: 2006-06-22 02:56:01 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -630,21 +630,24 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		
 		if (srcPluginID!=null) {
 			Bundle srcBundle = Platform.getBundle(srcPluginID);
-			String rel[] = getSrcConfig(srcBundle);
-			URL u = null;
-			if (rel.length==0)
-				u = FileLocator.find(srcBundle, new Path(pkgName).append(srcFile), null);
-			else
-				for (int i = 0; i < rel.length; i++) {
-					u = FileLocator.find(srcBundle, new Path(rel[i]).append(pkgName).append(srcFile), null);
-					if (u!=null) break;					
+			// This bundle can be null if the source plug-in is not installed
+			if (srcBundle != null) {
+				String rel[] = getSrcConfig(srcBundle);
+				URL u = null;
+				if (rel.length==0)
+					u = FileLocator.find(srcBundle, new Path(pkgName).append(srcFile), null);
+				else
+					for (int i = 0; i < rel.length; i++) {
+						u = FileLocator.find(srcBundle, new Path(rel[i]).append(pkgName).append(srcFile), null);
+						if (u!=null) break;					
+					}
+				if (u!=null) {
+				   try {
+					result = getFilePath(FileLocator.resolve(u));
+					platformSrcPath.put(bundle,result);
+					return result;
+				   } catch (IOException e) {}			   
 				}
-			if (u!=null) {
-			   try {
-				result = getFilePath(FileLocator.resolve(u));
-				platformSrcPath.put(bundle,result);
-				return result;
-			   } catch (IOException e) {}			   
 			}
 		}
 		return null;
