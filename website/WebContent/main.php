@@ -70,13 +70,7 @@
 		<div class="homeitem3col">
 			<h3>What's New</h3>
 			<ul>
-				<li><img src="http://www.eclipse.org/images/new.gif" height="14" width="31"><a href="http://download.eclipse.org/tools/ve/downloads/drops/S-1.2RC2-200605301123/index.html">VE v1.2RC2 (latest milestone/stable)</a> <span class="dates">May 30, 2006</span></li>
-				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/S-1.2RC1-200605181544/index.html">VE v1.2RC1</a> <span class="dates">May 19, 2006</span></li>
-				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/S-1.2M3-200604071123/index.html">VE v1.2M3</a> <span class="dates">Apr 7, 2006</span></li>						
-				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/S-1.2M2-200602271803/">VE v1.2M2</a> <span class="dates">Feb 28, 2006</span></li>			
-				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/S-1.2M1-200512210749/index.html">VE v1.2M1</a> <span class="dates">12/21/05</span></li>
-				<li><a href="docs/v1.2/plan/vep-plan-1.2.html">VE 1.2 plan posted</a> <span class="dates">11/08/05</span></li>
-				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/R-1.1.0.1-200509071822/index.html">VE v1.1.0.1 released</a> <span class="dates">09/07/05</span></li>
+				<li><img src="http://www.eclipse.org/images/new.gif" height="14" width="31"><a href="http://download.eclipse.org/tools/ve/downloads/drops/R-1.2-200606280938/index.html">VE v1.2 final release</a> <span class="dates">June 30, 2006</span></li>
 				<li><a href="docs/v1.1/VE11grid.html">VE v1.1 Grid support</a> <span class="dates">07/13/05</span></li>
 				<li><a href="http://eclipse.org/articles/Article-VE-Custom-Widget/customwidget.html">Extending the Visual Editor Tutorial: Enabling support for a custom widget</a> <span class="dates">06/15/05</span></li>
 				<li><a href="docs/newsArchive/main.html">News Archive...</a></li>
