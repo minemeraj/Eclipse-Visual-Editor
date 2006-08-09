@@ -13,10 +13,10 @@ feature@phony.perfcore=N20050114f,:pserver:anonymous@dev.eclipse.org:/home/tools
 
 plugin@org.eclipse.jem=v20060530_RC2,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.beaninfo=v20060530_RC2,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.ui=v20060809_I,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.util=v20060809_I,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.ui=v20060809_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.util=v20060809_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.proxy=v20060530_RC2,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.tests=v20060809_I,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.tests=v20060809_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.workbench=v20060808_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.sdk=v20060518_RC1,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/org.eclipse.jem.sdk
 
