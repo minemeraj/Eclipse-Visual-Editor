@@ -983,8 +983,12 @@ protected static final String DEFAULT_CATNAME = "...";
 					catName = catXMLTextBuffer.substring(i, endlabel);
 				} else
 					catName = buildNumber;	// This is wrong, but we need something. Should of had a name="\
-				
-				catXMLText = catXMLTextBuffer.toString();
+				// Now make sure there is a new line at the end so that it doesn't cause
+				// an insert in a line where it is added, instead it should insert a new line.
+				StringWriter categoryExtraInfo = new StringWriter();
+				PrintWriter categoryWriter = new PrintWriter(categoryExtraInfo);
+				categoryWriter.println(catXMLTextBuffer.toString());
+				catXMLText = categoryExtraInfo.toString();
 			} else {
 				// create the default.
 				StringWriter categoryExtraInfo = new StringWriter();
