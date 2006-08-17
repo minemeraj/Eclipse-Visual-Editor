@@ -197,7 +197,6 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	 */
 	public GridLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		this.containerPolicy = containerPolicy;
-		helper.setContainerPolicy(containerPolicy);
 	}
 
 	public void setHost(EditPart host) {
@@ -207,6 +206,8 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	}
 
 	public void activate() {
+		containerPolicy.setContainer(getHost().getModel());
+		helper.setContainerPolicy(containerPolicy);
 		gridController = new GridController();
 		if (gridController != null) {
 			gridController.addGridListener(this);
@@ -228,13 +229,13 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			while (iterator.hasNext())
 				((EditPart) iterator.next()).addEditPartListener(editPartListener);
 		}
-		containerPolicy.setContainer(getHost().getModel());
 		super.activate();
 		CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), GridLayoutLayoutPage.class);
 		CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(), GridLayoutComponentPage.class);
 	}
 
 	public void deactivate() {
+		helper.setContainerPolicy(null);
 		containerPolicy.setContainer(null);
 		GridController gridController = GridController.getGridController(getHost());
 		eraseGridFigure();

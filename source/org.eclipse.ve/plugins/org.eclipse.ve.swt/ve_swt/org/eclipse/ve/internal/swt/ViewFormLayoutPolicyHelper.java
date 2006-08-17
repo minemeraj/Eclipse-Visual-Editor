@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutPolicyHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-11 21:23:47 $ 
+ *  $Revision: 1.7 $  $Date: 2006-08-17 15:32:01 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -174,14 +174,14 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 	 * occupied, return the UnexecutableCommand.
 	 */
 	public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List children, List constraints, Object position) {
-		Object constraint = null;
 		Iterator itr = constraints.iterator();
 		while (itr.hasNext()) {
 			Object next = itr.next();
 			if (next == null) 
 				return VisualContainerPolicy.createUnexecutableResult(children, constraints);
-			if (REAL_INTERNAL_TAGS.contains(next))
-				constraint = next;
+			String constraint = ((ViewFormLayoutEditPolicy.ViewFormConstraintWrapper) next).getViewFormConstraint();
+			if (!REAL_INTERNAL_TAGS.contains(constraint))
+				return VisualContainerPolicy.createUnexecutableResult(children, constraints); 
 		}
 		Object child = children.get(0);
 		
@@ -202,6 +202,7 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 			child = result.getChildren().get(0);
 			CommandBuilder cBld = new CommandBuilder();
 			cBld.append(result.getCommand());
+			String constraint = ((ViewFormLayoutEditPolicy.ViewFormConstraintWrapper) result.getCorelatedList().get(0)).getViewFormConstraint();
 			if(left == null && ((String) REAL_INTERNAL_TAGS.get(LEFT_INDEX)).equals(constraint))
 				cBld.applyAttributeSetting(parent, sfLeftControl, child, position);
 			else if(right == null && ((String) REAL_INTERNAL_TAGS.get(RIGHT_INDEX)).equals(constraint))
@@ -236,19 +237,20 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 		IJavaInstance center = (IJavaInstance) viewFormBean.eGet(sfCenterControl);
 		IJavaInstance content = (IJavaInstance) viewFormBean.eGet(sfContentControl);
 		
-		VisualContainerPolicy.CorelatedResult result = super.getCreateChildCommand(Collections.singletonList(child), Collections.singletonList(null), position);
+		VisualContainerPolicy.CorelatedResult result = super.getCreateChildCommand(child, constraint, position);
 		if (!result.getChildren().isEmpty()) {
 			EObject parent = getContainer();
 			child = result.getChildren().get(0);
 			CommandBuilder cBld = new CommandBuilder();
 			cBld.append(result.getCommand());
-			if(left == null && ((String) REAL_INTERNAL_TAGS.get(LEFT_INDEX)).equals(constraint))
+			String realConstraint = ((ViewFormLayoutEditPolicy.ViewFormConstraintWrapper) constraint).getViewFormConstraint();
+			if(left == null && ((String) REAL_INTERNAL_TAGS.get(LEFT_INDEX)).equals(realConstraint))
 				cBld.applyAttributeSetting(parent, sfLeftControl, child, position);
-			else if(right == null && ((String) REAL_INTERNAL_TAGS.get(RIGHT_INDEX)).equals(constraint))
+			else if(right == null && ((String) REAL_INTERNAL_TAGS.get(RIGHT_INDEX)).equals(realConstraint))
 				cBld.applyAttributeSetting(parent, sfRightControl, child, position);
-			else if(center == null && ((String) REAL_INTERNAL_TAGS.get(CENTER_INDEX)).equals(constraint))
+			else if(center == null && ((String) REAL_INTERNAL_TAGS.get(CENTER_INDEX)).equals(realConstraint))
 				cBld.applyAttributeSetting(parent, sfCenterControl, child, position);
-			else if(content == null && ((String) REAL_INTERNAL_TAGS.get(CONTENT_INDEX)).equals(constraint))
+			else if(content == null && ((String) REAL_INTERNAL_TAGS.get(CONTENT_INDEX)).equals(realConstraint))
 				cBld.applyAttributeSetting(parent, sfContentControl, child, position);
 			result.setCommand(cBld.getCommand());
 		}

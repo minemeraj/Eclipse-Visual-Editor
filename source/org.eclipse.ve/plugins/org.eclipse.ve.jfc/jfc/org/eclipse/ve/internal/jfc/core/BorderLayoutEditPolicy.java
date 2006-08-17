@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutEditPolicy.java,v $
- *  $Revision: 1.11 $  $Date: 2006-05-17 20:14:58 $ 
+ *  $Revision: 1.12 $  $Date: 2006-08-17 15:31:59 $ 
  */
 
 import java.util.*;
@@ -57,18 +57,19 @@ public class BorderLayoutEditPolicy extends ConstrainedLayoutEditPolicy implemen
  */
 public BorderLayoutEditPolicy(VisualContainerPolicy aContainerPolicy) {
 	fLayoutPolicyHelper = new BorderLayoutPolicyHelper();
-	fLayoutPolicyHelper.setContainerPolicy(aContainerPolicy);
 	fPolicy = aContainerPolicy;
 }
 public void activate() {
 	super.activate();
 	fPolicy.setContainer(getHost().getModel());
+	fLayoutPolicyHelper.setContainerPolicy(fPolicy);
 	CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), BorderLayoutLayoutPage.class);
 }
 
 public void deactivate() {
-	super.deactivate();
+	fLayoutPolicyHelper.setContainerPolicy(null);
 	fPolicy.setContainer(null);
+	super.deactivate();
 }
 protected EditPolicy createChildEditPolicy(EditPart child) {
 	return new NonResizableEditPolicy();

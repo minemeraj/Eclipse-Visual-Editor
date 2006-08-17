@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: ILayoutPolicyHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-12-01 20:19:39 $ 
+ *  $Revision: 1.9 $  $Date: 2006-08-17 15:31:59 $ 
  */
 
 import java.util.List;
@@ -135,7 +135,12 @@ public Command getMoveChildrenCommand(List children, Object beforeChild);
 public List getDefaultConstraint(List children);
 
 /**
- * Set ContainerEditPolicy to use.
+ * Set ContainerEditPolicy to use. This will be called
+ * on activation with a policy that has the model set, and
+ * it will be called again on deactivation, this time with
+ * policy being null.
+ * 
+ * @param policy on activation, a policy with the model set, on deactivation <code>null</code> will be passed in.
  */
 public void setContainerPolicy(VisualContainerPolicy policy);
 }

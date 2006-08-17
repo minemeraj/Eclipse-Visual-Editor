@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerLayoutPolicyHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-11 21:23:47 $ 
+ *  $Revision: 1.6 $  $Date: 2006-08-17 15:32:01 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -163,14 +163,14 @@ public class CBannerLayoutPolicyHelper extends LayoutPolicyHelper {
 	 * occupied, return the UnexecutableCommand.
 	 */
 	public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List children, List constraints, Object position) {
-		Object constraint = null;
 		Iterator itr = constraints.iterator();
 		while (itr.hasNext()) {
 			Object next = itr.next();
 			if (next == null) 
 				return VisualContainerPolicy.createUnexecutableResult(children, constraints);
-			if (REAL_INTERNAL_TAGS.contains(next))
-				constraint = next;
+			String constraint = ((CBannerLayoutEditPolicy.CBannerConstraintWrapper) next).getCBannerConstraint();
+			if (!REAL_INTERNAL_TAGS.contains(constraint))
+				return VisualContainerPolicy.createUnexecutableResult(children, constraints);
 		}
 		Object child = children.get(0);
 		
@@ -188,6 +188,7 @@ public class CBannerLayoutPolicyHelper extends LayoutPolicyHelper {
 		if (!result.getChildren().isEmpty()) {
 			EObject parent = getContainer();
 			child = result.getChildren().get(0);
+			String constraint = ((CBannerLayoutEditPolicy.CBannerConstraintWrapper) result.getCorelatedList().get(0)).getCBannerConstraint();
 			CommandBuilder cBld = new CommandBuilder();
 			cBld.append(result.getCommand());
 			if (left == null && ((String) REAL_INTERNAL_TAGS.get(LEFT_INDEX)).equals(constraint))
@@ -215,17 +216,18 @@ public class CBannerLayoutPolicyHelper extends LayoutPolicyHelper {
 		IJavaInstance right = (IJavaInstance) cBannerBean.eGet(sfRightControl);
 		IJavaInstance bottom = (IJavaInstance) cBannerBean.eGet(sfBottomControl);
 		
-		VisualContainerPolicy.CorelatedResult result = super.getCreateChildCommand(Collections.singletonList(child), Collections.singletonList(constraint), position);
+		VisualContainerPolicy.CorelatedResult result = super.getCreateChildCommand(child, constraint, position);
 		if (!result.getChildren().isEmpty()) {
 			EObject parent = getContainer();
 			child = result.getChildren().get(0);
 			CommandBuilder cBld = new CommandBuilder();
 			cBld.append(result.getCommand());
-			if (left == null && ((String) REAL_INTERNAL_TAGS.get(LEFT_INDEX)).equals(constraint))
+			String realConstraint = ((CBannerLayoutEditPolicy.CBannerConstraintWrapper) constraint).getCBannerConstraint();
+			if (left == null && ((String) REAL_INTERNAL_TAGS.get(LEFT_INDEX)).equals(realConstraint))
 				cBld.applyAttributeSetting(parent, sfLeftControl, child, position);
-			else if (right == null && ((String) REAL_INTERNAL_TAGS.get(RIGHT_INDEX)).equals(constraint))
+			else if (right == null && ((String) REAL_INTERNAL_TAGS.get(RIGHT_INDEX)).equals(realConstraint))
 				cBld.applyAttributeSetting(parent, sfRightControl, child, position);
-			else if (bottom == null && ((String) REAL_INTERNAL_TAGS.get(BOTTOM_INDEX)).equals(constraint))
+			else if (bottom == null && ((String) REAL_INTERNAL_TAGS.get(BOTTOM_INDEX)).equals(realConstraint))
 				cBld.applyAttributeSetting(parent, sfBottomControl, child, position);
 			result.setCommand(cBld.getCommand());
 		}

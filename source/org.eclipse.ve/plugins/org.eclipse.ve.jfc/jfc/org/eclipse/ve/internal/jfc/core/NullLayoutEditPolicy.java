@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NullLayoutEditPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-11-08 22:33:24 $ 
+ *  $Revision: 1.10 $  $Date: 2006-08-17 15:31:59 $ 
  */
 import java.util.Collections;
 
@@ -44,16 +44,17 @@ public class NullLayoutEditPolicy extends XYLayoutEditPolicy {
  */
 public NullLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 	this.containerPolicy = containerPolicy;
-	helper.setContainerPolicy(containerPolicy);
 }
 
 public void activate() {
 	super.activate();
 	containerPolicy.setContainer(getHost().getModel());
+	helper.setContainerPolicy(containerPolicy);
 }
 
 public void deactivate() {
 	super.deactivate();
+	helper.setContainerPolicy(null);
 	containerPolicy.setContainer(null);
 }
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: TreeVisualContainerEditPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-12-01 20:19:39 $ 
+ *  $Revision: 1.10 $  $Date: 2006-08-17 15:31:59 $ 
  */
 
 import java.util.*;
@@ -38,6 +38,22 @@ public class TreeVisualContainerEditPolicy extends TreeContainerEditPolicy imple
 	
 	public TreeVisualContainerEditPolicy(VisualContainerPolicy policy) {
 		super(policy);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy#activate()
+	 */
+	public void activate() {
+		super.activate();
+		helper.setContainerPolicy((VisualContainerPolicy) containerPolicy);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy#deactivate()
+	 */
+	public void deactivate() {
+		helper.setContainerPolicy(null);
+		super.deactivate();
 	}
 	
 	public void setPolicyHelper(ILayoutPolicyHelper helper) {

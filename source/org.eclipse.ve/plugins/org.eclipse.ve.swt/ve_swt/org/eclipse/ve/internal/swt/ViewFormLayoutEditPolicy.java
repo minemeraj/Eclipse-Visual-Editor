@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-11 21:23:47 $ 
+ *  $Revision: 1.5 $  $Date: 2006-08-17 15:32:01 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -38,7 +38,9 @@ import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy.ConstraintWrapper;
  
 /**
  * The LayoutEditPolicy for a ViewForm will use the helper class to add feedback to regions
@@ -57,16 +59,17 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 	public ViewFormLayoutEditPolicy(EditDomain anEditDomain) {
 		fPolicy = new ViewFormContainerPolicy(anEditDomain);
 		fLayoutPolicyHelper = new ViewFormLayoutPolicyHelper();
-		fLayoutPolicyHelper.setContainerPolicy(fPolicy);
 	}
 	
 	public void activate() {
 		super.activate();
 		fPolicy.setContainer(getHost().getModel());
+		fLayoutPolicyHelper.setContainerPolicy(fPolicy);
 	}
 	
 	public void deactivate() {
 		super.deactivate();
+		fLayoutPolicyHelper.setContainerPolicy(null);
 		fPolicy.setContainer(null);
 	}
 	
@@ -138,10 +141,10 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 	 * A new child is being moved to the container.
 	 * Create the command to add it.
 	 */
-	protected Command createAddCommand(EditPart childEditPart, Object constraint) {
-		if (constraint == null || !(constraint instanceof String)) return UnexecutableCommand.INSTANCE;
-		if (fLayoutPolicyHelper.isRegionAvailable((String)constraint)) {
-			return fLayoutPolicyHelper.getAddChildrenCommand(Collections.singletonList(childEditPart.getModel()), Collections.singletonList(constraint), null).getCommand(); 
+	protected Command createAddCommand(EditPart childEditPart, String constraint) {
+		if (constraint == null) return UnexecutableCommand.INSTANCE;
+		if (fLayoutPolicyHelper.isRegionAvailable(constraint)) {
+			return fLayoutPolicyHelper.getAddChildrenCommand(Collections.singletonList(childEditPart.getModel()), Collections.singletonList(new ViewFormConstraintWrapper(constraint)), null).getCommand(); 
 		} else
 			return UnexecutableCommand.INSTANCE;
 	}
@@ -153,6 +156,25 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 		return fLayoutPolicyHelper.getChangeConstraintCommand(Collections.singletonList(childEditPart.getModel()), Collections.singletonList(constraint));
 	}
 	
+	public static class ViewFormConstraintWrapper extends ConstraintWrapper {
+
+		private String viewFormConstraint;
+		/**
+		 * @param constraint
+		 * 
+		 * @since 1.2.1
+		 */
+		public ViewFormConstraintWrapper(String viewformConstraint) {
+			super(ILayoutPolicyHelper.NO_CONSTRAINT_VALUE);	// None is actually used in the setLayoutData. 
+			// Constraint for view form is handled separately.
+			this.viewFormConstraint = viewformConstraint;
+		}
+		
+		public String getViewFormConstraint() {
+			return viewFormConstraint;
+		}
+		
+	}
 	/**
 	 * createCreateCommand.
 	 * A brand new child is being add to the container.
@@ -161,7 +183,7 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 	protected Command createCreateCommand(Object child, String aConstraint) {
 		Command addCmd = UnexecutableCommand.INSTANCE;
 		if (fLayoutPolicyHelper.isRegionAvailable(aConstraint)) {
-			addCmd = fLayoutPolicyHelper.getCreateChildCommand(child,aConstraint,null).getCommand();
+			addCmd = fLayoutPolicyHelper.getCreateChildCommand(child,new ViewFormConstraintWrapper(aConstraint),null).getCommand();
 		}
 		return addCmd;
 	}

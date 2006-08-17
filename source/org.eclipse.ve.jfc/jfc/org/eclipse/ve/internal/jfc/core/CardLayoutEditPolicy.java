@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: CardLayoutEditPolicy.java,v $
- *  $Revision: 1.13 $  $Date: 2006-05-17 20:14:58 $ 
+ *  $Revision: 1.14 $  $Date: 2006-08-17 15:31:59 $ 
  */
 import java.util.*;
 
@@ -71,7 +71,6 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 
 	public CardLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		this.containerPolicy = containerPolicy;
-		helper.setContainerPolicy(containerPolicy);
 	}
 	
 	public void activate() {
@@ -89,6 +88,7 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 				(IJavaObjectInstance) getHost().getModel(),
 				JFCConstants.SF_COMPONENT_NAME);			
 				
+		helper.setContainerPolicy(containerPolicy);		
 		super.activate();
 		/*
 		 * If there are children, spawn a separate thread to process through
@@ -217,6 +217,8 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		return null;
 	}
 	public void deactivate() {
+		helper.setContainerPolicy(null);
+		containerPolicy.setContainer(null);
 		Iterator children = getHost().getChildren().iterator();
 		while (children.hasNext()) {
 			GraphicalEditPart child = (GraphicalEditPart) children.next();
