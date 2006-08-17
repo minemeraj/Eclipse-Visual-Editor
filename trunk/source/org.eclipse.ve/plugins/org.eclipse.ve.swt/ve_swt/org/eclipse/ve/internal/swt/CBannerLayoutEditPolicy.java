@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerLayoutEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-11 21:23:47 $ 
+ *  $Revision: 1.5 $  $Date: 2006-08-17 15:32:01 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -40,7 +40,9 @@ import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy.ConstraintWrapper;
  
 /**
  * The LayoutEditPolicy for a CBanner will use the helper class to add feedback to regions
@@ -59,17 +61,18 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 	public CBannerLayoutEditPolicy(EditDomain anEditDomain) {
 		fPolicy = new CBannerContainerPolicy(anEditDomain);
 		fLayoutPolicyHelper = new CBannerLayoutPolicyHelper();
-		fLayoutPolicyHelper.setContainerPolicy(fPolicy);
 	}
 	
 	public void activate() {
 		super.activate();
 		fPolicy.setContainer(getHost().getModel());
+		fLayoutPolicyHelper.setContainerPolicy(fPolicy);
 	}
 	
 	public void deactivate() {
-		super.deactivate();
+		fLayoutPolicyHelper.setContainerPolicy(null);
 		fPolicy.setContainer(null);
+		super.deactivate();
 	}
 	
 	public EditPolicy createChildEditPolicy(EditPart aChild) {
@@ -126,10 +129,10 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 	 * A new child is being moved to the container.
 	 * Create the command to add it.
 	 */
-	protected Command createAddCommand(EditPart childEditPart, Object constraint) {
-		if (constraint == null || !(constraint instanceof String)) return UnexecutableCommand.INSTANCE;
-		if (fLayoutPolicyHelper.isRegionAvailable((String)constraint)) {
-			return fLayoutPolicyHelper.getAddChildrenCommand(Collections.singletonList(childEditPart.getModel()), Collections.singletonList(constraint), null).getCommand(); 
+	protected Command createAddCommand(EditPart childEditPart, String constraint) {
+		if (constraint == null) return UnexecutableCommand.INSTANCE;
+		if (fLayoutPolicyHelper.isRegionAvailable(constraint)) {
+			return fLayoutPolicyHelper.getAddChildrenCommand(Collections.singletonList(childEditPart.getModel()), Collections.singletonList(new CBannerConstraintWrapper(constraint)), null).getCommand(); 
 		} else
 			return UnexecutableCommand.INSTANCE;
 	}
@@ -141,6 +144,26 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 		return fLayoutPolicyHelper.getChangeConstraintCommand(Collections.singletonList(childEditPart.getModel()), Collections.singletonList(constraint));
 	}
 	
+	public static class CBannerConstraintWrapper extends ConstraintWrapper {
+
+		private String cbannerConstraint;
+		/**
+		 * @param constraint
+		 * 
+		 * @since 1.2.1
+		 */
+		public CBannerConstraintWrapper(String cbannerConstraint) {
+			super(ILayoutPolicyHelper.NO_CONSTRAINT_VALUE);	// None is actually used in the setLayoutData. 
+			// Constraint for banner is handled separately.
+			this.cbannerConstraint = cbannerConstraint;
+		}
+		
+		public String getCBannerConstraint() {
+			return cbannerConstraint;
+		}
+		
+	}
+	
 	/**
 	 * createCreateCommand.
 	 * A brand new child is being add to the container.
@@ -148,7 +171,7 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 	 */
 	protected Command createCreateCommand(Object child, String aConstraint) {
 		if (fLayoutPolicyHelper.isRegionAvailable(aConstraint)) {
-			return fLayoutPolicyHelper.getCreateChildCommand(child,aConstraint,null).getCommand();
+			return fLayoutPolicyHelper.getCreateChildCommand(child,new CBannerConstraintWrapper(aConstraint),null).getCommand();
 		} else
 			return UnexecutableCommand.INSTANCE;
 	}

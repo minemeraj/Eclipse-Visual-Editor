@@ -19,7 +19,7 @@ import org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy;
 
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 /*
- * $RCSfile: DefaultLayoutEditPolicy.java,v $ $Revision: 1.4 $ $Date: 2005-10-11 21:23:47 $
+ * $RCSfile: DefaultLayoutEditPolicy.java,v $ $Revision: 1.5 $ $Date: 2006-08-17 15:32:01 $
  */
 /**
  * Default layout edit policy for SWT layouts. Allows insertion between components and standard
@@ -32,7 +32,22 @@ public class DefaultLayoutEditPolicy extends FlowLayoutEditPolicy {
 	 */
 	public DefaultLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		super(containerPolicy);
-		helper.setContainerPolicy(containerPolicy);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy#activate()
+	 */
+	public void activate() {
+		super.activate();
+		helper.setContainerPolicy((VisualContainerPolicy) containerPolicy);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy#deactivate()
+	 */
+	public void deactivate() {
+		helper.setContainerPolicy(null);
+		super.deactivate();
 	}
 	/**
 	 * The child editpart is about to be added to the parent.

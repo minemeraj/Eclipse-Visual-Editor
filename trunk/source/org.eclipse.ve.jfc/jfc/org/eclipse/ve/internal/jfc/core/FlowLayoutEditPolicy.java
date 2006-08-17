@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FlowLayoutEditPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2006-05-17 20:14:58 $ 
+ *  $Revision: 1.10 $  $Date: 2006-08-17 15:31:59 $ 
  */
 
 import java.util.Collections;
@@ -41,12 +41,20 @@ public class FlowLayoutEditPolicy extends org.eclipse.ve.internal.cde.core.FlowL
 	public FlowLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		super(containerPolicy);
 		setHorizontal(Boolean.TRUE);
-		helper.setContainerPolicy(containerPolicy);
 	}
 	
 	public void activate() {
 		super.activate();
+		helper.setContainerPolicy((VisualContainerPolicy) containerPolicy);
 		CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), FlowLayoutLayoutPage.class);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy#deactivate()
+	 */
+	public void deactivate() {
+		helper.setContainerPolicy(null);
+		super.deactivate();
 	}
 	
 	/**

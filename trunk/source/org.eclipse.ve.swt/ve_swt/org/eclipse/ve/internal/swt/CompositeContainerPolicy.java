@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.27 $$  $$Date: 2005-12-07 23:12:34 $$ 
+ *  $$Revision: 1.28 $$  $$Date: 2006-08-17 15:32:01 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -28,6 +28,7 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 public class CompositeContainerPolicy extends VisualContainerPolicy {
@@ -112,7 +113,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 			Object constraint = constraintsItr.next();
 			if (constraint instanceof ConstraintWrapper)
 				constraint = ((ConstraintWrapper) constraint).getConstraint();
-			if (constraint != null)
+			if (constraint != null && constraint != ILayoutPolicyHelper.NO_CONSTRAINT_VALUE)
 				cbld.applyAttributeSetting(child, sfLayoutData, constraint);
 		}
 		
@@ -137,7 +138,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 			Object constraint = constraintsItr.next();
 			if (constraint instanceof ConstraintWrapper)
 				constraint = ((ConstraintWrapper) constraint).getConstraint();
-			if (constraint != null)
+			if (constraint != null && constraint != ILayoutPolicyHelper.NO_CONSTRAINT_VALUE)
 				rcb.applyAttributeSetting(child, sfLayoutData, constraint);
 		}
 

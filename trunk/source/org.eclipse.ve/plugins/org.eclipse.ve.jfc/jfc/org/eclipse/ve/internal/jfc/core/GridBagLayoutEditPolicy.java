@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.24 $  $Date: 2005-11-04 17:30:48 $ 
+ *  $Revision: 1.25 $  $Date: 2006-08-17 15:31:59 $ 
  */
 
 import java.util.*;
@@ -94,10 +94,11 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	
 	public GridBagLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		this.containerPolicy = (ContainerPolicy)containerPolicy;
-		helper.setContainerPolicy(containerPolicy);
 	}
 	
 	public void activate() {
+		containerPolicy.setContainer(getHost().getModel());
+		helper.setContainerPolicy(containerPolicy);
 		gridController = new GridController();
 		if (gridController != null) {
 			gridController.addGridListener(this);
@@ -115,7 +116,6 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 				((EditPart) iterator.next()).addEditPartListener(editPartListener);
 		}
 		super.activate();
-		containerPolicy.setContainer(getHost().getModel());
 		rset = ((IJavaObjectInstance) getHost().getModel()).eResource().getResourceSet();
 		sfConstraintConstraint = JavaInstantiation.getReference(rset, JFCConstants.SF_CONSTRAINT_CONSTRAINT);
 		sfComponents = JavaInstantiation.getReference(rset, JFCConstants.SF_CONTAINER_COMPONENTS);
@@ -130,6 +130,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	}
 	
 	public void deactivate() {
+		helper.setContainerPolicy(null);
 		containerPolicy.setContainer(null);
 		GridController gridController = GridController.getGridController(getHost());
 		eraseGridFigure();
