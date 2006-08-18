@@ -12,7 +12,7 @@
  *  Created May 23, 2005 by Gili Mendel
  * 
  *  $RCSfile: StringLabelProvider.java,v $
- *  $Revision: 1.4 $  $Date: 2005-12-14 21:32:35 $ 
+ *  $Revision: 1.5 $  $Date: 2006-08-18 14:35:10 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -22,6 +22,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
+
+import org.eclipse.ve.internal.propertysheet.PropertysheetMessages;
  
 
 public class StringLabelProvider extends DefaultJavaBeanLabelProvider {
@@ -29,7 +31,7 @@ public class StringLabelProvider extends DefaultJavaBeanLabelProvider {
 		String str = super.getText(element);
 		if (element instanceof IJavaInstance) {
 		   IBeanProxy h = BeanProxyUtilities.getBeanProxy((IJavaInstance)element, EMFEditDomainHelper.getResourceSet(domain));
-		   String post = h.toBeanString();
+		   String post = h != null ? h.toBeanString() : PropertysheetMessages.display_null;
 		   str = MessageFormat.format(JavaMessages.StringLabelProvider_BeanName_Extension, new Object[] { str, post });		   
 		}		
 		return str;
