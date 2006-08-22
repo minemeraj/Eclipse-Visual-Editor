@@ -4,8 +4,6 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -19,16 +17,20 @@
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_class_create" />
 <meta name="DC.Language" content="en-us" />
-<!-- All rights reserved. Licensed Materials Property of IBM -->
-<!-- US Government Users Restricted Rights -->
-<!-- Use, duplication or disclosure restricted by -->
-<!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
 <title>Creating a new Java visual class</title>
-</head>
+<!--/******************************************************************************
+* Copyright (c) 2000, 2006 IBM Corporation and others.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+* 
+* Contributors:
+*     IBM Corporation - initial API and implementation
+*******************************************************************************/--></head>
 <body id="tve_class_create"><a name="tve_class_create"><!-- --></a>
-
 <h1 class="topictitle1">Creating a new Java visual class</h1>
 <div><p>You can use the New Java Visual Class wizard to quickly create
 a visual class that you can then design within the visual editor.</p>
@@ -42,13 +44,13 @@ SWT, Swing, AWT, or Other), the initial container or composite that you want
 the visual class to instantiate (for example, an RCP view, an SWT composite,
 or a Swing JFrame), and whether you want the visual class to be an application
 that includes a <samp class="codeph">public static void main(String[] args)</samp> method.</p>
-<div class="tip"><span class="tiptitle">Tip: </span>If you select the Swing Application style, the wizard generates
+<div class="tip"><span class="tiptitle">Tip:</span> If you select the Swing Application style, the wizard generates
 a Swing application that includes commonly used menus and event handlers already
 built into it.</div>
 <p>To create a new Java visual class for use in the visual
 editor for Java:</p>
 </div>
-<ol><li class="stepexpand"><span>In the Java perspective, click <span class="menucascade"><span class="uicontrol">File</span> &gt; <span class="uicontrol">New</span> &gt; <span class="uicontrol">Visual Class</span></span>.</span> The New Java Visual Class wizard opens.<br /><img src="../images/NewJavaVisualClass.gif" alt="New Java Visual Class dialog" /><br /></li>
+<ol><li class="stepexpand"><span>In the Java perspective, click <span class="menucascade"><span class="uicontrol">File</span> &gt; <span class="uicontrol">New</span> &gt; <span class="uicontrol">Visual Class</span></span>.</span> The New Java Visual Class wizard opens.<div class="image"><img src="../images/NewJavaVisualClass.gif" alt="New Java Visual Class dialog" /></div></li>
 <li class="stepexpand"><span>In the <span class="uicontrol">Source Folder</span> field, enter the workspace
 folder where the class will be saved. This will default to your current project.</span></li>
 <li class="stepexpand"><span>In the <span class="uicontrol">Package</span> field, enter the name of
@@ -66,7 +68,7 @@ to any other class that wants to use it</li>
 to any other class in the same package</li>
 </ul>
 </li>
-<li class="stepexpand"><strong>Optional: </strong><span>Select <em>one</em> of the following modifiers
+<li class="stepexpand"><strong>Optional:</strong> <span>Select <em>one</em> of the following modifiers
 for the class:</span><ul><li><span class="uicontrol">abstract</span> - indicates that the class will serve
 in a superclass role</li>
 <li><span class="uicontrol">final</span> - indicates that the class cannot be
@@ -75,19 +77,19 @@ subclassed</li>
 </li>
 <li class="stepexpand"><span>In the <span class="uicontrol">Style</span> list, select the toolkit and
 visual element that you want your new visual class to extend.</span> For
-example, you can select RCP view, SWT composite, or Swing JPanel. <div class="note"><span class="notetitle">Note: </span>An RCP view or editor can only be created in a Plug-in
+example, you can select RCP view, SWT composite, or Swing JPanel. <div class="note"><span class="notetitle">Note:</span> An RCP view or editor can only be created in a Plug-in
 project that is enabled for Rich Client Platform (RCP) application development</div>
  The <span class="uicontrol">Superclass</span> field displays the appropriate
 class name. If you select <span class="uicontrol">Other</span> as the style, you need
 to specify the superclass that you want to extend or accept the default <samp class="codeph">java.lang.Object</samp>.
 The <samp class="codeph">java.lang.Object</samp> superclass can be used, for example,
 for a SWT application that uses a SWT Shell.</li>
-<li class="stepexpand"><strong>Optional: </strong><span>To import and implement an additional interface
+<li class="stepexpand"><strong>Optional:</strong> <span>To import and implement an additional interface
 in your new visual class, click <span class="uicontrol">Add</span> and select the
 interface, then click <span class="uicontrol">OK</span>. The interfaces to be implemented
 are listed in the <span class="uicontrol">Interfaces</span> field. Repeat this step
 for each interface.</span></li>
-<li class="stepexpand"><strong>Optional: </strong><span>Select any of the following check boxes to
+<li class="stepexpand"><strong>Optional:</strong> <span>Select any of the following check boxes to
 generate additional method stubs in your new visual class:</span><ul><li><span class="uicontrol">public static void main(String[] args)</span> - generates
 a stub main() method for running the class as a Java application. For SWT
 applications, the visual editor also generates the necessary display loop
@@ -113,8 +115,5 @@ class, and the class opens in the visual editor for Java</div>
 <div><a href="../topics/tve_rcp_editor.html" title="The visual editor for Java supports the creation and development of Rich Client Platform (RCP) editors.">Creating an RCP editor in the visual editor</a></div>
 <div><a href="../topics/tve_rcp_view.html" title="The visual editor for Java supports the creation and development of Rich Client Platform (RCP) views.">Creating an RCP view in the visual editor</a></div>
 </div>
-</div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
-<br />
-</div>
-</body>
+</div></body>
 </html>

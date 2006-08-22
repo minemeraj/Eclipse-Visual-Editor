@@ -4,8 +4,6 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -20,16 +18,20 @@
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_swtlayout_grid" />
 <meta name="DC.Language" content="en-us" />
-<!-- All rights reserved. Licensed Materials Property of IBM -->
-<!-- US Government Users Restricted Rights -->
-<!-- Use, duplication or disclosure restricted by -->
-<!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
 <title>Using GridLayout (SWT)</title>
-</head>
+<!--/******************************************************************************
+* Copyright (c) 2000, 2006 IBM Corporation and others.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+* 
+* Contributors:
+*     IBM Corporation - initial API and implementation
+*******************************************************************************/--></head>
 <body id="tve_swtlayout_grid"><a name="tve_swtlayout_grid"><!-- --></a>
-
 <h1 class="topictitle1">Using GridLayout (SWT)</h1>
 <div><p>You can use the GridLayout with SWT containers to arrange widgets
 in a grid arrangement.</p>
@@ -48,8 +50,8 @@ width or height of the grid indicates that an entire row or column will be
 added. A yellow bar that spans a single row or column indicates that only
 that row or column will be affected:</p>
 <p><img src="../images/SWTGrid_drop2.gif" alt="SWT GridLayout" /></p>
-<div class="p">For more help, read the following sections
-of this topic:<ul><li><a href="#swtgrid1">Adding or moving components in GridLayout</a></li>
+<div class="p">For more help,
+read the following sections of this topic:<ul><li><a href="#swtgrid1">Adding or moving components in GridLayout</a></li>
 <li><a href="#swtgrid2">Setting the alignment of a component within its
 cell in the grid</a></li>
 <li><a href="#swtgrid3">Spanning a widget across grid cells</a></li>
@@ -82,22 +84,22 @@ that you selected. Depending on the placement, the visual editor will move
 widgets and create rows or columns as necessary.</span></li>
 </ol>
 <div class="example">
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" frame="border" border="1" rules="all"><caption>Table 1. Example drop placements and results</caption><thead align="left"><tr valign="bottom"><th valign="bottom" id="d0e79">Cursor position and feedback</th>
-<th valign="bottom" id="d0e81">Result</th>
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" frame="border" border="1" rules="all"><caption>Table 1. Example drop placements and results</caption><thead align="left"><tr valign="bottom"><th valign="bottom" id="d0e93">Cursor position and feedback</th>
+<th valign="bottom" id="d0e95">Result</th>
 </tr>
 </thead>
-<tbody><tr><td valign="top" headers="d0e79 ">Cursor placed in an empty cell:<br /><img src="../images/SWTGrid_drop1.gif" alt="SWT GridLayout" /><br /></td>
-<td valign="top" headers="d0e81 ">Widget is added to cell:<br /><img src="../images/SWTGrid_drop1b.gif" alt="SWT GridLayout" /><br /></td>
+<tbody><tr><td valign="top" headers="d0e93 ">Cursor placed in an empty cell:<div class="image"><img src="../images/SWTGrid_drop1.gif" alt="SWT GridLayout" /></div></td>
+<td valign="top" headers="d0e95 ">Widget is added to cell:<div class="image"><img src="../images/SWTGrid_drop1b.gif" alt="SWT GridLayout" /></div></td>
 </tr>
-<tr><td valign="top" headers="d0e79 ">Cursor placed on horizontal grid border:<br /><img src="../images/SWTGrid_drop2.gif" alt="SWT GridLayout" /><br /></td>
-<td valign="top" headers="d0e81 ">Widget is added to cell in new row:<br /><img src="../images/SWTGrid_drop2b.gif" alt="SWT GridLayout" /><br /></td>
+<tr><td valign="top" headers="d0e93 ">Cursor placed on horizontal grid border:<div class="image"><img src="../images/SWTGrid_drop2.gif" alt="SWT GridLayout" /></div></td>
+<td valign="top" headers="d0e95 ">Widget is added to cell in new row:<div class="image"><img src="../images/SWTGrid_drop2b.gif" alt="SWT GridLayout" /></div></td>
 </tr>
-<tr><td valign="top" headers="d0e79 ">Cursor placed on vertical grid border:<br /><img src="../images/SWTGrid_drop3.gif" alt="SWT GridLayout" /><br /></td>
-<td valign="top" headers="d0e81 ">Widget is added to cell in new column:<br /><img src="../images/SWTGrid_drop3b.gif" alt="SWT GridLayout" /><br /></td>
+<tr><td valign="top" headers="d0e93 ">Cursor placed on vertical grid border:<div class="image"><img src="../images/SWTGrid_drop3.gif" alt="SWT GridLayout" /></div></td>
+<td valign="top" headers="d0e95 ">Widget is added to cell in new column:<div class="image"><img src="../images/SWTGrid_drop3b.gif" alt="SWT GridLayout" /></div></td>
 </tr>
-<tr><td valign="top" headers="d0e79 ">Cursor placed on vertical grid border, on single row:<br /><img src="../images/SWTGrid_drop4.gif" alt="SWT GridLayout" /><br /></td>
-<td valign="top" headers="d0e81 ">Widget (CLabel) is added to cell, other widgets in row
-are moved:<br /><img src="../images/SWTGrid_drop4b.gif" alt="SWT GridLayout" /><br /></td>
+<tr><td valign="top" headers="d0e93 ">Cursor placed on vertical grid border, on single row:<div class="image"><img src="../images/SWTGrid_drop4.gif" alt="SWT GridLayout" /></div></td>
+<td valign="top" headers="d0e95 ">Widget (CLabel) is added to cell, other widgets in row
+are moved:<div class="image"><img src="../images/SWTGrid_drop4b.gif" alt="SWT GridLayout" /></div></td>
 </tr>
 </tbody>
 </table>
@@ -117,7 +119,7 @@ that you selected. In Grid layout, you can only place an item to the left
 or right of another item. Depending on the number of columns and whether other
 components span columns, the visual editor will move widgets and create rows
 as necessary.</span></li>
-<li><strong>Optional: </strong><span>To force the row or column that holds the
+<li><strong>Optional:</strong> <span>To force the row or column that holds the
 component to grab extra space in the container, click the <span class="uicontrol">Fill
 horizontal</span> or <span class="uicontrol">Fill vertical</span> button. If
 multiple rows or columns are grabbing extra space, they divide up the excess
@@ -130,7 +132,7 @@ space equally.</span></li>
 following steps:</div>
 <ul><li><span>Click a resize handle on the widget, and drag the component across
 cells until the dark grey box occupies the cells that you want to span, then
-release your mouse button:<span><br /><img src="../images/SWTGrid_span1a.gif" alt="SWT GridLayout spanning cells" /><br /></span><span><br /><img src="../images/SWTGrid_span1b.gif" alt="SWT GridLayout spanning cells" /><br /></span><span><br /><img src="../images/SWTGrid_span1c.gif" alt="SWT GridLayout spanning cells" /><br /></span></span></li>
+release your mouse button:<span><div class="image"><img src="../images/SWTGrid_span1a.gif" alt="SWT GridLayout spanning cells" /></div></span><span><div class="image"><img src="../images/SWTGrid_span1b.gif" alt="SWT GridLayout spanning cells" /></div></span><span><div class="image"><img src="../images/SWTGrid_span1c.gif" alt="SWT GridLayout spanning cells" /></div></span></span></li>
 <li><span>On the Customize Layout window, enter the exact number of cells
 that you want the widget to span. If you increase the <span class="uicontrol">Vertical</span> span,
 the component will span to the cell below its current position. If you increase
@@ -143,17 +145,15 @@ cell to the right of its current position.</span></li>
 <div><div class="section">When you add or move widgets, the number of columns and rows can
 change dynamically. You can also manually specify the number of columns:</div>
 <ol><li class="stepexpand"><span>In the Design view, select the container that uses Fill layout.</span></li>
-<li class="stepexpand"><span>Click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/icons/aligndialog_obj.gif" alt="Customize Layout toolbar button" /></span> toolbar button.</span> The Customize Layout dialog opens.</li>
+<li class="stepexpand"><span>Click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/icons/aligndialog_obj.gif" alt="Customize Layout toolbar button" /></span> toolbar
+button.</span> The Customize Layout dialog opens.</li>
 <li class="stepexpand"><span>On the Layout notebook tab, enter a new value in the <span class="uicontrol">Number
 of columns</span> field.</span></li>
-<li class="stepexpand"><strong>Optional: </strong><span>You can force all the Grid columns to be
+<li class="stepexpand"><strong>Optional:</strong> <span>You can force all the Grid columns to be
 the same width by selecting the <span class="uicontrol">Make columns equal width</span> check
 box.</span></li>
 </ol>
 </div>
-</div>
-<div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
-<br />
 </div>
 </body>
 </html>
