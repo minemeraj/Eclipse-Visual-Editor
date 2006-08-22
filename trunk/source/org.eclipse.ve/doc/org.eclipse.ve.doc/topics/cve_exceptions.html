@@ -4,8 +4,6 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -22,16 +20,20 @@
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="cve_exceptions" />
 <meta name="DC.Language" content="en-us" />
-<!-- All rights reserved. Licensed Materials Property of IBM -->
-<!-- US Government Users Restricted Rights -->
-<!-- Use, duplication or disclosure restricted by -->
-<!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
 <title>Java bean exceptions</title>
-</head>
+<!--/******************************************************************************
+* Copyright (c) 2000, 2006 IBM Corporation and others.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+* 
+* Contributors:
+*     IBM Corporation - initial API and implementation
+*******************************************************************************/--></head>
 <body id="cve_exceptions"><a name="cve_exceptions"><!-- --></a>
-
 <h1 class="topictitle1">Java bean exceptions</h1>
 <div><p>During normal development, exceptions are sometimes thrown by the
 Java beans. The visual editor displays icons and visual markers to indicate
@@ -40,11 +42,11 @@ exceptions.</p>
 are applied, a visual class might throw an exception. If an exception is thrown
 when a property value is applied, the Java bean is recreated and all of the
 other valid properties are applied. A warning sign is shown in the Design
-view and the Java beans view to indicate that an exception occurred  <br /><img src="../images/DesignWarningException.gif" alt="exception warning sign" /><br />  <br /><img src="../images/JavaBeansWarningException.gif" alt="exception in Java bean view" /><br /></p>
+view and the Java beans view to indicate that an exception occurred  <div class="image"><img src="../images/DesignWarningException.gif" alt="exception warning sign" /></div>  <div class="image"><img src="../images/JavaBeansWarningException.gif" alt="exception in Java bean view" /></div></p>
 <p>When you select a component that has a warning, the status line will show
 you the property that threw the exception as well as the exception message.
 For example, if the button's text property threw a run-time exception, the
-status bar shows the following status:<br /><img src="../images/StatusWarningException.gif" alt="exception in status bar" /><br /></p>
+status bar shows the following status:<div class="image"><img src="../images/StatusWarningException.gif" alt="exception in status bar" /></div></p>
 <p>When the exception is thrown during the application of a property value,
 the Java bean is recreated and the property ignored. The warning sign indicates
 that the representation of the live Java bean, as shown in the Design view
@@ -75,8 +77,5 @@ for the visual editor to understand.</p>
 <div><a href="../topics/tve_debug.html" title="If you want to see the Java processes and step through the code for your Java visual class while you are running it, you can choose the debug options.">Debugging a visual Java bean or application</a></div>
 <div><a href="../topics/tve_test_applets.html" title="You can test an applet using launch configuration options before deploying it to open in a browser.">Testing and deploying applets</a></div>
 </div>
-</div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
-<br />
-</div>
-</body>
+</div></body>
 </html>
