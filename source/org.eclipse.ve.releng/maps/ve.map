@@ -12,7 +12,7 @@ feature@phony.perfcore=N20050114f,:pserver:anonymous@dev.eclipse.org:/home/tools
 !*** The standard contributions
 
 plugin@org.eclipse.jem=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.beaninfo=v20060530_RC2,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.beaninfo=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.ui=v20060815_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.util=v20060815_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.proxy=v20060530_RC2,:pserver:anonymous@dev.eclipse.org:/home/tools,
