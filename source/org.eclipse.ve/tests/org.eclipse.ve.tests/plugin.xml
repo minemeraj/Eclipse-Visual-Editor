@@ -1,39 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.eclipse.ve.tests"
-   name="%pluginName"
-   version="1.2.0.qualifier"
-   provider-name="%providerName"
-   class="org.eclipse.ve.tests.VETestsPlugin">
+<plugin>
 
-   <runtime>
-      <library name="vetests.jar"/>
-   </runtime>
-   <requires>
-      <import plugin="org.junit"/>
-      <import plugin="org.eclipse.ve.cde"/>
-      <import plugin="org.eclipse.ve.java.core"/>
-      <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.ui.workbench"/>
-      <import plugin="org.eclipse.gef"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.jem"/>
-      <import plugin="org.eclipse.ve.propertysheet"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.jem.tests"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.jem.proxy"/>
-      
-      <!-- dbk added for perf tests -->
-      <import plugin="org.eclipse.ui.ide" />
-      <import plugin="org.eclipse.jface" />   
-      <import plugin="org.eclipse.jem.util"/>
-      <import plugin="com.ibm.icu"/>           
-   </requires>
-
-
+    
 <!-- extend a CodeGen rule -->
    <extension
          point="org.eclipse.ve.java.core.style">
