@@ -15,20 +15,20 @@ plugin@org.eclipse.jem=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tool
 plugin@org.eclipse.jem.beaninfo=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.ui=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.util=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.proxy=v20060530_RC2,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.tests=v20060815_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.workbench=v20060815_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.proxy=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.tests=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.workbench=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.sdk=v20060815_M,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/org.eclipse.jem.sdk
 
 plugin@org.eclipse.ve=v20060518_RC1,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.cde=v20060518_RC1,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.examples=v20060518_RC1,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.java.core=v20060818_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.propertysheet=v20060518_RC1,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.jfc=v20060817_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.swt=v20060817_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.tests=v20060518_RC1,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.doc=v20060518_RC1,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.cde=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.examples=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.java.core=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.propertysheet=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.jfc=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.swt=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.tests=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.doc=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.sdk=v20060518_RC1,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk
 
 feature@org.eclipse.jem=v20060815_M,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
@@ -37,6 +37,6 @@ feature@org.eclipse.jem.tests=v20060824_M,:pserver:anonymous@dev.eclipse.org:/ho
 
 feature@org.eclipse.ve=v20060817_M,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
 feature@org.eclipse.ve.examples=v20060530_RC2,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
-feature@org.eclipse.ve.tests=v20060530_RC2,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.tests-feature
+feature@org.eclipse.ve.tests=v20060824_M,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.tests-feature
 feature@org.eclipse.ve.sdk=v20060817_M,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk-feature
 
