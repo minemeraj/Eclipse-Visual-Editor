@@ -11,36 +11,33 @@
 package org.eclipse.ve.internal.java.core;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySource;
 
-import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
-import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.commands.CancelAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.properties.AbstractPropertyDescriptorAdapter;
 
 import org.eclipse.ve.internal.java.common.Common;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 
+import org.eclipse.ve.internal.propertysheet.IEToolsPropertyDescriptor;
 import org.eclipse.ve.internal.propertysheet.INeedData;
 
 public class CustomizeJavaBeanAction extends CustomizeAction {
@@ -49,7 +46,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 	public static final ImageDescriptor IMG_CUSTOMIZE_BEAN = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/customizebean_co.gif"); //$NON-NLS-1$
 
 	protected EditDomain fEditDomain;
-	private Shell shell;	
+		
 	static final int NONE = 0;
 	static final int NEWVALUE = 2;
 	static final int CHANGED = 3;
@@ -68,7 +65,6 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 	}
 	public void run() {
 		try {
-			shell = new Shell();			
 			EditPart editPart = (EditPart) getSelectedObjects().get(0);
 			ProxyFactoryRegistry registry = BeanProxyUtilities.getProxyFactoryRegistry(editPart);
 			IBeanTypeProxy customizerTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy(getCustomizerClassName());
@@ -90,16 +86,25 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 			setObjectMethod.invoke(customizerProxy, new IBeanProxy[] { beanProxy });
 			// (2)
 			// The only properties we are about are those that have get and set method pairs
-			// Get the existing beanProxy object and put it in a map keyed by property descriptor
-			Iterator propertyDecorators = Utilities.getPropertiesIterator(((JavaClass) bean.eClass()).getAllProperties());
+			// Get the existing beanProxy object and put it in a map keyed by property descriptor.
+			
+			IPropertyDescriptor[] propertyDescriptors = ((IPropertySource) editPart.getAdapter(IPropertySource.class)).getPropertyDescriptors();
 			final Map oldValues = new HashMap();
-			while (propertyDecorators.hasNext()) {
-				PropertyDecorator propDecor = (PropertyDecorator) propertyDecorators.next();
-				EStructuralFeature sf = (EStructuralFeature) propDecor.getEModelElement();
-				if (sf.isChangeable()) {
-					// Query the bean object
-					IBeanProxy existingValue = beanProxyHost.getBeanPropertyProxyValue(sf);
-					oldValues.put(sf, existingValue);
+			final Map namesToPropDesc = new HashMap();
+			for (int i=0; i<propertyDescriptors.length; i++) {
+				IPropertyDescriptor propDescriptor = propertyDescriptors[i];
+				Object id = propDescriptor.getId();
+				if (id instanceof EStructuralFeature) {
+					EStructuralFeature sf = (EStructuralFeature) id;
+					boolean isetool = propDescriptor instanceof IEToolsPropertyDescriptor;
+					// if is etool, the isReadonly takes precedence. Otherwise use the features isChangable.
+					if ((isetool && (!((IEToolsPropertyDescriptor) propDescriptor).isReadOnly())) || 
+						(!isetool && sf.isChangeable())) {
+						// Query the bean object
+						IBeanProxy existingValue = beanProxyHost.getBeanPropertyProxyValue(sf);
+						oldValues.put(propDescriptor, existingValue);
+						namesToPropDesc.put(sf.getName(), propDescriptor);
+					}
 				}
 			}
 			// (3)
@@ -128,16 +133,17 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 							beanProxyHost.revalidateBeanProxy();
 							if(eventName != null && explicitPropertyChange){
 								// If explicit property change is being done by the customize then apply the change immediately
-								EStructuralFeature sf = bean.getJavaType().getEStructuralFeature(eventName);
-								if(sf != null){
-									IBeanProxy oldValue = (IBeanProxy) oldValues.get(sf);
-									IBeanProxy currentValue = beanProxyHost.getBeanPropertyProxyValue(sf);	
+								IPropertyDescriptor propDesc = (IPropertyDescriptor) namesToPropDesc.get(eventName);
+								if(propDesc != null){
+									// It is one of interest.
+									IBeanProxy oldValue = (IBeanProxy) oldValues.get(propDesc);
+									IBeanProxy currentValue = beanProxyHost.getBeanPropertyProxyValue((EStructuralFeature) propDesc.getId());	
 									RuledCommandBuilder cmdBuilder = new RuledCommandBuilder(fEditDomain); 
 									recordProperyChange(
 										currentValue,
 										oldValue,
 										bean,
-										sf,
+										propDesc,
 										cmdBuilder);
 									fEditDomain.getCommandStack().execute(cmdBuilder.getCommand());
 								} else {
@@ -170,19 +176,19 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 			launcher = null;				
 		} catch (Exception exc) {
 			JavaVEPlugin.log(exc, Level.WARNING);
-		} finally {		
-			shell.dispose();			
-		}
+		} 
 	}
 	protected void customizerCancel(Map oldValues, IBeanProxyHost aBeanProxyHost, IJavaObjectInstance aBean) {
 		// When the customizer is cancelled the model will be fine, the only problem is that the customizer may have changed the target VM Java bean
 		// We therefore need to iterate over all the values and see which are different
-		Iterator keys = oldValues.keySet().iterator();
+		Iterator entries = oldValues.entrySet().iterator();
 
-		while (keys.hasNext()) {
-			EStructuralFeature sf = (EStructuralFeature) keys.next();
-			IBeanProxy oldValue = (IBeanProxy) oldValues.get(sf);
+		while (entries.hasNext()) {
+			Map.Entry entry = (Entry) entries.next();
+			IPropertyDescriptor pd = (IPropertyDescriptor) entry.getKey();
+			IBeanProxy oldValue = (IBeanProxy) entry.getValue();
 			IInternalBeanProxyHost internalHost = (IInternalBeanProxyHost) aBeanProxyHost;
+			EStructuralFeature sf = (EStructuralFeature) pd.getId();
 			IBeanProxy currentValue = aBeanProxyHost.getBeanPropertyProxyValue(sf);
 			int changeType = NONE;
 			if (oldValue == currentValue) {
@@ -213,13 +219,15 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 		// b)   The propertyChangeEvents fired by the customizer are used.		
 		CommandBuilder commandBuilder = new RuledCommandBuilder(fEditDomain);
 		
-		Iterator keys = oldValues.keySet().iterator();
+		Iterator oldValuesItr = oldValues.entrySet().iterator();
 		// We need a shell for the cell editors we will create to get the init strings.	
 		Map originalSettings = ((IInternalBeanProxyHost) aBeanProxyHost).getOriginalSettingsTable();
 
-		while (keys.hasNext()) {
-			EStructuralFeature sf = (EStructuralFeature) keys.next();
-			IBeanProxy oldValue = (IBeanProxy) oldValues.get(sf);
+		while (oldValuesItr.hasNext()) {
+			Map.Entry oldValueEntry = (Entry) oldValuesItr.next();
+			IPropertyDescriptor pd = (IPropertyDescriptor) oldValueEntry.getKey();
+			EStructuralFeature sf = (EStructuralFeature) pd.getId();
+			IBeanProxy oldValue = (IBeanProxy) oldValueEntry.getValue();
 			IBeanProxy currentValue = aBeanProxyHost.getBeanPropertyProxyValue(sf);
 			int changeType = NONE;
 			// 	If the customizer signalled a change in the property then we should 
@@ -251,7 +259,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 						currentValue,
 						oldValue,
 						aBean,
-						sf,
+						pd,
 						commandBuilder);
 				break;
 			case CANCELED :
@@ -265,16 +273,10 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 		fEditDomain.getCommandStack().execute(commandBuilder.getCommand());
 	}
 		
-	protected void recordProperyChange(IBeanProxy currentValue, IBeanProxy oldValue, IJavaObjectInstance aBean, EStructuralFeature sf, CommandBuilder commandBuilder){
+	protected void recordProperyChange(IBeanProxy currentValue, IBeanProxy oldValue, IJavaObjectInstance aBean, IPropertyDescriptor propDesc, CommandBuilder commandBuilder){
 		IJavaInstance newBean =
 			BeanProxyUtilities.wrapperBeanProxy(currentValue, aBean.eResource().getResourceSet(), null, true);
-		// (1)
-		PropertyDecorator propDecor = Utilities.getPropertyDecorator(sf);
-		IPropertyDescriptor propertySheetDescriptor =
-			(IPropertyDescriptor) EcoreUtil.getRegisteredAdapter(
-				propDecor.getEModelElement(),
-				AbstractPropertyDescriptorAdapter.IPROPERTYDESCRIPTOR_TYPE);
-		CellEditor cellEditor = propertySheetDescriptor.createPropertyEditor(shell);
+		CellEditor cellEditor = propDesc.createPropertyEditor(getWorkbenchPart().getSite().getShell());
 		if (cellEditor instanceof INeedData) {
 			((INeedData) cellEditor).setData(fEditDomain);
 			// We must call doSetValue(...) with the new bean
@@ -298,7 +300,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 		
 		commandBuilder.applyAttributeSetting(
 				aBean,
-				sf,
+				(EStructuralFeature) propDesc.getId(),
 				newBean);
 	}
 }
