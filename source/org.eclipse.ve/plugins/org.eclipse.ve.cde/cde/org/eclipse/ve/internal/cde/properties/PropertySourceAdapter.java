@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: PropertySourceAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-08-25 20:36:04 $ 
+ *  $Revision: 1.12 $  $Date: 2006-08-25 18:29:58 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -221,6 +221,7 @@ public class PropertySourceAdapter extends AdapterImpl implements IPropertySourc
 	 * isAdapter false means the descriptor is not an adapter, so it needs to be created each time
 	 * it is requested. This is used in the case that the descriptor needs to know the source of the property for
 	 * it to do its job.
+	 * @deprecated This should not be allowed anymore. If the descriptor needs the source, then it should be a ISourcedPropertyDescriptor.
 	 */
 	protected IPropertyDescriptor createPropertyDescriptorFromInfo(EStructuralFeature sfeature) {
 		PropertyDescriptorInformation descInfo =
