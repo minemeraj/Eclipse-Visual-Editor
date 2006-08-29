@@ -18,4 +18,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ve.propertysheet,
  org.eclipse.gef,
  org.eclipse.emf.ecore
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
