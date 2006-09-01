@@ -5,17 +5,17 @@
   xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"   
   xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
   xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">  
-  <palette:CategoryCmp xmi:id="swtCat0">
-    <categoryLabel xsi:type="utility:ConstantString" string="Custom 1"/>
-    <cmpGroups xsi:type="palette:GroupCmp">
-    
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" icon16Name="platform:/plugin/org.eclipse.ve.example.customwidget/icons/custom.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/org.eclipse.ve.example.customwidget.prompter#MyCustomPrompter"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="customPrompter"/>          
-        <entryLabel xsi:type="utility:ConstantString" string="Prompter"/>
-      </cmpEntries> 
-      
-    </cmpGroups>
-  </palette:CategoryCmp>
+  
+  <palette:Drawer>
+    <entryLabel xsi:type="utility:ConstantString" string="Custom"/>
+    <children 
+        xsi:type="palette:EMFCreationToolEntry" 
+        icon16Name="platform:/plugin/org.eclipse.ve.example.customwidget/icons/custom.gif"
+        creationClassURI="java:/org.eclipse.ve.example.customwidget.prompter#MyCustomPrompter">
+      <entryLabel xsi:type="utility:ConstantString" string="Prompter"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" 
+          key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="prompter"/>
+    </children>  
+  </palette:Drawer>
 </xmi:XMI>
