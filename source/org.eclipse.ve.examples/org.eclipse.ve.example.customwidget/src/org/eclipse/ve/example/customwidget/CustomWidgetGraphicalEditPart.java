@@ -21,15 +21,6 @@ public class CustomWidgetGraphicalEditPart extends ControlGraphicalEditPart {
 	public CustomWidgetGraphicalEditPart(Object model) {
 		super(model);
 	}
-	
-	public void performRequest(Request request) {
-		if(request.getType() == RequestConstants.REQ_DIRECT_EDIT){
-			// do nothing.  Bug introduced because the "text" property has a custom editor, and the BeanDirectEditCellEditorLocator assumes that "text" always has an SWT Text editor
-		} else {
-			super.performRequest(request);
-		}
-	}
-	
 
 	protected IFigure createFigure() {
 
