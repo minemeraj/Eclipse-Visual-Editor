@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.2 $  $Date: 2006-05-17 20:14:52 $ 
+ *  $Revision: 1.3 $  $Date: 2006-09-11 23:42:29 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -563,7 +563,6 @@ public class TypeResolver {
 			protected IJavaProject getJavaProject() {
 				return javaProject;
 			}
-
 			
 			public void processDelta(IJavaElementDelta delta) {
 				IJavaElement element = delta.getElement();
@@ -686,6 +685,15 @@ public class TypeResolver {
 			}
 			
 			/* (non-Javadoc)
+			 * @see org.eclipse.jem.workbench.utility.JavaModelListener#notifyProjectAddedRemovedFromClasspath(org.eclipse.jdt.core.IJavaProject, boolean)
+			 */
+			protected void notifyProjectAddedRemovedFromClasspath(IJavaProject[] added, IJavaProject[] removed) {
+				if (removed.length > 0) {
+					clearAllResolved();	// Probably won't get here, but if removed, blast all (could actually use removed elements).
+				}
+			}
+			
+			/* (non-Javadoc)
 			 * @see org.eclipse.jem.internal.adapters.jdom.JavaModelListener#processJavaElementChanged(org.eclipse.jdt.core.IPackageFragment, org.eclipse.jdt.core.IJavaElementDelta)
 			 */
 			protected void processJavaElementChanged(IPackageFragment element, IJavaElementDelta delta) {
@@ -763,14 +771,11 @@ public class TypeResolver {
 			private ThreadLocal removedImportDecls = new ThreadLocal();
 			
 			
-			/* (non-Javadoc)
-			 * @see org.eclipse.jem.internal.adapters.jdom.JavaModelListener#elementChanged(org.eclipse.jdt.core.ElementChangedEvent)
-			 */
-			public void elementChanged(ElementChangedEvent event) {
+			protected void processElementChanged(ElementChangedEvent event) {
 				blastAll.set(null);
 				removedElements.set(null);
 				removedImportDecls.set(null);
-				super.elementChanged(event);
+				super.processElementChanged(event);
 				if (isBlastAll()) {
 					clearAllResolved();
 				} else {
@@ -784,6 +789,8 @@ public class TypeResolver {
 				removedImportDecls.set(null);
 			}
 		};
+		
+		modelListener.initializeClasspaths();
 	}
 	
 	
@@ -1068,7 +1075,7 @@ public class TypeResolver {
 		}
 		
 		if (modelListener != null)
-			JavaCore.removeElementChangedListener(modelListener);
+			modelListener.releaseListener();
 	}
 	
 	/**
