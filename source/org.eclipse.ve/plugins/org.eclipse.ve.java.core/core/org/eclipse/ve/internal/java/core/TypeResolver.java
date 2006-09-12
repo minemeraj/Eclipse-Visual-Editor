@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.3 $  $Date: 2006-09-11 23:42:29 $ 
+ *  $Revision: 1.4 $  $Date: 2006-09-12 18:45:39 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -566,7 +566,6 @@ public class TypeResolver {
 			
 			public void processDelta(IJavaElementDelta delta) {
 				IJavaElement element = delta.getElement();
-				
 				switch (element.getElementType()) {
 					case IJavaElement.IMPORT_CONTAINER:
 						processJavaElementChanged((IImportContainer) element, delta);
@@ -775,18 +774,21 @@ public class TypeResolver {
 				blastAll.set(null);
 				removedElements.set(null);
 				removedImportDecls.set(null);
-				super.processElementChanged(event);
-				if (isBlastAll()) {
-					clearAllResolved();
-				} else {
-					if (removedElements.get() != null)
-						clearRegion((IRegion) removedElements.get());
-					if (removedImportDecls.get() != null)
-						processRemovedImports(getRemovedImportDecls());
-				}
-				blastAll.set(null);
-				removedElements.set(null);
-				removedImportDecls.set(null);
+				try {
+					super.processElementChanged(event);
+					if (isBlastAll()) {
+						clearAllResolved();
+					} else {
+						if (removedElements.get() != null)
+							clearRegion((IRegion) removedElements.get());
+						if (removedImportDecls.get() != null)
+							processRemovedImports(getRemovedImportDecls());
+					}
+				} finally {
+					blastAll.set(null);
+					removedElements.set(null);
+					removedImportDecls.set(null);
+				}				
 			}
 		};
 		

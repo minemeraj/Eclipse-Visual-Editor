@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TestRefreshProject.java,v $
- *  $Revision: 1.5 $  $Date: 2006-05-17 20:16:07 $ 
+ *  $Revision: 1.6 $  $Date: 2006-09-12 18:45:40 $ 
  */
 package org.eclipse.ve.tests.codegen.resolve;
 
@@ -69,10 +69,8 @@ public class TestRefreshProject extends BaseResolveTestCase {
 
 	public void testCloseProjectReference() throws CoreException {
 		resolveType("FromTest2");
-
 		// We will close the other project. This will be a remove.
 		ResourcesPlugin.getWorkspace().getRoot().getProject(ResolveSuite.RESOLVE_TESTDATA2_PROJECT).close(new NullProgressMonitor());
-		
 		// Now we should not get an answer to resolve type.
 		assertNull(resolver.resolveType("FromTest2"));
 	}
@@ -100,7 +98,9 @@ public class TestRefreshProject extends BaseResolveTestCase {
 				javaProject.getProject().getFile(CLASSPATH).delete(true, monitor);
 				javaProject.getProject().getFile(CLASSPATH_COPY).copy(CLASSPATH, true, new NullProgressMonitor());
 				javaProject.getProject().getFile(CLASSPATH_COPY).delete(true, monitor);
-				ResourcesPlugin.getWorkspace().getRoot().getProject(ResolveSuite.RESOLVE_TESTDATA2_PROJECT).open(new NullProgressMonitor());
+				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(ResolveSuite.RESOLVE_TESTDATA2_PROJECT);
+				project.open(new NullProgressMonitor());
+				ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor());
 			}
 		}, new NullProgressMonitor());
 	}
