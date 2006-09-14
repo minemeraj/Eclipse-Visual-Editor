@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaModelSynchronizer.java,v $
- *  $Revision: 1.13 $  $Date: 2006-09-11 23:42:29 $ 
+ *  $Revision: 1.14 $  $Date: 2006-09-14 18:31:07 $ 
  */
 
 import java.util.Iterator;
@@ -40,22 +40,9 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	}
 	protected IBeanProxyDomain proxyDomain;
 	protected IJavaProject fProject; // The project this listener is opened on.
+	private boolean recycleVM = false;
 	private TerminateRunnable terminateRun;	
 	private String ignoreTypeName;	// The name of the "this" class.
-	
-	private ThreadLocal recycleVM = new ThreadLocal();
-	private boolean isRecycleVM() {
-		Boolean b = (Boolean) recycleVM.get();
-		if (b == null) {
-			b = Boolean.FALSE;
-			recycleVM.set(b);
-		}
-		return b.booleanValue();
-	}
-	
-	private void setRecycleVM(boolean b) {
-		recycleVM.set(Boolean.valueOf(b));
-	}
 	
 
 	public JavaModelSynchronizer(IBeanProxyDomain proxyDomain, IJavaProject aProject, TerminateRunnable terminateRun) {
@@ -64,7 +51,6 @@ public class JavaModelSynchronizer extends JavaModelListener {
 		this.terminateRun = terminateRun;
 		
 		fProject = aProject;
-		initializeClasspaths();
 	}
 	
 	/* (non-Javadoc)
@@ -82,7 +68,7 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	 * Stop the synchronizer from listening to any more changes.
 	 */
 	public void stopSynchronizer() {
-		releaseListener();
+		JavaCore.removeElementChangedListener(this);
 	}
 
 	protected void processJavaElementChanged(IJavaProject element, IJavaElementDelta delta) {
@@ -91,10 +77,10 @@ public class JavaModelSynchronizer extends JavaModelListener {
 				// If our project goes, we need to stop the vm so that it can't be erased.
 				// All related projects are required projects and if they are deleted/closed/added/opened when need to do
 				// a recycle because we don't know any of the state, whether they are still there or not.
-				setRecycleVM(true);
+				recycleVM = true;
 				return;	// Don't need to process further since we will recycle.
 			} else if (isClasspathResourceChange(delta)) {
-				setRecycleVM(true); // The .classpath file itself in SOME DEPENDENT PROJECT has changed. 
+				recycleVM = true; // The .classpath file itself in SOME DEPENDENT PROJECT has changed. 
 				return;	// Don't need to process further since we will recycle.
 			}
 			processChildren(element, delta);
@@ -140,7 +126,7 @@ public class JavaModelSynchronizer extends JavaModelListener {
 		while (itr.hasNext()) {
 			String entryName = (String) itr.next();
 			if (entryName.equals(sourceName) || entryName.startsWith(sourceNameForInner)) {
-				setRecycleVM(true);
+				recycleVM = true;
 				return;	// Don't need to process further since we will recycle.						
 			}
 		}
@@ -168,7 +154,7 @@ public class JavaModelSynchronizer extends JavaModelListener {
 				break;	// Don't need to do anything on a new package. If this was from a new fragroot, we would recycle already. Otherwise, it will find this package on the first use.
 			case IJavaElementDelta.REMOVED:
 				if (delta.getAffectedChildren().length == 0)
-					setRecycleVM(true);	// Since package was removed, we should recyle to get a clean classloader.
+					recycleVM = true;	// Since package was removed, we should recyle to get a clean classloader.
 				break;
 			default :
 				super.processJavaElementChanged(element, delta);
@@ -204,18 +190,9 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	 */
 	protected void processJavaElementChanged(IPackageFragmentRoot element, IJavaElementDelta delta) {
 		if (isClassPathChange(delta))
-			setRecycleVM(true);
+			recycleVM = true;
 		else
 			super.processJavaElementChanged(element, delta);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jem.workbench.utility.JavaModelListener#notifyProjectAddedRemovedFromClasspath(org.eclipse.jdt.core.IJavaProject, boolean)
-	 */
-	protected void notifyProjectAddedRemovedFromClasspath(IJavaProject[] added, IJavaProject[] removed) {
-		if (proxyDomain.getProxyFactoryRegistry() == null || !proxyDomain.getProxyFactoryRegistry().isValid())
-			return;	// Don't even bother, our factory is already terminated or we don't have one yet.
-		terminateRun.run(false);
 	}
 
 	/**
@@ -223,27 +200,29 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	 * Something about the type has changed. If it was removed (not a move), then recycle.
 	 */
 	protected void processJavaElementChanged(IType element, IJavaElementDelta delta) {
-		if (!isRecycleVM()) {
+		if (!recycleVM) {
 			IStandardBeanTypeProxyFactory btypeFactory = proxyDomain.getProxyFactoryRegistry().getBeanTypeProxyFactory();
 			String typeName = element.getFullyQualifiedName();		
 			if (btypeFactory.isBeanTypeRegistered(typeName) || btypeFactory.isBeanTypeNotFound(typeName))
-				setRecycleVM(true);
+				recycleVM = true;
 		}
 	}
 
 	public String toString() {
 		return super.toString()+" "+fProject.getElementName(); //$NON-NLS-1$
 	}
-	
-	protected void processElementChanged(ElementChangedEvent event) {
+	/**
+	 * @see org.eclipse.jdt.core.IElementChangedListener#elementChanged(ElementChangedEvent)
+	 */
+	public void elementChanged(ElementChangedEvent event) {
 		if (proxyDomain.getProxyFactoryRegistry() == null || !proxyDomain.getProxyFactoryRegistry().isValid())
 			return;	// Don't even bother, our factory is already terminated or we don't have one yet.
 		// We want to know when we start process all deltas, and then we end. At the end if
 		// the recycle flag is set, we will only do one recycle.
-		setRecycleVM(false);
-		super.processElementChanged(event);
-		if (isRecycleVM()) {
-			setRecycleVM(false);
+		recycleVM = false;
+		super.elementChanged(event);
+		if (recycleVM) {
+			recycleVM = false;
 			terminateRun.run(false);
 		}
 	}

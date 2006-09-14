@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.4 $  $Date: 2006-09-12 18:45:39 $ 
+ *  $Revision: 1.5 $  $Date: 2006-09-14 18:31:07 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -563,9 +563,11 @@ public class TypeResolver {
 			protected IJavaProject getJavaProject() {
 				return javaProject;
 			}
+
 			
 			public void processDelta(IJavaElementDelta delta) {
 				IJavaElement element = delta.getElement();
+				
 				switch (element.getElementType()) {
 					case IJavaElement.IMPORT_CONTAINER:
 						processJavaElementChanged((IImportContainer) element, delta);
@@ -684,15 +686,6 @@ public class TypeResolver {
 			}
 			
 			/* (non-Javadoc)
-			 * @see org.eclipse.jem.workbench.utility.JavaModelListener#notifyProjectAddedRemovedFromClasspath(org.eclipse.jdt.core.IJavaProject, boolean)
-			 */
-			protected void notifyProjectAddedRemovedFromClasspath(IJavaProject[] added, IJavaProject[] removed) {
-				if (removed.length > 0) {
-					clearAllResolved();	// Probably won't get here, but if removed, blast all (could actually use removed elements).
-				}
-			}
-			
-			/* (non-Javadoc)
 			 * @see org.eclipse.jem.internal.adapters.jdom.JavaModelListener#processJavaElementChanged(org.eclipse.jdt.core.IPackageFragment, org.eclipse.jdt.core.IJavaElementDelta)
 			 */
 			protected void processJavaElementChanged(IPackageFragment element, IJavaElementDelta delta) {
@@ -770,29 +763,27 @@ public class TypeResolver {
 			private ThreadLocal removedImportDecls = new ThreadLocal();
 			
 			
-			protected void processElementChanged(ElementChangedEvent event) {
+			/* (non-Javadoc)
+			 * @see org.eclipse.jem.internal.adapters.jdom.JavaModelListener#elementChanged(org.eclipse.jdt.core.ElementChangedEvent)
+			 */
+			public void elementChanged(ElementChangedEvent event) {
 				blastAll.set(null);
 				removedElements.set(null);
 				removedImportDecls.set(null);
-				try {
-					super.processElementChanged(event);
-					if (isBlastAll()) {
-						clearAllResolved();
-					} else {
-						if (removedElements.get() != null)
-							clearRegion((IRegion) removedElements.get());
-						if (removedImportDecls.get() != null)
-							processRemovedImports(getRemovedImportDecls());
-					}
-				} finally {
-					blastAll.set(null);
-					removedElements.set(null);
-					removedImportDecls.set(null);
-				}				
+				super.elementChanged(event);
+				if (isBlastAll()) {
+					clearAllResolved();
+				} else {
+					if (removedElements.get() != null)
+						clearRegion((IRegion) removedElements.get());
+					if (removedImportDecls.get() != null)
+						processRemovedImports(getRemovedImportDecls());
+				}
+				blastAll.set(null);
+				removedElements.set(null);
+				removedImportDecls.set(null);
 			}
 		};
-		
-		modelListener.initializeClasspaths();
 	}
 	
 	
@@ -1077,7 +1068,7 @@ public class TypeResolver {
 		}
 		
 		if (modelListener != null)
-			modelListener.releaseListener();
+			JavaCore.removeElementChangedListener(modelListener);
 	}
 	
 	/**
