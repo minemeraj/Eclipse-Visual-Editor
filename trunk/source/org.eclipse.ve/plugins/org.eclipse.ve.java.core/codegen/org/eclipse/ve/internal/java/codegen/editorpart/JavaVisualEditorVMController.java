@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.23 $  $Date: 2006-09-11 23:42:29 $ 
+ *  $Revision: 1.24 $  $Date: 2006-09-14 18:31:07 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -645,7 +645,7 @@ stopDeadlock(file);
 			}
 			
 			if (JAVA_MODEL_LISTENER != null) {
-				JAVA_MODEL_LISTENER.releaseListener();
+				JavaCore.removeElementChangedListener(JAVA_MODEL_LISTENER);
 				ResourcesPlugin.getWorkspace().removeResourceChangeListener(JAVA_MODEL_LISTENER);
 				JAVA_MODEL_LISTENER = null;
 			}
@@ -691,42 +691,10 @@ stopDeadlock(file);
 		 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
 		 */
 		public void resourceChanged(IResourceChangeEvent e) {
-			switch (e.getType()) {
-				case IResourceChangeEvent.PRE_CLOSE:
-				case IResourceChangeEvent.PRE_DELETE:
-					// About to close or delete the project and it is ours, so we need to cleanup.
-					IProject project = (IProject) e.getResource();
-					processRemovedProject(project, true);	// Need to wait because the project is going away and we can't have the registry hold onto files.
-					processChangedReferencedProject(project);
-					break;
-				case IResourceChangeEvent.POST_BUILD:
-				case IResourceChangeEvent.POST_CHANGE:
-					// Test to see if it is a project description change. That could signal a need to recycle the vm's.
-					try {
-						e.getDelta().accept(new IResourceDeltaVisitor() {
-						
-							public boolean visit(IResourceDelta delta) throws CoreException {
-								IResource res = delta.getResource();
-								boolean isProject = res.getType() == IResource.PROJECT;
-								if (isProject && ((delta.getFlags() & IResourceDelta.DESCRIPTION) != 0)) {
-									// This means this project's classpath (a container changed some element of the container and added/removed project) was changed. This is a major
-									// change (though it could be simply attach source), so to be on the safe
-									// side process any referenced project like an add or remove. Plus the project
-									// itself.
-									// It actually could be something other than the referenced projects, but can't tell. So treat as
-									// recycle needed.
-									IProject project = (IProject) res;
-									processChangedProject(project);
-									processChangedReferencedProject(project);	
-								}
-								return res.getType() != IResource.PROJECT;	// As soon as we reach project, we don't want to go to the children.
-							}
-						
-						});
-					} catch (CoreException exp) {
-					}
-					break;
-			}
+			// About to close or delete the project and it is ours, so we need to cleanup.
+			IProject project = (IProject) e.getResource();
+			processRemovedProject(project, true);	// Need to wait because the project is going away and we can't have the registry hold onto files.
+			processChangedReferencedProject(project);
 		}
 
 		
@@ -858,8 +826,7 @@ stopDeadlock(file);
 		// It is assumed that we are sync(PER_PROJECT) at this point.
 		// Creating it actually adds it to listening.
 		JAVA_MODEL_LISTENER = new ChangeListener();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(JAVA_MODEL_LISTENER, IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE | IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.POST_CHANGE);
-		
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(JAVA_MODEL_LISTENER, IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
 	}
 	
 	/**
