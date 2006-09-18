@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaModelSynchronizer.java,v $
- *  $Revision: 1.14 $  $Date: 2006-09-14 18:31:07 $ 
+ *  $Revision: 1.15 $  $Date: 2006-09-18 17:53:17 $ 
  */
 
 import java.util.Iterator;
@@ -151,10 +151,9 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	protected void processJavaElementChanged(IPackageFragment element, IJavaElementDelta delta) {
 		switch (delta.getKind()) {
 			case IJavaElementDelta.ADDED:
-				break;	// Don't need to do anything on a new package. If this was from a new fragroot, we would recycle already. Otherwise, it will find this package on the first use.
 			case IJavaElementDelta.REMOVED:
 				if (delta.getAffectedChildren().length == 0)
-					recycleVM = true;	// Since package was removed, we should recyle to get a clean classloader.
+					recycleVM = true;	// Since package was added/removed, we should recyle to get a clean classloader.
 				break;
 			default :
 				super.processJavaElementChanged(element, delta);
