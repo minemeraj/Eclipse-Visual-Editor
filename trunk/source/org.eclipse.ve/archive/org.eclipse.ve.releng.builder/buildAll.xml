@@ -39,16 +39,16 @@
 	</target>
 
 	<target name="update.map.cvsuser" depends="preinit" if="cvsuser">
-		<!-- cvs user is set explicitly, so download and modify map file to point to cvsuser for /home/tools references -->
+		<!-- cvs user is set explicitly, so download and modify map file to point to cvsuser for /cvsroot/tools references -->
 		<property name="mapVersionTag" value="HEAD" />
-		<cvs cvsRoot="${cvsuser}@dev.eclipse.org:/home/tools"
+		<cvs cvsRoot="${cvsuser}@dev.eclipse.org:/cvsroot/tools"
 			package="org.eclipse.ve.releng"
 			dest="${buildDirectory}/maps"
 			tag="${mapVersionTag}"
 		/>
 		<replace file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/ve.map">
 		 	<!--  Insert url for supported eclipse drop-->
-			<replacefilter token=":pserver:anonymous@dev.eclipse.org:/home/tools" value="${cvsuser}@dev.eclipse.org:/home/tools"/>
+			<replacefilter token=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools" value="${cvsuser}@dev.eclipse.org:/cvsroot/tools"/>
 		</replace>
 	</target>
 	
