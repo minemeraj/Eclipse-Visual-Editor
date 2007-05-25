@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.43 $  $Date: 2006-06-22 02:56:01 $ 
+ *  $Revision: 1.44 $  $Date: 2007-05-25 04:20:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -199,17 +199,22 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 	
 	protected static URL getSWTLegacyOSPath () {
 		PluginModelManager pm = PDECore.getDefault().getModelManager();
-		IFragmentModel[] frags = pm.getFragments();			
+		IFragmentModel frag = null;
+		IPluginModelBase[] models = pm.getAllModels();
 		URL os = null;
-		for (int i = 0; i < frags.length; i++) {
-			if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt") && //$NON-NLS-1$
-				frags[i].getBundleDescription().getHost().getName().equals("org.eclipse.swt")) { //$NON-NLS-1$
-				// swt fragment					
-				if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt.nl"))  //$NON-NLS-1$
-					continue; // skip the nl ones
-				os = getResourceURL(frags[i], SWTContainer.SWT_CONTAINER_OS.toPortableString());
-				if (os!=null){	
-				  return os;
+		for (int i = 0; i < models.length; i++) {
+			if (models[i].isFragmentModel())
+			{
+				frag = (IFragmentModel)models[i];
+				if (frag.getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt") && //$NON-NLS-1$
+					frag.getBundleDescription().getHost().getName().equals("org.eclipse.swt")) { //$NON-NLS-1$
+					// swt fragment					
+					if (frag.getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt.nl"))  //$NON-NLS-1$
+						continue; // skip the nl ones
+					os = getResourceURL(frag, SWTContainer.SWT_CONTAINER_OS.toPortableString());
+					if (os!=null){	
+					  return os;
+					}
 				}
 			}
 		}	
@@ -222,7 +227,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		IPluginExtension[] extensions = plugin.getExtensions().getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
 			IPluginExtension extension = extensions[i];
-			if ((PDECore.getPluginId() + ".source").equals(extension.getPoint())) { //$NON-NLS-1$
+			if ((PDECore.PLUGIN_ID + ".source").equals(extension.getPoint())) { //$NON-NLS-1$
 				IPluginObject[] children = extension.getChildren();
 				for (int j = 0; j < children.length; j++) {
 					if (children[j].getName().equals("location")) { //$NON-NLS-1$

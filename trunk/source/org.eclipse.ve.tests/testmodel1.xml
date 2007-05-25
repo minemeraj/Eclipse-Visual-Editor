@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.cdo.mapping:PackageMapping xmlns:org.eclipse.emf.cdo.mapping="http://www.eclipse.org/net4j/cdo/mapping.ecore" packageName="testmodel1">
+  <classes className="TreeNode" tableName="TREE_NODE">
+    <attributes attributeName="booleanFeature" columnName="BOOLEAN_FEATURE" columnType="16"/>
+    <attributes attributeName="intFeature" columnName="INT_FEATURE" columnType="4"/>
+    <attributes attributeName="stringFeature" columnName="STRING_FEATURE" columnType="-1"/>
+  </classes>
+  <classes className="ExtendedNode" tableName="EXTENDED_NODE">
+    <attributes attributeName="booleanFeature" columnName="BOOLEAN_FEATURE" columnType="16"/>
+    <attributes attributeName="intFeature" columnName="INT_FEATURE" columnType="4"/>
+    <attributes attributeName="stringFeature" columnName="STRING_FEATURE" columnType="-1"/>
+    <attributes attributeName="stringFeature2" columnName="STRING_FEATURE2" columnType="-1"/>
+  </classes>
+  <classes className="EmptyNode" tableName="EMPTY_NODE">
+    <attributes attributeName="booleanFeature" columnName="BOOLEAN_FEATURE" columnType="16"/>
+    <attributes attributeName="intFeature" columnName="INT_FEATURE" columnType="4"/>
+    <attributes attributeName="stringFeature" columnName="STRING_FEATURE" columnType="-1"/>
+  </classes>
+  <classes className="EmptyRefNode" tableName="EMPTY_REF_NODE">
+    <attributes attributeName="booleanFeature" columnName="BOOLEAN_FEATURE" columnType="16"/>
+    <attributes attributeName="intFeature" columnName="INT_FEATURE" columnType="4"/>
+    <attributes attributeName="stringFeature" columnName="STRING_FEATURE" columnType="-1"/>
+  </classes>
+</org.eclipse.emf.cdo.mapping:PackageMapping>

@@ -11,7 +11,7 @@
 package org.eclipse.ve.tests.vce.rules;
 /*
  *  $RCSfile: PostSetTest.java,v $
- *  $Revision: 1.5 $  $Date: 2005-12-05 17:07:40 $ 
+ *  $Revision: 1.6 $  $Date: 2007-05-25 04:20:09 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -26,16 +26,18 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.emf.EMFAnnotationLinkagePolicy;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cdm.DiagramData;
-import org.eclipse.ve.internal.java.vce.rules.VCEChildRule;
-import org.eclipse.ve.internal.jcm.JCMPackage;
+
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.EMFAnnotationLinkagePolicy;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
-import org.eclipse.ve.internal.jcm.JCMMethod;
+import org.eclipse.ve.internal.jcm.JCMPackage;
+
+import org.eclipse.ve.internal.java.vce.rules.VCEChildRule;
 
 /**
  * @author Rich Kulp
@@ -98,7 +100,7 @@ public class PostSetTest extends TestCase {
 		// Get the ParentContainer, which is //@members.0, create a command builder, and remove it from components
 		// as a child policy and the post set command and then execute.
 		CommandBuilder cbld = new CommandBuilder();
-		BeanSubclassComposition comp = (BeanSubclassComposition) (EObject) testRes.getContents().get(0);
+		BeanSubclassComposition comp = (BeanSubclassComposition) testRes.getContents().get(0);
 		EObject parentContainer = testRes.getEObject("parentContainer");
 		cbld.cancelAttributeSetting(comp, JCMPackage.eINSTANCE.getBeanComposition_Components(), parentContainer);
 		cbld.append(childRule.postDeleteChild(domain, parentContainer));
@@ -122,7 +124,7 @@ public class PostSetTest extends TestCase {
 		// Get the ParentContainer, which is //@members.0, create a command builder, and remove it from components
 		// as a child policy and the post set command and then execute.
 		CommandBuilder cbld = new CommandBuilder();
-		BeanSubclassComposition comp = (BeanSubclassComposition) (EObject) testRes.getContents().get(0);
+		BeanSubclassComposition comp = (BeanSubclassComposition) testRes.getContents().get(0);
 		EObject parentContainer = testRes.getEObject("parentContainer");
 		cbld.cancelAttributeSetting(comp, JCMPackage.eINSTANCE.getBeanComposition_Components(), parentContainer);
 		cbld.append(childRule.postDeleteChild(domain, parentContainer));
@@ -148,7 +150,7 @@ public class PostSetTest extends TestCase {
 		// Get the ParentContainer, create a command builder, and remove it from components
 		// as a child policy and the post set command and then execute.
 		CommandBuilder cbld = new CommandBuilder();
-		BeanSubclassComposition comp = (BeanSubclassComposition) (EObject) testRes.getContents().get(0);
+		BeanSubclassComposition comp = (BeanSubclassComposition) testRes.getContents().get(0);
 		EObject parentContainer = testRes.getEObject("parentContainer");
 		cbld.cancelAttributeSetting(comp, JCMPackage.eINSTANCE.getBeanComposition_Components(), parentContainer);
 		cbld.append(childRule.postDeleteChild(domain, parentContainer));
@@ -166,8 +168,8 @@ public class PostSetTest extends TestCase {
 		assertTrue("ParentContainer1 members missing.", comp.getMembers().get(0) == testRes.getEObject("parentContainer1"));
 		assertTrue("Child3 members missing.", comp.getMembers().get(1) == testRes.getEObject("child3"));		
 		assertTrue("Wrong number of initialize methods removed.", comp.getMethods().size() == 2);
-		assertTrue("ParentContainer1 initializer missing.", ((JCMMethod) comp.getMethods().get(0)).getReturn() == testRes.getEObject("parentContainer1"));
-		assertTrue("Child3 initializer missing.", ((JCMMethod) comp.getMethods().get(1)).getReturn() == testRes.getEObject("child3"));
+		assertTrue("ParentContainer1 initializer missing.", (comp.getMethods().get(0)).getReturn() == testRes.getEObject("parentContainer1"));
+		assertTrue("Child3 initializer missing.", (comp.getMethods().get(1)).getReturn() == testRes.getEObject("child3"));
 		
 		EStructuralFeature crossRef = child3.eClass().getEStructuralFeature("crossRef");
 		assertNull("crossRef from Child1 not removed.", InverseMaintenanceAdapter.getFirstReferencedBy(child3, (EReference) crossRef));

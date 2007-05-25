@@ -89,7 +89,7 @@ public class ViewFormBeanInfo extends IvjBeanInfo {
 	}
 	
 	protected PropertyDescriptor[] overridePropertyDescriptors(PropertyDescriptor[] pds) {
-		PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
+		PropertyDescriptor[] newPDs = pds.clone();
 
 		replacePropertyDescriptor(newPDs, "layout", null, new Object[] { //$NON-NLS-1$
 				DESIGNTIMEPROPERTY, Boolean.FALSE,});

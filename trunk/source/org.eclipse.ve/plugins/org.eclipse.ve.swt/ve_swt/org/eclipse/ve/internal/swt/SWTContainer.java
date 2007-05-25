@@ -167,9 +167,9 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		}		
 		public String getPdePath() {
 			if (pdePath==null) {				
-				if (isLegacy(PDECore.getDefault().getModelManager().getTargetVersion()))
-					pdePath = PDECore.getDefault().getModelManager().findModel(swtLibraries[0].getLegacyID()).getInstallLocation();
-				else 
+//				if (isLegacy(PDECore.getDefault().getModelManager().getTargetVersion()))
+//					pdePath = PDECore.getDefault().getModelManager().findModel(swtLibraries[0].getLegacyID()).getInstallLocation();
+//				else 
 				   pdePath = PDECore.getDefault().getModelManager().findModel(swtLibraries[0].getPluginID()).getInstallLocation();
 			}
 			return pdePath;
@@ -603,9 +603,9 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		currentPDEPath = ct.getPdePath();
 		containerType=ct;
 		removeProblems();
-		if (isLegacy(PDECore.getDefault().getModelManager().getTargetVersion())) 
-			initLegacyPDE(containerPath);
-		else
+//		if (isLegacy(PDECore.getDefault().getModelManager().getTargetVersion())) 
+//			initLegacyPDE(containerPath);
+//		else
 			initPDE(containerPath);
 	}
 	

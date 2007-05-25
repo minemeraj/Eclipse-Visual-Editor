@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SashFormBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-18 15:32:18 $ 
+ *  $Revision: 1.9 $  $Date: 2007-05-25 04:20:17 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -66,7 +66,7 @@ public class SashFormBeanInfo extends IvjBeanInfo {
 
 	protected PropertyDescriptor[] overridePropertyDescriptors(
 			PropertyDescriptor[] pds) {
-		PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
+		PropertyDescriptor[] newPDs = pds.clone();
 
 		replacePropertyDescriptor(newPDs, "layout", null, new Object[] { //$NON-NLS-1$
 				DESIGNTIMEPROPERTY, Boolean.FALSE, });

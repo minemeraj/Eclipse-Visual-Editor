@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BrowserBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.5 $  $Date: 2007-05-25 04:20:17 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -65,7 +65,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 }
 
 protected PropertyDescriptor[] overridePropertyDescriptors(PropertyDescriptor[] pds) {
-	PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
+	PropertyDescriptor[] newPDs = pds.clone();
 	
 	replacePropertyDescriptor(newPDs, "layout", null, new Object[] {  //$NON-NLS-1$
 		DESIGNTIMEPROPERTY, Boolean.FALSE,
