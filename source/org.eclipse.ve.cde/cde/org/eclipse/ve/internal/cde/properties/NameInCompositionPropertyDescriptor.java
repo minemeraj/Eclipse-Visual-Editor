@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: NameInCompositionPropertyDescriptor.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.11 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 import java.util.*;
@@ -98,7 +98,7 @@ public class NameInCompositionPropertyDescriptor extends AbstractAnnotationPrope
 			(EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
 		ks.setKey(NAME_IN_COMPOSITION_KEY);
 		if (setValue != null && ((String) setValue).length() > 0)
-			ks.setValue(setValue);
+			ks.setValue((String)setValue);
 		return ks;
 	}
 

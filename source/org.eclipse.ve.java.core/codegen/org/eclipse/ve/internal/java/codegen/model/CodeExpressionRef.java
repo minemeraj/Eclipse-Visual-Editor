@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.68 $  $Date: 2006-05-17 20:14:53 $ 
+ *  $Revision: 1.69 $  $Date: 2007-05-25 04:18:47 $ 
  */
 
 
@@ -47,9 +47,9 @@ private     int						fInternalState	= 0 ;
 protected   ExpressionParser		fContentParser	= null ; 
 protected 	VEexpressionPriority	fPriority		= null;      
 protected   CodeExpressionRef		fMasteredExpression = null;  // STATE_NO_SRC expressions may have a master expression
-protected   List					freqImports = new ArrayList();  // Imports required
-protected 	List fReferences = new ArrayList() ; // References to other BeanBarts
-protected List fSameLineExpressions = new ArrayList(); // List of expressions in the same line - STATE_SHARED_LINE
+protected   List<String>			freqImports = new ArrayList<String>();  // Imports required
+protected 	List<EObject> 			fReferences = new ArrayList<EObject>() ; // References to other BeanBarts
+protected List<CodeExpressionRef> fSameLineExpressions = new ArrayList<CodeExpressionRef>(); // List of expressions in the same line - STATE_SHARED_LINE
 
 
 /*********
@@ -281,9 +281,9 @@ protected boolean isDuplicate() {
 	boolean result = false ;
 	
 	// TODO Need a rule to descide this
-	Iterator itr = fBean.getRefExpressions().iterator() ;
+	Iterator<CodeExpressionRef> itr = fBean.getRefExpressions().iterator() ;
 	while (itr.hasNext()) {
-		CodeExpressionRef e = (CodeExpressionRef) itr.next();
+		CodeExpressionRef e = itr.next();
 		if (e == this) {
 			return false ;
 		}
@@ -714,7 +714,7 @@ protected void updateDocument(int docOff, int len, String newContent) {
  * Expression decoders may generated code that will require
  * a set of import statements.  If they do not exist, add them
  */
-public static void handleImportStatements(ICompilationUnit cu, IBeanDeclModel model, List imports) {
+public static void handleImportStatements(ICompilationUnit cu, IBeanDeclModel model, List<String> imports) {
 	if (imports != null && imports.size()>0) {		
 		try {
 			String packageName=null;
@@ -724,7 +724,7 @@ public static void handleImportStatements(ICompilationUnit cu, IBeanDeclModel mo
 
 			for (int i = 0; i < imports.size(); i++) {
 //				cu.reconcile(false,false,null,null);
-			   String reqName = (String)imports.get(i);
+			   String reqName = imports.get(i);
 			   int lastIndex = reqName.lastIndexOf('.');
 			   if (reqName.indexOf('.')<0)
 			   	   continue; // Default package ... no need
@@ -820,7 +820,7 @@ public  void insertContentToDocument() {
 public void refreshAST() {
 		
 		final Statement[] s = new Statement[] { null } ;   
-		ASTParser parser = ASTParser.newParser(AST.JLS2);
+		ASTParser parser = ASTParser.newParser(AST.JLS3);
 		parser.setSource(getContent().toCharArray());
 		parser.setSourceRange(0,getContent().length());
 		parser.setKind(ASTParser.K_STATEMENTS) ;		
@@ -1013,11 +1013,11 @@ public void dispose() {
 
 	// Remove this expression from the same line expressions of others
 	if(fSameLineExpressions.size()>1){
-		for (Iterator expItr = fSameLineExpressions.iterator(); expItr.hasNext();) {
-			CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+		for (Iterator<CodeExpressionRef> expItr = fSameLineExpressions.iterator(); expItr.hasNext();) {
+			CodeExpressionRef exp = expItr.next();
 			if(exp==this)
 				continue;
-			List list = exp.getSameLineExpressions();
+			List<CodeExpressionRef> list = exp.getSameLineExpressions();
 			if(list!=null && list.contains(this))
 				list.remove(this);
 		}
@@ -1218,13 +1218,13 @@ public void setMasteredExpression(CodeExpressionRef masterExpression) {
 /**
  * @return Returns the freqImports.
  */
-public List getReqImports() {
+public List<String> getReqImports() {
 	return freqImports;
 }
-public List getReferences() {
+public List<EObject> getReferences() {
 	return fReferences;
 }
-public void setReferences(List references) {
+public void setReferences(List<EObject> references) {
 	fReferences = references;
 }
 
@@ -1256,13 +1256,13 @@ public static void resetExpressionStates(CodeExpressionRef exp, int states) {
  * 
  * @since 1.1
  */
-public void setSameLineExpressions(List sameLineExpressions){
+public void setSameLineExpressions(List<CodeExpressionRef> sameLineExpressions){
 	fSameLineExpressions.clear();
 	if(sameLineExpressions!=null)
 		fSameLineExpressions.addAll(sameLineExpressions);
 }
 
-public List getSameLineExpressions(){
+public List<CodeExpressionRef> getSameLineExpressions(){
 	return fSameLineExpressions;
 }
 
@@ -1346,9 +1346,9 @@ protected void updateExpressionIndexInMethod() {
 	if(fMethod!=null){
 		// Check to see if this expression is really in the method
 		boolean presentInMethod = false;
-		Iterator expItr = fMethod.getExpressions();
+		Iterator<CodeExpressionRef> expItr = fMethod.getExpressions();
 		while (expItr.hasNext()) {
-			CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+			CodeExpressionRef exp = expItr.next();
 			if(exp==this){
 				presentInMethod = true;
 				break;

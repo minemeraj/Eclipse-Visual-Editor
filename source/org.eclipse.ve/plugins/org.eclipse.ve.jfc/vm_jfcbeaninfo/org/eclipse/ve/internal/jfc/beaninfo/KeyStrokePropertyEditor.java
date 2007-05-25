@@ -19,7 +19,7 @@ import java.text.MessageFormat;
 
 /*
  *  $RCSfile: KeyStrokePropertyEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.5 $  $Date: 2007-05-25 04:19:32 $ 
  */
 public class KeyStrokePropertyEditor extends JPanel {
 	
@@ -400,7 +400,7 @@ public class KeyStrokePropertyEditor extends JPanel {
 	
 	private void removeKeyboardActions( JComponent c ) {
 	    // Get rid of the existing swing key bindings for the component.
-        KeyListener existing[] = (KeyListener[])c.getListeners(KeyListener.class);
+        KeyListener existing[] = c.getListeners(KeyListener.class);
         for ( int i = 0; i < existing.length; i++ ) {
          	c.removeKeyListener(existing[i]);
         }

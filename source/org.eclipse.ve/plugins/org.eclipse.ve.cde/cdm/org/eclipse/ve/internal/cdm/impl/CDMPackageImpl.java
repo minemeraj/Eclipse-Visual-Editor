@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: CDMPackageImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2006-05-17 20:13:53 $ 
+ *  $Revision: 1.10 $  $Date: 2007-05-25 04:09:35 $ 
  */
 import java.util.Map;
 
@@ -47,6 +47,13 @@ import org.eclipse.ve.internal.cdm.model.Rectangle;
  * @generated
  */
 public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -889,6 +896,10 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 
 		// Obtain other dependent packages
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+
+		// Create type parameters
+
+		// Set bounds for type parameters
 
 		// Add supertypes to classes
 		diagramEClass.getESuperTypes().add(this.getKeyedValueHolder());

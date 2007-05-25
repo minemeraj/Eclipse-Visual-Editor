@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: SeparatorImpl.java,v 1.3 2006-02-07 17:21:33 rkulp Exp $
+ * $Id: SeparatorImpl.java,v 1.4 2007-05-25 04:09:36 srobenalt Exp $
  */
 package org.eclipse.ve.internal.cde.palette.impl;
 
@@ -39,6 +39,7 @@ public class SeparatorImpl extends EntryImpl implements Separator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.SEPARATOR;
 	}

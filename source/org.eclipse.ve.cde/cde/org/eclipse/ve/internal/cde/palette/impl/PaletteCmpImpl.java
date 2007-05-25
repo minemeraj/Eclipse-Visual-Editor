@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: PaletteCmpImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:36 $ 
  */
 import java.util.Collection;
 
@@ -62,7 +62,7 @@ public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList cmpCategories = null;
+	protected EList<Category> cmpCategories = null;
 
 	/**
 	 * The cached value of the '{@link #getCmpControlGroup() <em>Cmp Control Group</em>}' containment reference.
@@ -88,6 +88,7 @@ public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.PALETTE_CMP;
 	}
@@ -107,9 +108,9 @@ public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getCmpCategories() {
+	public EList<Category> getCmpCategories() {
 		if (cmpCategories == null) {
-			cmpCategories = new EObjectContainmentEList(Category.class, this, PalettePackage.PALETTE_CMP__CMP_CATEGORIES);
+			cmpCategories = new EObjectContainmentEList<Category>(Category.class, this, PalettePackage.PALETTE_CMP__CMP_CATEGORIES);
 		}
 		return cmpCategories;
 	}
@@ -186,10 +187,11 @@ public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case PalettePackage.PALETTE_CMP__CMP_CATEGORIES:
-				return ((InternalEList)getCmpCategories()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getCmpCategories()).basicRemove(otherEnd, msgs);
 			case PalettePackage.PALETTE_CMP__CMP_CONTROL_GROUP:
 				return basicSetCmpControlGroup(null, msgs);
 			case PalettePackage.PALETTE_CMP__PALETTE_LABEL:
@@ -203,6 +205,7 @@ public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.PALETTE_CMP__CMP_CATEGORIES:
@@ -220,11 +223,13 @@ public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.PALETTE_CMP__CMP_CATEGORIES:
 				getCmpCategories().clear();
-				getCmpCategories().addAll((Collection)newValue);
+				getCmpCategories().addAll((Collection<? extends Category>)newValue);
 				return;
 			case PalettePackage.PALETTE_CMP__CMP_CONTROL_GROUP:
 				setCmpControlGroup((Group)newValue);
@@ -241,6 +246,7 @@ public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.PALETTE_CMP__CMP_CATEGORIES:
@@ -261,6 +267,7 @@ public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.PALETTE_CMP__CMP_CATEGORIES:

@@ -11,7 +11,7 @@
 package org.eclipse.ve.examples.cdm.dept.dinner.ui;
 /*
  *  $RCSfile: MealPropertySource.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:16:43 $ 
+ *  $Revision: 1.5 $  $Date: 2007-05-25 04:13:08 $ 
  */
  
 import org.eclipse.emf.ecore.EcoreFactory;
@@ -84,8 +84,8 @@ public class MealPropertySource implements IPropertySource {
 			if (DinnerConstants.COMPANY_URL.equals(propertyKey)) {
 				EStringToStringMapEntryImpl newKV =
 					(EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
-				newKV.setKey(propertyKey);
-				newKV.setValue(value);
+				newKV.setKey((String)propertyKey);
+				newKV.setValue((String)value);
 				int keyPos = meal.getKeyedValues().indexOfKey(propertyKey);
 				if (keyPos != -1)
 					meal.getKeyedValues().set(keyPos, newKV);

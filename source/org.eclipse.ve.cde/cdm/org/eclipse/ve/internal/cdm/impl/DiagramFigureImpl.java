@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: DiagramFigureImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:35 $ 
  */
  
 import java.util.Collection;
@@ -44,6 +44,13 @@ import org.eclipse.ve.internal.cdm.DiagramFigure;
  */
 public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFigure {
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
+	/**
 	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -71,7 +78,7 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * @generated
 	 * @ordered
 	 */
-	protected EList childFigures = null;
+	protected EList<DiagramFigure> childFigures = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -87,6 +94,7 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.DIAGRAM_FIGURE;
 	}
@@ -117,9 +125,9 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getChildFigures() {
+	public EList<DiagramFigure> getChildFigures() {
 		if (childFigures == null) {
-			childFigures = new EObjectContainmentEList(DiagramFigure.class, this, CDMPackage.DIAGRAM_FIGURE__CHILD_FIGURES);
+			childFigures = new EObjectContainmentEList<DiagramFigure>(DiagramFigure.class, this, CDMPackage.DIAGRAM_FIGURE__CHILD_FIGURES);
 		}
 		return childFigures;
 	}
@@ -129,10 +137,11 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM_FIGURE__CHILD_FIGURES:
-				return ((InternalEList)getChildFigures()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getChildFigures()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -142,6 +151,7 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM_FIGURE__TYPE:
@@ -157,6 +167,8 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM_FIGURE__TYPE:
@@ -164,7 +176,7 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 				return;
 			case CDMPackage.DIAGRAM_FIGURE__CHILD_FIGURES:
 				getChildFigures().clear();
-				getChildFigures().addAll((Collection)newValue);
+				getChildFigures().addAll((Collection<? extends DiagramFigure>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -175,6 +187,7 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM_FIGURE__TYPE:
@@ -192,6 +205,7 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM_FIGURE__TYPE:
@@ -207,6 +221,7 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

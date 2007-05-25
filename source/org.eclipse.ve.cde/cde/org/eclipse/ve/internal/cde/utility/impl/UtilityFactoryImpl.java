@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: UtilityFactoryImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2006-05-17 20:13:53 $ 
+ *  $Revision: 1.9 $  $Date: 2007-05-25 04:09:36 $ 
  */
 import org.eclipse.ve.internal.cde.utility.*;
 
@@ -69,6 +69,7 @@ public class UtilityFactoryImpl extends EFactoryImpl implements UtilityFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case UtilityPackage.CONSTANT_STRING: return createConstantString();
@@ -98,7 +99,7 @@ public class UtilityFactoryImpl extends EFactoryImpl implements UtilityFactory {
 
 	public ResourceBundle createURLResourceBundle(String[] urls, String bundleName) {
 		URLResourceBundle o = createURLResourceBundle();
-		o.getBundleURLs().add(Arrays.asList(urls));
+		o.getBundleURLs().addAll(Arrays.asList(urls));
 		o.setBundleName(bundleName);
 		return o;
 	}
@@ -171,6 +172,7 @@ public class UtilityFactoryImpl extends EFactoryImpl implements UtilityFactory {
 	 * @deprecated
 	 * @generated
 	 */
+	@Deprecated
 	public static UtilityPackage getPackage() {
 		return UtilityPackage.eINSTANCE;
 	}

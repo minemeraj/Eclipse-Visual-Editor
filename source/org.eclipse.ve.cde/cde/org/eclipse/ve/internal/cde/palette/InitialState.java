@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InitialState.java,v $
- *  $Revision: 1.3 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.4 $  $Date: 2007-05-25 04:09:36 $ 
  */
 package org.eclipse.ve.internal.cde.palette;
 
@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.util.AbstractEnumerator;
+import org.eclipse.emf.common.util.Enumerator;
 
 /**
  * <!-- begin-user-doc -->
@@ -32,7 +32,35 @@ import org.eclipse.emf.common.util.AbstractEnumerator;
  * @model
  * @generated
  */
-public final class InitialState extends AbstractEnumerator {
+public enum InitialState implements Enumerator
+{
+	/**
+	 * The '<em><b>Open</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #OPEN
+	 * @generated
+	 * @ordered
+	 */
+	OPEN_LITERAL(0, "Open", "Open"),
+	/**
+	 * The '<em><b>Closed</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #CLOSED
+	 * @generated
+	 * @ordered
+	 */
+	CLOSED_LITERAL(1, "Closed", "Closed"),
+	/**
+	 * The '<em><b>Pinned Open</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #PINNED_OPEN
+	 * @generated
+	 * @ordered
+	 */
+	PINNED_OPEN_LITERAL(2, "PinnedOpen", "PinnedOpen");
 	/**
 	 * The '<em><b>Open</b></em>' literal value.
 	 * <!-- begin-user-doc -->
@@ -76,36 +104,6 @@ public final class InitialState extends AbstractEnumerator {
 	public static final int PINNED_OPEN = 2;
 
 	/**
-	 * The '<em><b>Open</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #OPEN
-	 * @generated
-	 * @ordered
-	 */
-	public static final InitialState OPEN_LITERAL = new InitialState(OPEN, "Open", "Open");
-
-	/**
-	 * The '<em><b>Closed</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #CLOSED
-	 * @generated
-	 * @ordered
-	 */
-	public static final InitialState CLOSED_LITERAL = new InitialState(CLOSED, "Closed", "Closed");
-
-	/**
-	 * The '<em><b>Pinned Open</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #PINNED_OPEN
-	 * @generated
-	 * @ordered
-	 */
-	public static final InitialState PINNED_OPEN_LITERAL = new InitialState(PINNED_OPEN, "PinnedOpen", "PinnedOpen");
-
-	/**
 	 * An array of all the '<em><b>Initial State</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -124,7 +122,7 @@ public final class InitialState extends AbstractEnumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+	public static final List<InitialState> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
 	 * Returns the '<em><b>Initial State</b></em>' literal with the specified literal value.
@@ -170,8 +168,29 @@ public final class InitialState extends AbstractEnumerator {
 			case CLOSED: return CLOSED_LITERAL;
 			case PINNED_OPEN: return PINNED_OPEN_LITERAL;
 		}
-		return null;	
+		return null;
 	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final int value;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final String name;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final String literal;
 
 	/**
 	 * Only this class can construct instances.
@@ -180,7 +199,46 @@ public final class InitialState extends AbstractEnumerator {
 	 * @generated
 	 */
 	private InitialState(int value, String name, String literal) {
-		super(value, name, literal);
+		this.value = value;
+		this.name = name;
+		this.literal = literal;
 	}
 
-} //InitialState
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getValue() {
+	  return value;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getName() {
+	  return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getLiteral() {
+	  return literal;
+	}
+
+	/**
+	 * Returns the literal value of the enumerator, which is its string representation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		return literal;
+	}
+}

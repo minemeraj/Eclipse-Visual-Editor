@@ -45,22 +45,22 @@ public class BeanPart {
 	}
 	
 	BeanPartDecleration fDecleration = null;	
-	ArrayList	    fBeanInitMethods = new ArrayList () ;			// JCMMethod/s where the Bean is created
-	ArrayList      	fBeanRefExpressions =  new ArrayList () ;		// JCMMethod/s which update bean attributes
-	ArrayList       fBeanEventExpressions = new ArrayList() ;
-	ArrayList		fBeanReturnMethods = new ArrayList () ;		// Metods/s which return the value of this bean
-	ArrayList		fEventInitMethods = new ArrayList() ;
-	ArrayList		fCallBackExpressions = new ArrayList() ;
-	ArrayList		fNoSrcExpressions = new ArrayList();
-	ArrayList		fparentExpressions = new ArrayList() ;     // Expressions that needs to move to a parent
+	ArrayList<CodeMethodRef>	    fBeanInitMethods = new ArrayList<CodeMethodRef> () ;			// JCMMethod/s where the Bean is created
+	ArrayList<CodeExpressionRef>      	fBeanRefExpressions =  new ArrayList<CodeExpressionRef> () ;		// JCMMethod/s which update bean attributes
+	ArrayList<CodeEventRef>       fBeanEventExpressions = new ArrayList<CodeEventRef>() ;
+	ArrayList<CodeMethodRef>		fBeanReturnMethods = new ArrayList<CodeMethodRef> () ;		// Metods/s which return the value of this bean
+	ArrayList<CodeMethodRef>		fEventInitMethods = new ArrayList<CodeMethodRef>() ;
+	ArrayList<CodeExpressionRef>		fCallBackExpressions = new ArrayList<CodeExpressionRef>() ;
+	ArrayList<CodeExpressionRef>		fNoSrcExpressions = new ArrayList<CodeExpressionRef>();
+	ArrayList<CodeExpressionRef>		fparentExpressions = new ArrayList<CodeExpressionRef>() ;     // Expressions that needs to move to a parent
 	EObject   		fEObject = null ;							// Mof Instance of this Bean
-	ArrayList    	fbackReferences = new ArrayList() ;		// Mof Object that contains this object 
+	ArrayList<BeanPart>    	fbackReferences = new ArrayList<BeanPart>() ;		// Mof Object that contains this object 
 	EObject			fContainer = null ;                        //  Parent (Container) of this object - null ? part of Composition
-	ArrayList      	fChildren = new ArrayList () ;				// Beans this part may contain components	    
+	ArrayList<BeanPart>      	fChildren = new ArrayList<BeanPart> () ;				// Beans this part may contain components	    
     BeanPart    	fProxyBeanPart = null ;					// This bean part is not in the BeanDecModel    
     boolean			fisInstanceInstantiation = false ;         // Is this bean part initilized with its decleration ?
     FreeFormAnnoationDecoder fFFDecoder = null ;				// Responsible parse/generate FF tags   
-    List        	fBadExpressions = null;
+    List<CodeExpressionRef>        	fBadExpressions = null;
     boolean			isInJVEModel = false ;
     boolean			fSettingProcessingRequired = false ;
     // A Bean is implicit, if it has an implicit allocation,
@@ -181,7 +181,7 @@ public  void removeReturnMethod (CodeMethodRef m) {
  */
 public CodeMethodRef getInitMethod() {
 	if (fBeanInitMethods.size() == 0) return null ;
-	return (CodeMethodRef) fBeanInitMethods.get(0) ;
+	return fBeanInitMethods.get(0) ;
 }
 
 /**
@@ -204,7 +204,7 @@ public CodeMethodRef getEventInitMethod() {
  */
 public CodeMethodRef getReturnedMethod() {
 	if (fBeanReturnMethods.size() == 0) return null ;
-	return (CodeMethodRef) fBeanReturnMethods.get(0) ;
+	return fBeanReturnMethods.get(0) ;
 }
 
 /**
@@ -296,10 +296,10 @@ public String getUniqueName() {
  *  During parsing, we may have collected expression that are not going to be used.
  *  Only init methods expressions will be used.
  */
-public Collection getRefExpressions () {
+public Collection<CodeExpressionRef> getRefExpressions () {
 	if (getInitMethod()==null) {
-		for (Iterator itr = fBeanRefExpressions.iterator(); itr.hasNext();) {
-			CodeExpressionRef exp = (CodeExpressionRef) itr.next();
+		for (Iterator<CodeExpressionRef> itr = fBeanRefExpressions.iterator(); itr.hasNext();) {
+			CodeExpressionRef exp = itr.next();
 			if (exp.getMethod() != null) {
 				exp.getMethod().removeExpressionRef(exp) ;
 			}
@@ -309,20 +309,20 @@ public Collection getRefExpressions () {
 	else {
 		CodeMethodRef mr = getInitMethod() ;
 		for (int I=fBeanRefExpressions.size()-1; I>=0; I--) {
-			CodeExpressionRef exp = (CodeExpressionRef) fBeanRefExpressions.get(I) ;
+			CodeExpressionRef exp = fBeanRefExpressions.get(I) ;
 			if ((!exp.isStateSet(CodeExpressionRef.STATE_FIELD_EXP)) && exp.getMethod() != mr) {
 				exp.getMethod().removeExpressionRef(exp) ;
 				fBeanRefExpressions.remove(I);
 			}
 		}				
 	}	   
-	return new ArrayList(fBeanRefExpressions) ;
+	return new ArrayList<CodeExpressionRef>(fBeanRefExpressions) ;
 }
 
-public Collection getRefEventExpressions () {
+public Collection<CodeEventRef> getRefEventExpressions () {
 	if (getEventInitMethod()==null) {
-		for (Iterator itr = fBeanEventExpressions.iterator(); itr.hasNext();) {
-			CodeEventRef exp = (CodeEventRef) itr.next();
+		for (Iterator<CodeEventRef> itr = fBeanEventExpressions.iterator(); itr.hasNext();) {
+			CodeEventRef exp = itr.next();
 			if (exp.getMethod() != null) {
 				exp.getMethod().removeEventRef(exp) ;
 			}
@@ -332,22 +332,22 @@ public Collection getRefEventExpressions () {
 	else {
 		// There may be more than one Event Init JCMMethod (style 2, 3)
 		for (int I=fBeanEventExpressions.size()-1; I>=0; I--) {
-			CodeEventRef exp = (CodeEventRef) fBeanEventExpressions.get(I) ;
+			CodeEventRef exp = fBeanEventExpressions.get(I) ;
 			if (!fEventInitMethods.contains(exp.getMethod())) {
 				exp.getMethod().removeEventRef(exp) ;
 				fBeanEventExpressions.remove(I);
 			}
 		}				
 	}	   
-	return new ArrayList(fBeanEventExpressions) ;
+	return new ArrayList<CodeEventRef>(fBeanEventExpressions) ;
 }
 
-public Collection getRefCallBackExpressions() {
-	return new ArrayList(fCallBackExpressions) ;
+public Collection<CodeExpressionRef> getRefCallBackExpressions() {
+	return new ArrayList<CodeExpressionRef>(fCallBackExpressions) ;
 }
 
-public Collection getNoSrcExpressions() {
-	return new ArrayList(fNoSrcExpressions);
+public Collection<CodeExpressionRef> getNoSrcExpressions() {
+	return new ArrayList<CodeExpressionRef>(fNoSrcExpressions);
 }
 
 
@@ -425,7 +425,7 @@ public void setEObject (EObject obj) {
  * Returns parent-child back references
  */
 public final BeanPart[] getBackRefs() {
-	return (BeanPart[]) fbackReferences.toArray(new BeanPart[fbackReferences.size()]) ;
+	return fbackReferences.toArray(new BeanPart[fbackReferences.size()]) ;
 }
 
 /**
@@ -488,7 +488,7 @@ public void removeChild (BeanPart bean) {
 	fChildren.remove(bean) ;
 }
 
-public Iterator getChildren() {
+public Iterator<BeanPart> getChildren() {
 	return fChildren.iterator() ;
 }
 
@@ -551,11 +551,11 @@ public void disposeMethod (CodeMethodRef m, IBeanDeclModel model) {
 					// has more beans - dont dispose the method.
 					if (fBeanRefExpressions != null)
 						for (int i = fBeanRefExpressions.size() - 1; i >= 0; i--) {
-							((CodeExpressionRef) fBeanRefExpressions.get(i)).dispose();
+							(fBeanRefExpressions.get(i)).dispose();
 						}
 					if (fBeanEventExpressions != null)
 						for (int i = fBeanEventExpressions.size() - 1; i >= 0; i--) {
-							((CodeEventRef) fBeanEventExpressions.get(i)).dispose();
+							(fBeanEventExpressions.get(i)).dispose();
 						}
 				}
 			} else {
@@ -600,14 +600,14 @@ public  void dispose() {
 	//       on the inverse adapter instead
 	
 	// Get a copy, as we are going to update the back references here
-	BeanPart[] backRef = (BeanPart[]) fbackReferences.toArray(new BeanPart[fbackReferences.size()]);
+	BeanPart[] backRef = fbackReferences.toArray(new BeanPart[fbackReferences.size()]);
 	for (int i = 0; i < backRef.length; i++) {
 		// This should be empty if decoders had the chance to do their thing
 		BeanPart bp = backRef[i];	
-		Collection beanParts = bp.getRefExpressions();
+		Collection<CodeExpressionRef> beanParts = bp.getRefExpressions();
 		beanParts.addAll(bp.getNoSrcExpressions());
-		for (Iterator iter = beanParts.iterator(); iter.hasNext();) {
-			CodeExpressionRef exp = (CodeExpressionRef) iter.next();
+		for (Iterator<CodeExpressionRef> iter = beanParts.iterator(); iter.hasNext();) {
+			CodeExpressionRef exp = iter.next();
 			Object[] added = exp.getAddedInstances();
 			if (added!=null)
 				for (int j = 0; j < added.length; j++) {
@@ -630,23 +630,23 @@ public  void dispose() {
 
 
 	// dipose bean init methods
-	CodeMethodRef[] beanInitMethods = (CodeMethodRef[]) fBeanInitMethods.toArray(new CodeMethodRef[fBeanInitMethods.size()]);
+	CodeMethodRef[] beanInitMethods = fBeanInitMethods.toArray(new CodeMethodRef[fBeanInitMethods.size()]);
 	for (int i = 0; i < beanInitMethods.length; i++) 
 		disposeMethod(beanInitMethods[i],model);
 	
 	// dispose event init methods
-	CodeMethodRef[] eventInitMethods = (CodeMethodRef[]) fEventInitMethods.toArray(new CodeMethodRef[fEventInitMethods.size()]);
+	CodeMethodRef[] eventInitMethods = fEventInitMethods.toArray(new CodeMethodRef[fEventInitMethods.size()]);
 	for (int i = 0; i < eventInitMethods.length; i++) 
 		disposeMethod(eventInitMethods[i],model);
 	
 	// dispose no source expressions
-	CodeExpressionRef[] noSrcExpressions = (CodeExpressionRef[])fNoSrcExpressions.toArray(new CodeExpressionRef[fNoSrcExpressions.size()]);
+	CodeExpressionRef[] noSrcExpressions = fNoSrcExpressions.toArray(new CodeExpressionRef[fNoSrcExpressions.size()]);
 	for (int i = 0; i < noSrcExpressions.length; i++) {
 		noSrcExpressions[i].dispose();
 	}
 	
 	// dipose back reference beans
-	BeanPart[] backReferences = (BeanPart[]) fbackReferences.toArray(new BeanPart[fbackReferences.size()]);
+	BeanPart[] backReferences = fbackReferences.toArray(new BeanPart[fbackReferences.size()]);
 	for (int i = 0; i < backReferences.length; i++) {
 		// This should be empty if decoders had the chance to do their thing
 		backReferences[i].removeBackRef(this,true) ;
@@ -710,15 +710,15 @@ public boolean isEquivalent(BeanPart b) {
 	 * or because it was undecodeable.
 	 * @return List
 	 */
-	public List getBadExpressions() {
+	public List<CodeExpressionRef> getBadExpressions() {
 		if(fBadExpressions==null)
-			fBadExpressions = new ArrayList();
+			fBadExpressions = new ArrayList<CodeExpressionRef>();
 		return fBadExpressions;
 	}
 
 	public void addBadExpresion(CodeExpressionRef fBadExpression) {
 		if(fBadExpressions==null)
-			fBadExpressions = new ArrayList();
+			fBadExpressions = new ArrayList<CodeExpressionRef>();
 		fBadExpressions.add(fBadExpression);
 	}
 	
@@ -757,7 +757,7 @@ public boolean isEquivalent(BeanPart b) {
 	public void resolveParentExpressions(BeanPart parent) {
 		if (parent != null) {
 			for (int i = 0; i < fparentExpressions.size(); i++) {
-				CodeExpressionRef e = (CodeExpressionRef) fparentExpressions.get(i);
+				CodeExpressionRef e = fparentExpressions.get(i);
 				if (e.getMethod() == parent.getInitMethod() &&
 					!e.isStateSet(CodeExpressionRef.STATE_EXIST)) {
 					e.setBean(parent);
@@ -819,8 +819,8 @@ public EObject createEObject() throws CodeGenException {
 public   void addToJVEModel() throws CodeGenException {
 	if(isInJVEModel) return ;
 	
-	for (Iterator itr=getChildren(); itr.hasNext();) {
-		BeanPart bp = (BeanPart) itr.next() ;
+	for (Iterator<BeanPart> itr=getChildren(); itr.hasNext();) {
+		BeanPart bp = itr.next() ;
 		bp.addToJVEModel();
 	}
 	if (isInJVEModel() || isProxy() || getModel() == null || 
@@ -1017,7 +1017,7 @@ public   void removeFromJVEModel()  {
 	 */
 	public void forceExpressionOrdering() throws CodeGenException {
 		CodeExpressionRef init = getInitExpression();
-		CodeExpressionRef[] array = (CodeExpressionRef[])getRefExpressions().toArray(new CodeExpressionRef[getRefExpressions().size()]);
+		CodeExpressionRef[] array = getRefExpressions().toArray(new CodeExpressionRef[getRefExpressions().size()]);
 		for (int i = 0; i < array.length; i++) {
 			if (array[i]!=init)
 				array[i].getMethod().updateExpressionIndex(array[i]);

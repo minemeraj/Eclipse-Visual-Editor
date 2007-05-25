@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: FeatureDescriptorDecorator.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 
@@ -142,7 +142,7 @@ public interface FeatureDescriptorDecorator extends EAnnotation{
 	 * @model type="java.lang.String"
 	 * @generated
 	 */
-	EList getHelpContextIdsString();
+	EList<String> getHelpContextIdsString();
 
 	/**
 	 * Returns the value of the '<em><b>Preferred</b></em>' attribute.
@@ -210,7 +210,7 @@ public interface FeatureDescriptorDecorator extends EAnnotation{
 	 * @model type="org.eclipse.ve.internal.cde.utility.AbstractString"
 	 * @generated
 	 */
-	EList getFilterFlagStrings();
+	EList<AbstractString> getFilterFlagStrings();
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: AnnotationGenericImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2006-05-17 20:13:53 $ 
+ *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:35 $ 
  */
 
 import org.eclipse.emf.common.notify.Notification;
@@ -35,6 +35,14 @@ import org.eclipse.ve.internal.cdm.CDMPackage;
  * @generated
  */
 public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationGeneric {
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
 
 	/**
 	 * The default value of the '{@link #getAnnotatesID() <em>Annotates ID</em>}' attribute.
@@ -80,6 +88,7 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.ANNOTATION_GENERIC;
 	}
@@ -135,6 +144,7 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION_GENERIC__ANNOTATES_ID:
@@ -148,6 +158,7 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION_GENERIC__ANNOTATES_ID:
@@ -162,6 +173,7 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION_GENERIC__ANNOTATES_ID:
@@ -176,6 +188,7 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION_GENERIC__ANNOTATES_ID:
@@ -189,6 +202,7 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: ToolEntryImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.10 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 
@@ -77,6 +77,7 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.TOOL_ENTRY;
 	}
@@ -111,6 +112,7 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.TOOL_ENTRY__TOOL_CLASS_NAME:
@@ -124,6 +126,7 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.TOOL_ENTRY__TOOL_CLASS_NAME:
@@ -138,6 +141,7 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.TOOL_ENTRY__TOOL_CLASS_NAME:
@@ -152,6 +156,7 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.TOOL_ENTRY__TOOL_CLASS_NAME:
@@ -165,6 +170,7 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

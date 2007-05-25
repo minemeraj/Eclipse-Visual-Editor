@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultVisitorFactoryRule.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.4 $  $Date: 2007-05-25 04:18:47 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
@@ -31,8 +31,8 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 public class DefaultVisitorFactoryRule implements IVisitorFactoryRule {
 
 	protected EClassifier classifier = null;
-	protected HashMap classToVistorsCache= new HashMap();
-	protected HashMap sfCache = new HashMap();
+	protected HashMap<String,HashMap<String,String>> classToVistorsCache= new HashMap<String,HashMap<String,String>>();
+	protected HashMap<String,EStructuralFeature> sfCache = new HashMap<String,EStructuralFeature>();
 	protected EObject codegenHelperClass = null;
 	
 	protected final static String 
@@ -47,7 +47,7 @@ public class DefaultVisitorFactoryRule implements IVisitorFactoryRule {
 		SF_EVENT_CALLBACK_EXPRESSION_VISITOR = "eventCallBackExpressionVisitor"; //$NON-NLS-1$
 	
 	protected EStructuralFeature getSF(String sfName){
-		EStructuralFeature sf = (EStructuralFeature) sfCache.get(sfName);
+		EStructuralFeature sf = sfCache.get(sfName);
 		
 		// If SF present in cache - check if it is coming from same resource sets - else exceptions will arise later
 		if(sf!=null){
@@ -70,20 +70,23 @@ public class DefaultVisitorFactoryRule implements IVisitorFactoryRule {
 	}
 	
 	protected ISourceVisitor retrieveFromCache(String visitorSFName){
-		HashMap visitorsCache = (HashMap) classToVistorsCache.get(getClassifier().getName());
+		HashMap<String,String> visitorsCache = classToVistorsCache.get(getClassifier().getName());
 		if(visitorsCache==null){
-			visitorsCache = new HashMap();
+			visitorsCache = new HashMap<String,String>();
 			classToVistorsCache.put(getClassifier().getName(), visitorsCache);
 		}
 		
-		String visitorTypeName = (String) visitorsCache.get(visitorSFName);
+		String visitorTypeName = visitorsCache.get(visitorSFName);
 		if(visitorTypeName==null){
 			// there was no visitor in the cache for the classifier - determine which
 			EAnnotation decr = ClassDecoratorFeatureAccess.getDecoratorWithFeature(getClassifier(), ExpressionDecoderFactory.SOURCE_DECORATOR_KEY, getSF(visitorSFName));
-			String visitorType = (String) decr.eGet(getSF(visitorSFName));
-			if(visitorType!=null){
-				visitorsCache.put(visitorSFName, visitorType);
-				visitorTypeName = visitorType;
+			if (decr != null)
+			{
+				String visitorType = (String) decr.eGet(getSF(visitorSFName));
+				if(visitorType!=null){
+					visitorsCache.put(visitorSFName, visitorType);
+					visitorTypeName = visitorType;
+				}
 			}
 		}
 		
@@ -91,9 +94,9 @@ public class DefaultVisitorFactoryRule implements IVisitorFactoryRule {
 		ISourceVisitor visitorInstance = null;
 		if(visitorTypeName!=null){
 			try {
-				Class visitorTypeClass = CDEPlugin.getClassFromString(visitorTypeName);
+				Class<ISourceVisitor> visitorTypeClass = CDEPlugin.getClassFromString(visitorTypeName);
 				if(visitorTypeClass != null)
-					visitorInstance = (ISourceVisitor) visitorTypeClass.newInstance();
+					visitorInstance = visitorTypeClass.newInstance();
 			} catch (ClassNotFoundException e) {
 				JavaVEPlugin.log(e, Level.WARNING);
 			} catch (InstantiationException e) {

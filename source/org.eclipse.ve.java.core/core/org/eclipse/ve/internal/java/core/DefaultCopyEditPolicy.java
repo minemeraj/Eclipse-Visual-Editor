@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.23 $  $Date: 2006-02-10 21:53:45 $ 
+ *  $Revision: 1.24 $  $Date: 2007-05-25 04:18:46 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -117,7 +117,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 						if (xmiResource.getID((EObject) objectToClone) == null) {
 							xmiResource.setID((EObject) objectToClone, "ID_" + nextID++); //$NON-NLS-1$
 						}
-						newEMFResource.getContents().add(objectToClone);
+						newEMFResource.getContents().add((EObject)objectToClone);
 					}
 				}
 
@@ -260,7 +260,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 
 					public Object isSet(EStructuralFeature feature, Object value) {
 						if (feature instanceof EReference && ((EReference) feature).isContainment()) {
-							EObject copiedPropertyValue = (EObject) copier.get(propertyValue);
+							EObject copiedPropertyValue = copier.get(propertyValue);
 							removeReferenceBetween(copiedPropertyValue, value, (EObject) propertyValue);
 						}
 						return null;

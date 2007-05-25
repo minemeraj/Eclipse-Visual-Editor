@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry output="common_bin" kind="src" path="jfccommon"/>
-	<classpathentry output="vm_bin" kind="src" path="vm_jfcvm"/>
-	<classpathentry output="vm_bin" kind="src" path="vm_jfcbeaninfo"/>
+	<classpathentry kind="src" output="common_bin" path="jfccommon"/>
+	<classpathentry kind="src" output="vm_bin" path="vm_jfcvm"/>
+	<classpathentry kind="src" output="vm_bin" path="vm_jfcbeaninfo"/>
 	<classpathentry kind="src" path="jfc"/>
 	<classpathentry kind="src" path="jfccodegen"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Eclipse/Eclipse3.3M6/temp/vm/beaninfovm.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

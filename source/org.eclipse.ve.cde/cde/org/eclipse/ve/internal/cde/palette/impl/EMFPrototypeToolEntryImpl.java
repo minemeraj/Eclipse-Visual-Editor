@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: EMFPrototypeToolEntryImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:35 $ 
  */
 
 import org.eclipse.emf.common.notify.Notification;
@@ -78,6 +78,7 @@ public class EMFPrototypeToolEntryImpl extends CreationToolEntryImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.EMF_PROTOTYPE_TOOL_ENTRY;
 	}
@@ -112,6 +113,7 @@ public class EMFPrototypeToolEntryImpl extends CreationToolEntryImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__PROTOTYPE_URI:
@@ -125,6 +127,7 @@ public class EMFPrototypeToolEntryImpl extends CreationToolEntryImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__PROTOTYPE_URI:
@@ -139,6 +142,7 @@ public class EMFPrototypeToolEntryImpl extends CreationToolEntryImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__PROTOTYPE_URI:
@@ -153,6 +157,7 @@ public class EMFPrototypeToolEntryImpl extends CreationToolEntryImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__PROTOTYPE_URI:
@@ -166,6 +171,7 @@ public class EMFPrototypeToolEntryImpl extends CreationToolEntryImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

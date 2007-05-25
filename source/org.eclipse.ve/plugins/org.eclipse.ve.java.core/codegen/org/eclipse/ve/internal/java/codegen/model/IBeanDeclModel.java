@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.22 $  $Date: 2006-05-17 20:14:53 $ 
+ *  $Revision: 1.23 $  $Date: 2007-05-25 04:18:47 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -80,13 +80,13 @@ public interface IBeanDeclModel {
     public void deleteDesignatedBeans() ;
     public List getRootBeans() ;
     public ITypeHierarchy getClassHierarchy()  ;
-    public Collection getBeansInitilizedByMethod(CodeMethodRef mref) ;
+    public Collection<BeanPart> getBeansInitilizedByMethod(CodeMethodRef mref) ;
     public void updateBeanNameChange(BeanPart bp) ;
 	public EditDomain getDomain() ;
 	public List getEventHandlers() ;
 	public void driveExpressionChangedEvent(CodeMethodRef sourceMethod, int docOff, int delta) ;
 	public CodeMethodRef getMethod(String handle) ;
-	public Iterator getAllMethods() ;
+	public Iterator<CodeMethodRef> getAllMethods() ;
 	/**
 	 * Mark the object as one that should be lazily created if reference in the future.
 	 * @param obj

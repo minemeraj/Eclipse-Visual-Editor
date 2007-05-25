@@ -11,10 +11,11 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: AnnotatedCreationEntry.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -58,7 +59,7 @@ public interface AnnotatedCreationEntry extends AbstractToolEntry{
 	 * @model type="org.eclipse.emf.ecore.EObject" containment="true"
 	 * @generated
 	 */
-	EList getValues();
+	EList<EObject> getValues();
 
 	/**
 	 * Returns the value of the '<em><b>Object Creation Entry</b></em>' containment reference.

@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.ve"
       label="%featureName"
-      version="1.2.1.qualifier"
+      version="1.3.0.qualifier"
       provider-name="%providerName"
       image="eclipse_update_120.jpg">
 
@@ -23,15 +23,12 @@
       <discovery label="%updateSiteName" url="http://update.eclipse.org/tools/ve/updates/1.0/"/>
    </url>
 
-   <includes
-         id="org.eclipse.jem"
-         version="0.0.0"/>
-
    <requires>
       <import feature="org.eclipse.jdt" version="3.2.0" match="compatible"/>
       <import feature="org.eclipse.emf" version="2.2.0" match="compatible"/>
       <import feature="org.eclipse.gef" version="3.1.0" match="compatible"/>
       <import feature="org.eclipse.pde" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jem" version="2.0.0" match="compatible"/>
    </requires>
 
    <plugin

@@ -52,7 +52,14 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
+public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry<String,Object> {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
 	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -87,6 +94,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.KEYED_DYNAMIC;
 	}
@@ -160,6 +168,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.KEYED_DYNAMIC__KEY:
@@ -175,6 +184,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.KEYED_DYNAMIC__KEY:
@@ -192,6 +202,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_DYNAMIC__KEY:
@@ -209,6 +220,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_DYNAMIC__KEY:
@@ -253,7 +265,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getKey() {
+	public String getKey() {
 		return getTypedKey();
 	}
 
@@ -262,8 +274,8 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setKey(Object key) {
-		setTypedKey((String)key);
+	public void setKey(String key) {
+		setTypedKey(key);
 	}
 
 	/**
@@ -291,9 +303,10 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EMap getEMap() {
+	@SuppressWarnings("unchecked")
+	public EMap<String, Object> getEMap() {
 		EObject container = eContainer();
-		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
+		return container == null ? null : (EMap<String, Object>)container.eGet(eContainmentFeature());
 	}
 
 } //KeyedDynamicImpl

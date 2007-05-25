@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: DiagramDataImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:35 $ 
  */
 import java.util.Collection;
 
@@ -47,6 +47,12 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+	/**
 	 * The cached value of the '{@link #getDiagrams() <em>Diagrams</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -54,7 +60,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList diagrams = null;
+	protected EList<Diagram> diagrams = null;
 	/**
 	 * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -63,7 +69,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList annotations = null;
+	protected EList<Annotation> annotations = null;
 	
 	/**
 	 * <!-- begin-user-doc -->
@@ -79,6 +85,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.DIAGRAM_DATA;
 	}
@@ -88,9 +95,9 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getDiagrams() {
+	public EList<Diagram> getDiagrams() {
 		if (diagrams == null) {
-			diagrams = new EObjectContainmentWithInverseEList(Diagram.class, this, CDMPackage.DIAGRAM_DATA__DIAGRAMS, CDMPackage.DIAGRAM__DIAGRAM_DATA);
+			diagrams = new EObjectContainmentWithInverseEList<Diagram>(Diagram.class, this, CDMPackage.DIAGRAM_DATA__DIAGRAMS, CDMPackage.DIAGRAM__DIAGRAM_DATA);
 		}
 		return diagrams;
 	}
@@ -100,9 +107,9 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getAnnotations() {
+	public EList<Annotation> getAnnotations() {
 		if (annotations == null) {
-			annotations = new EObjectContainmentEList(Annotation.class, this, CDMPackage.DIAGRAM_DATA__ANNOTATIONS);
+			annotations = new EObjectContainmentEList<Annotation>(Annotation.class, this, CDMPackage.DIAGRAM_DATA__ANNOTATIONS);
 		}
 		return annotations;
 	}
@@ -112,10 +119,12 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
-				return ((InternalEList)getDiagrams()).basicAdd(otherEnd, msgs);
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getDiagrams()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -125,12 +134,13 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
-				return ((InternalEList)getDiagrams()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getDiagrams()).basicRemove(otherEnd, msgs);
 			case CDMPackage.DIAGRAM_DATA__ANNOTATIONS:
-				return ((InternalEList)getAnnotations()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -140,6 +150,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
@@ -155,15 +166,17 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
 				getDiagrams().clear();
-				getDiagrams().addAll((Collection)newValue);
+				getDiagrams().addAll((Collection<? extends Diagram>)newValue);
 				return;
 			case CDMPackage.DIAGRAM_DATA__ANNOTATIONS:
 				getAnnotations().clear();
-				getAnnotations().addAll((Collection)newValue);
+				getAnnotations().addAll((Collection<? extends Annotation>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -174,6 +187,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
@@ -191,6 +205,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.37 $  $Date: 2006-05-17 20:14:52 $ 
+ *  $Revision: 1.38 $  $Date: 2007-05-25 04:18:46 $ 
  */
 
 import java.util.regex.Pattern;
@@ -361,7 +361,7 @@ public class BeanUtilities {
     	// find the primary diagram
     	Diagram d = null ;
     	for (int i=0; i<ed.getDiagramData().getDiagrams().size(); i++) {
-    		Diagram di = (Diagram) ed.getDiagramData().getDiagrams().get(i);
+    		Diagram di = ed.getDiagramData().getDiagrams().get(i);
     		if (Diagram.PRIMARY_DIAGRAM_ID.equals(di.getId())) {
     			d = di ;
     			break;
@@ -400,7 +400,7 @@ public class BeanUtilities {
     	// find the primary diagram
     	Diagram d = null ;    	
 		for (int i=0; i<domain.getDiagramData().getDiagrams().size(); i++) {
-    		Diagram di = (Diagram) domain.getDiagramData().getDiagrams().get(i);
+    		Diagram di = domain.getDiagramData().getDiagrams().get(i);
     		if (Diagram.PRIMARY_DIAGRAM_ID.equals(di.getId())) {
     			d = di ;
     			break;

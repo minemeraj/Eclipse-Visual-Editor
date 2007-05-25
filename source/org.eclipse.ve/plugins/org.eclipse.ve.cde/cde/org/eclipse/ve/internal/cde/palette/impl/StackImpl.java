@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: StackImpl.java,v 1.3 2006-02-07 17:21:33 rkulp Exp $
+ * $Id: StackImpl.java,v 1.4 2007-05-25 04:09:36 srobenalt Exp $
  */
 package org.eclipse.ve.internal.cde.palette.impl;
 
@@ -61,6 +61,7 @@ public class StackImpl extends ContainerImpl implements Stack {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.STACK;
 	}
@@ -108,6 +109,7 @@ public class StackImpl extends ContainerImpl implements Stack {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.STACK__ACTIVE_ENTRY:
@@ -122,6 +124,7 @@ public class StackImpl extends ContainerImpl implements Stack {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.STACK__ACTIVE_ENTRY:
@@ -136,6 +139,7 @@ public class StackImpl extends ContainerImpl implements Stack {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.STACK__ACTIVE_ENTRY:
@@ -150,6 +154,7 @@ public class StackImpl extends ContainerImpl implements Stack {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.STACK__ACTIVE_ENTRY:

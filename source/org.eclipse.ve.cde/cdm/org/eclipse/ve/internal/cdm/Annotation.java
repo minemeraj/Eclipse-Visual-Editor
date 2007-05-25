@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: Annotation.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-15 21:27:16 $ 
+ *  $Revision: 1.5 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 
@@ -36,6 +36,13 @@ import org.eclipse.emf.common.util.EList;
 public interface Annotation extends KeyedValueHolder{
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	String copyright = "";
+
+	/**
 	 * Returns the value of the '<em><b>Visual Infos</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.ve.internal.cdm.VisualInfo}.
 	 * <!-- begin-user-doc -->
@@ -49,7 +56,7 @@ public interface Annotation extends KeyedValueHolder{
 	 * @model type="org.eclipse.ve.internal.cdm.VisualInfo" containment="true"
 	 * @generated
 	 */
-	EList getVisualInfos();
+	EList<VisualInfo> getVisualInfos();
 
 	/**
 	 * <!-- begin-user-doc -->

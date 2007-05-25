@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: EMFPrototypeCreationFactory.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 import java.util.ArrayList;
@@ -127,7 +127,7 @@ public class EMFPrototypeCreationFactory extends EMFPrototypeFactory implements 
 				}
 			}
 			
-			setPrototype((EObject) copier.get(prototype), copyPrototypes);
+			setPrototype(copier.get(prototype), copyPrototypes);
 		}
 	}
 

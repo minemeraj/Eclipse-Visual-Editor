@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: SelectionCreationToolEntryImpl.java,v $
- *  $Revision: 1.11 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.12 $  $Date: 2007-05-25 04:09:36 $ 
  */
 import java.text.MessageFormat;
 import java.util.Map;
@@ -72,6 +72,7 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.SELECTION_CREATION_TOOL_ENTRY;
 	}
@@ -248,6 +249,7 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__SELECTOR_CLASS_NAME:
@@ -261,6 +263,7 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__SELECTOR_CLASS_NAME:
@@ -275,6 +278,7 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__SELECTOR_CLASS_NAME:
@@ -289,6 +293,7 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__SELECTOR_CLASS_NAME:
@@ -302,6 +307,7 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

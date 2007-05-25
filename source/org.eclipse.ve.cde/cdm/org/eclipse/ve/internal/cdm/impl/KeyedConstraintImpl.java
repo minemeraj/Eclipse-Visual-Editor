@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: KeyedConstraintImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2006-05-17 20:13:53 $ 
+ *  $Revision: 1.9 $  $Date: 2007-05-25 04:09:35 $ 
  */
 
 import org.eclipse.emf.common.notify.Notification;
@@ -39,7 +39,14 @@ import org.eclipse.ve.internal.cdm.model.Rectangle;
  *
  * @generated
  */
-public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry {
+public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry<String,Rectangle> {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
 	/**
 	 * The default value of the '{@link #getTypedValue() <em>Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -94,6 +101,7 @@ public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.KEYED_CONSTRAINT;
 	}
@@ -145,6 +153,7 @@ public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.KEYED_CONSTRAINT__VALUE:
@@ -160,6 +169,7 @@ public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.KEYED_CONSTRAINT__VALUE:
@@ -177,6 +187,7 @@ public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_CONSTRAINT__VALUE:
@@ -194,6 +205,7 @@ public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_CONSTRAINT__VALUE:
@@ -209,6 +221,7 @@ public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
@@ -255,7 +268,7 @@ public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getKey() {
+	public String getKey() {
 		return getTypedKey();
 	}
 
@@ -264,8 +277,8 @@ public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setKey(Object key) {
-		setTypedKey((String)key);
+	public void setKey(String key) {
+		setTypedKey(key);
 	}
 
 	/**
@@ -273,7 +286,7 @@ public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getValue() {
+	public Rectangle getValue() {
 		return getTypedValue();
 	}
 
@@ -282,9 +295,9 @@ public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object setValue(Object value) {
-		Object oldValue = getValue();
-		setTypedValue((Rectangle)value);
+	public Rectangle setValue(Rectangle value) {
+		Rectangle oldValue = getValue();
+		setTypedValue(value);
 		return oldValue;
 	}
 
@@ -293,9 +306,10 @@ public class KeyedConstraintImpl extends EObjectImpl implements BasicEMap.Entry 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EMap getEMap() {
+	@SuppressWarnings("unchecked")
+	public EMap<String, Rectangle> getEMap() {
 		EObject container = eContainer();
-		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
+		return container == null ? null : (EMap<String, Rectangle>)container.eGet(eContainmentFeature());
 	}
 
 } //KeyedConstraintImpl

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: AnnotationEMF.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
+ *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 
@@ -50,6 +50,13 @@ public interface AnnotationEMF extends Annotation{
 	 * The old and new values will be the appropriate annotations.
 	 */
 	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	String copyright = "";
+
 	/**
 	 * The adapter class for retrieving the parent annotation. It is stored on any EObject instance.
 	 * If the adapter doesn't exist on the EObject, then the EObject doesn't have an annotation attached to it.

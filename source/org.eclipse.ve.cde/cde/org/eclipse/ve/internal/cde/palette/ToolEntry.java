@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.cde.palette;
 
 /*
  *  $RCSfile: ToolEntry.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.5 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 
@@ -20,6 +20,13 @@ package org.eclipse.ve.internal.cde.palette;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Tool Entry</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * Generic ToolEntry
+ * <p>
+ * This is a generic tool entry. You will need to supply the classname and any of the properties for it.
+ * 
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -29,7 +36,7 @@ package org.eclipse.ve.internal.cde.palette;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getToolEntry()
- * @model 
+ * @model
  * @generated
  */
 

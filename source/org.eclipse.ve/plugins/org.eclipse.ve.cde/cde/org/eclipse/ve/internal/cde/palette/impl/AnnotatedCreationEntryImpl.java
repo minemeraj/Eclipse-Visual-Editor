@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: AnnotatedCreationEntryImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:36 $ 
  */
 import java.util.Collection;
 import java.util.Map;
@@ -73,7 +73,7 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 	 * @generated
 	 * @ordered
 	 */
-	protected EList values = null;
+	protected EList<EObject> values = null;
 	
 	/**
 	 * <!-- begin-user-doc -->
@@ -132,6 +132,7 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.ANNOTATED_CREATION_ENTRY;
 	}
@@ -141,9 +142,9 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getValues() {
+	public EList<EObject> getValues() {
 		if (values == null) {
-			values = new EObjectContainmentEList(EObject.class, this, PalettePackage.ANNOTATED_CREATION_ENTRY__VALUES);
+			values = new EObjectContainmentEList<EObject>(EObject.class, this, PalettePackage.ANNOTATED_CREATION_ENTRY__VALUES);
 		}
 		return values;
 	}
@@ -153,12 +154,13 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__OBJECT_CREATION_ENTRY:
 				return basicSetObjectCreationEntry(null, msgs);
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__VALUES:
-				return ((InternalEList)getValues()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getValues()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -168,6 +170,7 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__OBJECT_CREATION_ENTRY:
@@ -183,6 +186,8 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__OBJECT_CREATION_ENTRY:
@@ -190,7 +195,7 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 				return;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__VALUES:
 				getValues().clear();
-				getValues().addAll((Collection)newValue);
+				getValues().addAll((Collection<? extends EObject>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -201,6 +206,7 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__OBJECT_CREATION_ENTRY:
@@ -218,6 +224,7 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__OBJECT_CREATION_ENTRY:

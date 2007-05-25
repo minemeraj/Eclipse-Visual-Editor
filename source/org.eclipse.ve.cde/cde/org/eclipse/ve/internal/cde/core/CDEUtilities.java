@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.15 $  $Date: 2005-10-28 17:27:35 $ 
+ *  $Revision: 1.16 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 
@@ -336,7 +336,7 @@ public class CDEUtilities {
 		for (; ep != null && ep != top; ep = ep.getParent()) {
 			Annotation a = policy.getAnnotation(ep.getModel());
 			if (a != null) {
-				String name = (String) a.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+				String name = (String)a.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
 				if (name != null && name.length() > 0) {
 					path.add(name);
 					continue;
@@ -389,7 +389,7 @@ nextName:
 					EditPart child = (EditPart) children.get(j);
 					Annotation a = policy.getAnnotation(child.getModel());
 					if (a != null) {
-						String childName = (String) a.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+						String childName = (String)a.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
 						if (name.equals(childName)) {
 							ep = child;	// Found it
 							continue nextName;

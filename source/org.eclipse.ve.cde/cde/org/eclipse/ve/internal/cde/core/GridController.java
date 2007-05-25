@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: GridController.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.9 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 import java.util.*;
@@ -227,7 +227,7 @@ public class GridController {
 		AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
 		Annotation ann = policy.getAnnotation(ep.getModel());
 		if (ann != null) {
-			 String name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+			 String name = (String)ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
 			 // If no annotation name, container must be the root part... use special name.
 			 if (name == null)
 				name = GRID_THIS_PART; 

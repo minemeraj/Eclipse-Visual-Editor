@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: DiagramImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:35 $ 
  */
 import java.util.Collection;
 
@@ -50,6 +50,14 @@ import org.eclipse.ve.internal.cdm.VisualInfo;
  * @generated
  */
 public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -99,7 +107,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList visualInfos = null;
+	protected EList<VisualInfo> visualInfos = null;
 	/**
 	 * The cached value of the '{@link #getFigures() <em>Figures</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -108,7 +116,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList figures = null;
+	protected EList<DiagramFigure> figures = null;
 	
 	/**
 	 * <!-- begin-user-doc -->
@@ -124,6 +132,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.DIAGRAM;
 	}
@@ -185,6 +194,16 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public NotificationChain basicSetDiagramData(DiagramData newDiagramData, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newDiagramData, CDMPackage.DIAGRAM__DIAGRAM_DATA, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public void setDiagramData(DiagramData newDiagramData) {
 		if (newDiagramData != eInternalContainer() || (eContainerFeatureID != CDMPackage.DIAGRAM__DIAGRAM_DATA && newDiagramData != null)) {
 			if (EcoreUtil.isAncestor(this, newDiagramData))
@@ -194,7 +213,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 				msgs = eBasicRemoveFromContainer(msgs);
 			if (newDiagramData != null)
 				msgs = ((InternalEObject)newDiagramData).eInverseAdd(this, CDMPackage.DIAGRAM_DATA__DIAGRAMS, DiagramData.class, msgs);
-			msgs = eBasicSetContainer((InternalEObject)newDiagramData, CDMPackage.DIAGRAM__DIAGRAM_DATA, msgs);
+			msgs = basicSetDiagramData(newDiagramData, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
@@ -206,9 +225,9 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getVisualInfos() {
+	public EList<VisualInfo> getVisualInfos() {
 		if (visualInfos == null) {
-			visualInfos = new EObjectWithInverseResolvingEList(VisualInfo.class, this, CDMPackage.DIAGRAM__VISUAL_INFOS, CDMPackage.VISUAL_INFO__DIAGRAM);
+			visualInfos = new EObjectWithInverseResolvingEList<VisualInfo>(VisualInfo.class, this, CDMPackage.DIAGRAM__VISUAL_INFOS, CDMPackage.VISUAL_INFO__DIAGRAM);
 		}
 		return visualInfos;
 	}
@@ -218,9 +237,9 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getFigures() {
+	public EList<DiagramFigure> getFigures() {
 		if (figures == null) {
-			figures = new EObjectContainmentEList(DiagramFigure.class, this, CDMPackage.DIAGRAM__FIGURES);
+			figures = new EObjectContainmentEList<DiagramFigure>(DiagramFigure.class, this, CDMPackage.DIAGRAM__FIGURES);
 		}
 		return figures;
 	}
@@ -230,14 +249,16 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM__DIAGRAM_DATA:
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
-				return eBasicSetContainer(otherEnd, CDMPackage.DIAGRAM__DIAGRAM_DATA, msgs);
+				return basicSetDiagramData((DiagramData)otherEnd, msgs);
 			case CDMPackage.DIAGRAM__VISUAL_INFOS:
-				return ((InternalEList)getVisualInfos()).basicAdd(otherEnd, msgs);
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getVisualInfos()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -247,14 +268,15 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM__DIAGRAM_DATA:
-				return eBasicSetContainer(null, CDMPackage.DIAGRAM__DIAGRAM_DATA, msgs);
+				return basicSetDiagramData(null, msgs);
 			case CDMPackage.DIAGRAM__VISUAL_INFOS:
-				return ((InternalEList)getVisualInfos()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getVisualInfos()).basicRemove(otherEnd, msgs);
 			case CDMPackage.DIAGRAM__FIGURES:
-				return ((InternalEList)getFigures()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getFigures()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -264,6 +286,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID) {
 			case CDMPackage.DIAGRAM__DIAGRAM_DATA:
@@ -277,6 +300,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM__NAME:
@@ -298,6 +322,8 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM__NAME:
@@ -311,11 +337,11 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 				return;
 			case CDMPackage.DIAGRAM__VISUAL_INFOS:
 				getVisualInfos().clear();
-				getVisualInfos().addAll((Collection)newValue);
+				getVisualInfos().addAll((Collection<? extends VisualInfo>)newValue);
 				return;
 			case CDMPackage.DIAGRAM__FIGURES:
 				getFigures().clear();
-				getFigures().addAll((Collection)newValue);
+				getFigures().addAll((Collection<? extends DiagramFigure>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -326,6 +352,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM__NAME:
@@ -352,6 +379,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.DIAGRAM__NAME:
@@ -373,6 +401,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

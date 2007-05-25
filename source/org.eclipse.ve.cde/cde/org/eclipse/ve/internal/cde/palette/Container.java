@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Container.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
+ *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:36 $ 
  */
 package org.eclipse.ve.internal.cde.palette;
 
@@ -56,6 +56,6 @@ public interface Container extends Entry{
 	 * @model type="org.eclipse.ve.internal.cde.palette.Entry" containment="true"
 	 * @generated
 	 */
-	EList getChildren();
+	EList<Entry> getChildren();
 
 }

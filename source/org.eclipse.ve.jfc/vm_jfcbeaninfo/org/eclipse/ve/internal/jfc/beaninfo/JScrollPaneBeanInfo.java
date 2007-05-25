@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JScrollPaneBeanInfo.java,v $
- *  $Revision: 1.10 $  $Date: 2005-10-18 15:32:23 $ 
+ *  $Revision: 1.11 $  $Date: 2007-05-25 04:19:32 $ 
  */
 
 import java.beans.*;
@@ -545,7 +545,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
  * @see org.eclipse.ve.internal.jfc.beaninfo.IvjBeanInfo#overridePropertyDescriptors(java.beans.PropertyDescriptor[])
  */
 protected PropertyDescriptor[] overridePropertyDescriptors(PropertyDescriptor[] pds) {
-	PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
+	PropertyDescriptor[] newPDs = pds.clone();
 		
 	replacePropertyDescriptor(newPDs, "border", null, new Object[] { //$NON-NLS-1$
 		EXPERT, Boolean.FALSE,

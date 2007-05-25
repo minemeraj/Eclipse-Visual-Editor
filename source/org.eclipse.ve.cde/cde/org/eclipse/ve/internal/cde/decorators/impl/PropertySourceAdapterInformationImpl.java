@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: PropertySourceAdapterInformationImpl.java,v $
- *  $Revision: 1.11 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.12 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 import org.eclipse.emf.common.notify.Notification;
@@ -82,6 +82,7 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return DecoratorsPackage.Literals.PROPERTY_SOURCE_ADAPTER_INFORMATION;
 	}
@@ -137,6 +138,7 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_SOURCE_ADAPTER_INFORMATION__PROPERTY_SOURCE_ADAPTER_CLASSNAME:
@@ -150,6 +152,7 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_SOURCE_ADAPTER_INFORMATION__PROPERTY_SOURCE_ADAPTER_CLASSNAME:
@@ -164,6 +167,7 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_SOURCE_ADAPTER_INFORMATION__PROPERTY_SOURCE_ADAPTER_CLASSNAME:
@@ -212,6 +216,7 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

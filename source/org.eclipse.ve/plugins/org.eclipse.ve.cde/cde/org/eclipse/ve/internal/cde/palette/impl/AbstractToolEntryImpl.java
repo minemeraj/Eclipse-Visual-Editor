@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: AbstractToolEntryImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 import java.util.*;
@@ -60,7 +60,7 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 	 * @generated
 	 * @ordered
 	 */
-	protected EMap stringProperties = null;
+	protected EMap<String, String> stringProperties = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -76,6 +76,7 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.ABSTRACT_TOOL_ENTRY;
 	}
@@ -85,9 +86,9 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EMap getStringProperties() {
+	public EMap<String, String> getStringProperties() {
 		if (stringProperties == null) {
-			stringProperties = new EcoreEMap(EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY, EStringToStringMapEntryImpl.class, this, PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES);
+			stringProperties = new EcoreEMap<String,String>(EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY, EStringToStringMapEntryImpl.class, this, PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES);
 		}
 		return stringProperties;
 	}
@@ -97,10 +98,11 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES:
-				return ((InternalEList)getStringProperties()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getStringProperties()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -110,6 +112,7 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES:
@@ -124,6 +127,7 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES:
@@ -138,6 +142,7 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES:
@@ -152,6 +157,7 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES:

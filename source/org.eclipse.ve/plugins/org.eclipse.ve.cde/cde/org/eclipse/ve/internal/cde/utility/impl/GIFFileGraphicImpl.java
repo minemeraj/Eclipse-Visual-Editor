@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: GIFFileGraphicImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2006-05-17 20:13:53 $ 
+ *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:36 $ 
  */
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
@@ -61,6 +61,7 @@ public class GIFFileGraphicImpl extends GraphicImpl implements GIFFileGraphic {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return UtilityPackage.Literals.GIF_FILE_GRAPHIC;
 	}
@@ -111,6 +112,7 @@ public class GIFFileGraphicImpl extends GraphicImpl implements GIFFileGraphic {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
@@ -138,6 +140,7 @@ public class GIFFileGraphicImpl extends GraphicImpl implements GIFFileGraphic {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case UtilityPackage.GIF_FILE_GRAPHIC__RESOURCE_NAME:
@@ -151,6 +154,7 @@ public class GIFFileGraphicImpl extends GraphicImpl implements GIFFileGraphic {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case UtilityPackage.GIF_FILE_GRAPHIC__RESOURCE_NAME:
@@ -165,6 +169,7 @@ public class GIFFileGraphicImpl extends GraphicImpl implements GIFFileGraphic {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case UtilityPackage.GIF_FILE_GRAPHIC__RESOURCE_NAME:
@@ -179,6 +184,7 @@ public class GIFFileGraphicImpl extends GraphicImpl implements GIFFileGraphic {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case UtilityPackage.GIF_FILE_GRAPHIC__RESOURCE_NAME:

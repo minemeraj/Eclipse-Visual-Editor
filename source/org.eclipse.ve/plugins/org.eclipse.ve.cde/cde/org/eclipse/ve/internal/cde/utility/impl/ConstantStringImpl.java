@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: ConstantStringImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2006-05-17 20:13:53 $ 
+ *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:36 $ 
  */
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
@@ -69,6 +69,7 @@ public class ConstantStringImpl extends AbstractStringImpl implements ConstantSt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return UtilityPackage.Literals.CONSTANT_STRING;
 	}
@@ -103,6 +104,7 @@ public class ConstantStringImpl extends AbstractStringImpl implements ConstantSt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case UtilityPackage.CONSTANT_STRING__STRING:
@@ -116,6 +118,7 @@ public class ConstantStringImpl extends AbstractStringImpl implements ConstantSt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case UtilityPackage.CONSTANT_STRING__STRING:
@@ -130,6 +133,7 @@ public class ConstantStringImpl extends AbstractStringImpl implements ConstantSt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case UtilityPackage.CONSTANT_STRING__STRING:
@@ -144,6 +148,7 @@ public class ConstantStringImpl extends AbstractStringImpl implements ConstantSt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case UtilityPackage.CONSTANT_STRING__STRING:
@@ -157,6 +162,7 @@ public class ConstantStringImpl extends AbstractStringImpl implements ConstantSt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

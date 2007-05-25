@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MemberDecoderAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2005-10-24 18:00:33 $ 
+ *  $Revision: 1.14 $  $Date: 2007-05-25 04:18:47 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -204,7 +204,7 @@ protected void processPromotionIfNeeded(Notification msg) {
 			if (bp != null) {
 				// Found a BeanPart that references this Instance
 				// Now look for a decoder for this SF.
-				CodeExpressionRef[] expList = (CodeExpressionRef[]) bp.getRefExpressions().toArray(new CodeExpressionRef[bp.getRefExpressions().size()]);
+				CodeExpressionRef[] expList = bp.getRefExpressions().toArray(new CodeExpressionRef[bp.getRefExpressions().size()]);
 				for (int j = 0; j < expList.length; j++) {
 					if (expList[j].isStateSet(CodeExpressionRef.STATE_NO_MODEL) || !expList[j].isStateSet(CodeExpressionRef.STATE_EXIST))
 						continue;
