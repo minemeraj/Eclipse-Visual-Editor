@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry output="vm_bin" kind="src" path="vm_swtbeaninfo"/>
-	<classpathentry output="common_bin" kind="src" path="swtcommon"/>
-	<classpathentry output="vm_bin" kind="src" path="vm_swt"/>
+	<classpathentry kind="src" output="vm_bin" path="vm_swtbeaninfo"/>
+	<classpathentry kind="src" output="common_bin" path="swtcommon"/>
+	<classpathentry kind="src" output="vm_bin" path="vm_swt"/>
 	<classpathentry kind="src" path="ve_swt"/>
 	<classpathentry kind="src" path="swtcodegen"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry output="vm_bin" kind="src" path="vm_formsbeaninfo"/>
+	<classpathentry kind="src" output="vm_bin" path="vm_formsbeaninfo"/>
+	<classpathentry kind="lib" path="C:/Eclipse/Eclipse3.3M6/temp/vm/beaninfovm.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

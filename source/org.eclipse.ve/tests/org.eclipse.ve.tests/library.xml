@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.cdo.mapping:PackageMapping xmlns:org.eclipse.emf.cdo.mapping="http://www.eclipse.org/net4j/cdo/mapping.ecore" packageName="library">
+  <classes className="Library" tableName="LIBRARY"/>
+  <classes className="Book" tableName="BOOK">
+    <attributes attributeName="title" columnName="TITLE" columnType="-1"/>
+    <attributes attributeName="numberOfPages" columnName="NUMBER_OF_PAGES" columnType="4"/>
+  </classes>
+  <classes className="Author" tableName="AUTHOR">
+    <attributes attributeName="name" columnName="NAME" columnType="-1"/>
+  </classes>
+  <classes className="Topic" tableName="TOPIC">
+    <attributes attributeName="name" columnName="NAME" columnType="-1"/>
+  </classes>
+  <classes className="EBook" tableName="EBOOK">
+    <attributes attributeName="title" columnName="TITLE" columnType="-1"/>
+    <attributes attributeName="numberOfPages" columnName="NUMBER_OF_PAGES" columnType="4"/>
+    <attributes attributeName="url" columnName="URL" columnType="-1"/>
+  </classes>
+</org.eclipse.emf.cdo.mapping:PackageMapping>
