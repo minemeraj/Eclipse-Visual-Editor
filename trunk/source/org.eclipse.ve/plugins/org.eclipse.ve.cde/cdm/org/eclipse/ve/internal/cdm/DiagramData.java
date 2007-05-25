@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: DiagramData.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
+ *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 
@@ -41,6 +41,13 @@ import org.eclipse.emf.ecore.EObject;
 public interface DiagramData extends EObject{
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	String copyright = "";
+
+	/**
 	 * Returns the value of the '<em><b>Diagrams</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.ve.internal.cdm.Diagram}.
 	 * It is bidirectional and its opposite is '{@link org.eclipse.ve.internal.cdm.Diagram#getDiagramData <em>Diagram Data</em>}'.
@@ -56,7 +63,7 @@ public interface DiagramData extends EObject{
 	 * @model type="org.eclipse.ve.internal.cdm.Diagram" opposite="diagramData" containment="true"
 	 * @generated
 	 */
-	EList getDiagrams();
+	EList<Diagram> getDiagrams();
 
 	/**
 	 * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
@@ -72,6 +79,6 @@ public interface DiagramData extends EObject{
 	 * @model type="org.eclipse.ve.internal.cdm.Annotation" containment="true"
 	 * @generated
 	 */
-	EList getAnnotations();
+	EList<Annotation> getAnnotations();
 
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.commands;
 /*
  *  $RCSfile: AbstractApplyAttributeCommand.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.5 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 import java.util.Iterator;
@@ -131,7 +131,7 @@ public abstract class AbstractApplyAttributeCommand extends AbstractAttributeCom
 						else
 							((EObject) containers[i]).eSet(containmentReferences[i], values.get(i));
 					} else {
-						((Resource) containers[i]).getContents().add(containmentIndexes[i], values.get(i));
+						((Resource) containers[i]).getContents().add(containmentIndexes[i], (EObject)values.get(i));
 					}
 				}
 			}

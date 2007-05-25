@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: GroupImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:35 $ 
  */
 
 
@@ -58,6 +58,7 @@ public class GroupImpl extends ContainerImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.GROUP;
 	}
@@ -97,6 +98,7 @@ public class GroupImpl extends ContainerImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case PalettePackage.GROUP__GROUP_LABEL:
@@ -110,6 +112,7 @@ public class GroupImpl extends ContainerImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.GROUP__GROUP_LABEL:
@@ -123,6 +126,7 @@ public class GroupImpl extends ContainerImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.GROUP__GROUP_LABEL:
@@ -137,6 +141,7 @@ public class GroupImpl extends ContainerImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.GROUP__GROUP_LABEL:
@@ -151,6 +156,7 @@ public class GroupImpl extends ContainerImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.GROUP__GROUP_LABEL:

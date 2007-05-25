@@ -42,6 +42,13 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 
 	
 	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
 	public static final class ParentAdapterImpl extends AdapterImpl implements ParentAdapter {
 		protected Annotation parentAnnotation;
 		
@@ -88,6 +95,7 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.ANNOTATION_EMF;
 	}
@@ -209,6 +217,7 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION_EMF__ANNOTATES:
@@ -223,6 +232,7 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION_EMF__ANNOTATES:
@@ -237,6 +247,7 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION_EMF__ANNOTATES:
@@ -251,6 +262,7 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION_EMF__ANNOTATES:

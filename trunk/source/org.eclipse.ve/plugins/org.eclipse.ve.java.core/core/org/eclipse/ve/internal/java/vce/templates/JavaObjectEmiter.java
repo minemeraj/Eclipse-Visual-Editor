@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaObjectEmiter.java,v $
- *  $Revision: 1.14 $  $Date: 2006-05-17 20:14:53 $ 
+ *  $Revision: 1.15 $  $Date: 2007-05-25 04:18:47 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -74,8 +74,8 @@ public class JavaObjectEmiter {
 			return fProblems;
 		}
 
-		public void createNewProblem(char[] originatingFileName, String message, int id, String[] stringArguments, int severity, int startPosition, int endPosition, int line) {
-			IProblem newProblem = new DefaultProblem(originatingFileName, message, id, stringArguments, severity, startPosition, endPosition, line);
+		public void createNewProblem(char[] originatingFileName, String message, int id, String[] stringArguments, int severity, int startPosition, int endPosition, int line, int column) {
+			IProblem newProblem = new DefaultProblem(originatingFileName, message, id, stringArguments, severity, startPosition, endPosition, line, column);
 			if (fProblems == null) {
 				fProblems = new IProblem[1];
 				fProblems[0] = newProblem;
@@ -93,7 +93,7 @@ public class JavaObjectEmiter {
 
 		}
 		public void createNewProblem(char[] originatingFileName, String message) {
-			createNewProblem(originatingFileName, message, 0, null, 0, 0, 0, 0);
+			createNewProblem(originatingFileName, message, 0, null, 0, 0, 0, 0, 0);
 		}
 		public void acceptResult(CompilationResult compilationResult) {
 			try {
@@ -134,17 +134,17 @@ public class JavaObjectEmiter {
 						output.close();
 					}
 					else
-						createNewProblem(directory.toOSString().toCharArray(), VCETemplatesMessages.JavaObjectEmiter_Problem_DirectoryDoesntExist_ERROR_, 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0); 
+						createNewProblem(directory.toOSString().toCharArray(), VCETemplatesMessages.JavaObjectEmiter_Problem_DirectoryDoesntExist_ERROR_, 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0, 0); 
 
 				}
 			}
 			catch (SecurityException se) {
 				org.eclipse.ve.internal.java.core.JavaVEPlugin.log(se);
-				createNewProblem(getClassName().toCharArray(), VCETemplatesMessages.JavaObjectEmiter_Problem_Security_EXC_ + se.getMessage(), 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0); 
+				createNewProblem(getClassName().toCharArray(), VCETemplatesMessages.JavaObjectEmiter_Problem_Security_EXC_ + se.getMessage(), 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0, 0); 
 			}
 			catch (java.io.IOException ioe) {
 				org.eclipse.ve.internal.java.core.JavaVEPlugin.log(ioe);
-				createNewProblem(getClassName().toCharArray(), VCETemplatesMessages.JavaObjectEmiter_Problem_IO_EXC_ + ioe.getMessage(), 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0); 
+				createNewProblem(getClassName().toCharArray(), VCETemplatesMessages.JavaObjectEmiter_Problem_IO_EXC_ + ioe.getMessage(), 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0, 0); 
 			}
 		}
 		/**

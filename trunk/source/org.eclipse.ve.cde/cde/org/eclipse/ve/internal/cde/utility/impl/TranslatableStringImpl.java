@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: TranslatableStringImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-05-17 20:13:53 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:36 $ 
  */
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
@@ -83,6 +83,7 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return UtilityPackage.Literals.TRANSLATABLE_STRING;
 	}
@@ -163,6 +164,7 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case UtilityPackage.TRANSLATABLE_STRING__KEY:
@@ -179,6 +181,7 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case UtilityPackage.TRANSLATABLE_STRING__KEY:
@@ -196,6 +199,7 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case UtilityPackage.TRANSLATABLE_STRING__KEY:
@@ -213,6 +217,7 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case UtilityPackage.TRANSLATABLE_STRING__KEY:
@@ -228,6 +233,7 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

@@ -11,13 +11,17 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: VisualInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.4 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Visual Info</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * The visual info for a component. The id is used to allow the info to be for a specific viewer, in case the component may be visible in more than one viewer, e.g. the graphViewer and a specialized viewer.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -27,10 +31,17 @@ package org.eclipse.ve.internal.cdm;
  * </p>
  *
  * @see org.eclipse.ve.internal.cdm.CDMPackage#getVisualInfo()
- * @model 
+ * @model
  * @generated
  */
 public interface VisualInfo extends KeyedValueHolder{
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	String copyright = "";
+
 	/**
 	 * Returns the value of the '<em><b>Diagram</b></em>' reference.
 	 * It is bidirectional and its opposite is '{@link org.eclipse.ve.internal.cdm.Diagram#getVisualInfos <em>Visual Infos</em>}'.

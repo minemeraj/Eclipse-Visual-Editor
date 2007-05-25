@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: EntryImpl.java,v $
- *  $Revision: 1.10 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.11 $  $Date: 2007-05-25 04:09:36 $ 
  */
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -204,6 +204,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.ENTRY;
 	}
@@ -381,6 +382,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case PalettePackage.ENTRY__ENTRY_LABEL:
@@ -396,6 +398,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.ENTRY__ICON16_NAME:
@@ -423,6 +426,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.ENTRY__ICON16_NAME:
@@ -458,6 +462,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.ENTRY__ICON16_NAME:
@@ -493,6 +498,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.ENTRY__ICON16_NAME:
@@ -520,6 +526,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

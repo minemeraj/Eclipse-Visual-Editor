@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeTypeRef.java,v $
- *  $Revision: 1.10 $  $Date: 2006-05-17 20:14:53 $ 
+ *  $Revision: 1.11 $  $Date: 2007-05-25 04:18:47 $ 
  */
 
 
@@ -35,7 +35,7 @@ protected   IType					fType = null ;
 protected   ICompilationUnit		fCU = null ;
 protected   String					fName ;
 protected   IBeanDeclModel			fBeanModel ;
-protected   Vector					fMethods = new Vector () ;
+protected   Vector<CodeMethodRef>	fMethods = new Vector<CodeMethodRef> () ;
 protected   BeanSubclassComposition	fbeanComposition = null ;
 	
 public CodeTypeRef (String typeName, IBeanDeclModel model){
@@ -83,7 +83,7 @@ public void removeRefMethod (CodeMethodRef method) {
 	fMethods.remove(method) ;
 }
 
-public Iterator getMethods() {
+public Iterator<CodeMethodRef> getMethods() {
 	return fMethods.iterator() ;
 }
 

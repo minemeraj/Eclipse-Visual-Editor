@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.ve.cde; singleton:=true
-Bundle-Version: 1.2.0.qualifier
+Bundle-Version: 1.3.0.qualifier
 Bundle-Activator: org.eclipse.ve.internal.cde.core.CDEPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -21,7 +21,7 @@ Export-Package: org.eclipse.ve.internal.cde.commands,
  org.eclipse.ve.internal.cdm,
  org.eclipse.ve.internal.cdm.impl,
  org.eclipse.ve.internal.cdm.model
-Require-Bundle: org.eclipse.ve.propertysheet;bundle-version="[1.2.0,2.0.0)",
+Require-Bundle: org.eclipse.ve.propertysheet;bundle-version="[1.3.0,2.0.0)",
  org.eclipse.emf.ecore.xmi;bundle-version="[2.2.0,3.0.0)",
  org.eclipse.gef;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.ui.views;bundle-version="[3.2.0,4.0.0)",
@@ -30,7 +30,7 @@ Require-Bundle: org.eclipse.ve.propertysheet;bundle-version="[1.2.0,2.0.0)",
  org.eclipse.jface;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.ui.workbench;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
- org.eclipse.jem;bundle-version="[1.2.0,2.0.0)",
- org.eclipse.jem.util;bundle-version="[1.2.0,2.0.0)",
+ org.eclipse.jem;bundle-version="[2.0.0,3.0.0)",
+ org.eclipse.jem.util;bundle-version="[2.0.0,3.0.0)",
  com.ibm.icu;bundle-version="[3.4.4.1,4.0.0)"
 Eclipse-LazyStart: true

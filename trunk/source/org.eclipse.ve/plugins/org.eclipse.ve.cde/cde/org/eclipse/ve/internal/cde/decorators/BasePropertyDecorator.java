@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: BasePropertyDecorator.java,v $
- *  $Revision: 1.7 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 
@@ -60,7 +60,7 @@ public interface BasePropertyDecorator extends EAnnotation{
 	 * @model type="java.lang.String"
 	 * @generated
 	 */
-	EList getCellEditorValidatorClassnames();
+	EList<String> getCellEditorValidatorClassnames();
 
 	/**
 	 * Returns the value of the '<em><b>Label Provider Classname</b></em>' attribute.

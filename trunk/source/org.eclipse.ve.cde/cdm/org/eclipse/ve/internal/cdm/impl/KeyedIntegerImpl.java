@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: KeyedIntegerImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2006-05-17 20:13:53 $ 
+ *  $Revision: 1.10 $  $Date: 2007-05-25 04:09:35 $ 
  */
  
 import org.eclipse.emf.common.notify.Notification;
@@ -38,7 +38,14 @@ import org.eclipse.ve.internal.cdm.CDMPackage;
  *
  * @generated
  */
-public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
+public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry<String,Integer> {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
 	/**
 	 * The default value of the '{@link #getTypedValue() <em>Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -93,6 +100,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.KEYED_INTEGER;
 	}
@@ -144,6 +152,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.KEYED_INTEGER__VALUE:
@@ -159,6 +168,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.KEYED_INTEGER__VALUE:
@@ -176,6 +186,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_INTEGER__VALUE:
@@ -193,6 +204,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_INTEGER__VALUE:
@@ -208,6 +220,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
@@ -254,7 +267,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getKey() {
+	public String getKey() {
 		return getTypedKey();
 	}
 
@@ -263,8 +276,8 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setKey(Object key) {
-		setTypedKey((String)key);
+	public void setKey(String key) {
+		setTypedKey(key);
 	}
 
 	/**
@@ -272,7 +285,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getValue() {
+	public Integer getValue() {
 		return new Integer(getTypedValue());
 	}
 
@@ -281,9 +294,9 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object setValue(Object value) {
-		Object oldValue = getValue();
-		setTypedValue(((Integer)value).intValue());
+	public Integer setValue(Integer value) {
+		Integer oldValue = getValue();
+		setTypedValue(value);
 		return oldValue;
 	}
 
@@ -292,9 +305,10 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EMap getEMap() {
+	@SuppressWarnings("unchecked")
+	public EMap<String, Integer> getEMap() {
 		EObject container = eContainer();
-		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
+		return container == null ? null : (EMap<String, Integer>)container.eGet(eContainmentFeature());
 	}
 
 } //KeyedIntegerImpl

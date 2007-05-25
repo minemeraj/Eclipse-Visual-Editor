@@ -6,7 +6,7 @@
     modelPluginID="" modelName="CDE" editPluginClass="org.eclipse.ve.internal.cde.decorators.provider.DecoratorsEditPlugin"
     editorPluginClass="org.eclipse.ve.internal.cde.decorators.presentation.DecoratorsEditorPlugin"
     updateClasspath="false" booleanFlagsField="eFlags" booleanFlagsReservedBits="8"
-    importerID="org.eclipse.emf.importer.rose" usedGenPackages="cdmmodel.genmodel#//cdm ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+    importerID="org.eclipse.emf.importer.rose" complianceLevel="5.0" usedGenPackages="cdmmodel.genmodel#//cdm ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
   <foreignModel>..\rose\cdeModels.mdl</foreignModel>
   <foreignModel>WorkspaceRoot</foreignModel>
   <foreignModel>../..</foreignModel>

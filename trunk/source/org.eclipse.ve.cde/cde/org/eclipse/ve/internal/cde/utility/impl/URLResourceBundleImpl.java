@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.cde.utility.impl;
+import java.util.Collection;
 import java.net.*;
 import java.util.*;
 
@@ -73,7 +74,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * @generated
 	 * @ordered
 	 */
-	protected EList bundleURLs = null;
+	protected EList<String> bundleURLs = null;
 	
 	/**
 	 * <!-- begin-user-doc -->
@@ -89,6 +90,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return UtilityPackage.Literals.URL_RESOURCE_BUNDLE;
 	}
@@ -177,9 +179,9 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getBundleURLs() {
+	public EList<String> getBundleURLs() {
 		if (bundleURLs == null) {
-			bundleURLs = new EDataTypeUniqueEList(String.class, this, UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_UR_LS);
+			bundleURLs = new EDataTypeUniqueEList<String>(String.class, this, UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_UR_LS);
 		}
 		return bundleURLs;
 	}
@@ -189,6 +191,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_NAME:
@@ -204,6 +207,8 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_NAME:
@@ -211,7 +216,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 				return;
 			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_UR_LS:
 				getBundleURLs().clear();
-				getBundleURLs().addAll((Collection)newValue);
+				getBundleURLs().addAll((Collection<? extends String>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -222,6 +227,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_NAME:
@@ -239,6 +245,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_NAME:
@@ -254,6 +261,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

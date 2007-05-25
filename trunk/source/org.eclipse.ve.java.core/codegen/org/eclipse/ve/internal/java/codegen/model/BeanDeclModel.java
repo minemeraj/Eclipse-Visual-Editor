@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.33 $  $Date: 2006-05-17 20:14:53 $ 
+ *  $Revision: 1.34 $  $Date: 2007-05-25 04:18:47 $ 
  */
 
 import java.util.*;
@@ -40,18 +40,18 @@ import org.eclipse.ve.internal.java.core.TypeResolver;
  */
 public class BeanDeclModel implements IBeanDeclModel {
 	
-	ArrayList fBeans=null ;                           // Root Beans
-	HashMap   fBeanDecleration = new HashMap();
-	HashMap   fBeansKey = new HashMap () ;   	    // Keep a hash key for the fBeans by unique manes
-	HashMap   fBeanReturns = new HashMap() ;        // Keep a hash of Methods with return Beans ... e.g., getJButton1() ;
-	HashMap	  fBeanInitMethod = new HashMap() ;     // Keep a hash to all Methods  that update beans 
-	HashMap   fRefObjKey = new HashMap () ;         // Keep a hash from a EObject to Bean Part
-    ArrayList fBeanDeleteCandidates = new ArrayList() ; // Hold before an Editor command is completed
-	ArrayList flazyCreateList = new ArrayList();  // Beans that were added to the VE model, but not geenrated yet
+	ArrayList<BeanPart> fBeans=null ;                           // Root Beans
+	HashMap<String,BeanPartDecleration>   fBeanDecleration = new HashMap<String,BeanPartDecleration>();
+	HashMap<String,BeanPart>   fBeansKey = new HashMap <String,BeanPart>() ;   	    // Keep a hash key for the fBeans by unique manes
+	HashMap<String,BeanPart>   fBeanReturns = new HashMap<String,BeanPart>() ;        // Keep a hash of Methods with return Beans ... e.g., getJButton1() ;
+	HashMap<String,CodeMethodRef>	  fBeanInitMethod = new HashMap<String,CodeMethodRef>() ;     // Keep a hash to all Methods  that update beans 
+	HashMap<EObject,BeanPart>   fRefObjKey = new HashMap<EObject,BeanPart>() ;         // Keep a hash from a EObject to Bean Part
+    ArrayList<BeanPart> fBeanDeleteCandidates = new ArrayList<BeanPart>() ; // Hold before an Editor command is completed
+	ArrayList<EObject> flazyCreateList = new ArrayList<EObject>();  // Beans that were added to the VE model, but not geenrated yet
 	
 	TypeDeclaration				fTypeDeclaration = null ;           // The class element of the JDOM model
 	CodeTypeRef                 fTypeRef = null ;
-	List						fEventHandlers = new ArrayList() ;  // CodeEventHandlerRef list	
+	List<CodeEventHandlerRef>	fEventHandlers = new ArrayList<CodeEventHandlerRef>() ;  // CodeEventHandlerRef list	
 	IWorkingCopyProvider		fWorkCopyP = null ;	
 	JavaSourceSynchronizer      fSrcSync = null ;
 	IVEModelInstance			fCompositionModel = null ;
@@ -78,13 +78,13 @@ private boolean isPriority(BeanPart b) {
  * @param sortByInitOffset, if true, Beans will be sorted according to 
  *                          thier init expression's offset.
  */	
-public List getBeans(boolean sortByInitOffset) {
-	ArrayList v = new ArrayList() ;
+public List<BeanPart> getBeans(boolean sortByInitOffset) {
+	ArrayList<BeanPart> v = new ArrayList<BeanPart>() ;
 	
-	Iterator e = fBeansKey.values().iterator();
+	Iterator<BeanPart> e = fBeansKey.values().iterator();
 	while (e.hasNext()) {
-	  Object o = e.next() ;	  
-	  if (isPriority((BeanPart)o))
+	  BeanPart o = e.next() ;	  
+	  if (isPriority(o))
 	     v.add(0,o);
 	  else
 	     v.add(o) ;
@@ -92,10 +92,10 @@ public List getBeans(boolean sortByInitOffset) {
 	
 	if (sortByInitOffset) {		 
 		//TODO: this is a simlification of the order (method calls) of bean creation
-		Collections.sort(v, new Comparator() {
-			public int compare(Object o1, Object o2) {
-			    CodeExpressionRef e1 = ((BeanPart)o1).getInitExpression();
-			    CodeExpressionRef e2 = ((BeanPart)o2).getInitExpression();
+		Collections.sort(v, new Comparator<BeanPart>() {
+			public int compare(BeanPart o1, BeanPart o2) {
+			    CodeExpressionRef e1 = o1.getInitExpression();
+			    CodeExpressionRef e2 = o2.getInitExpression();
 			    if (e1==null) 
 			    	if (e2==null)
 			    		return 0;
@@ -114,7 +114,7 @@ public List getBeans(boolean sortByInitOffset) {
 	return v ;
 }	
 
-public List getEventHandlers() {
+public List<CodeEventHandlerRef> getEventHandlers() {
 	return fEventHandlers ;
 }
 
@@ -123,16 +123,16 @@ public List getEventHandlers() {
 public synchronized void dispose() {
 	fState = BDM_STATE_DOWN ;
 
-	List beans = getBeans(false) ;
+	List<BeanPart> beans = getBeans(false) ;
 	for (int i=beans.size()-1; i>=0; i--) {
-		BeanPart b = (BeanPart) beans.remove(i) ;
+		BeanPart b = beans.remove(i) ;
 		// clean up all expression adapters
 		b.dispose () ;
 	}	
 	
 	fTypeRef.dispose() ;
 	for (int i = 0; i < fEventHandlers.size(); i++) 
-		((CodeEventHandlerRef)fEventHandlers.get(i)). dispose() ;
+		(fEventHandlers.get(i)). dispose() ;
 
 
 	fCompositionModel = null ;
@@ -146,8 +146,8 @@ public synchronized void dispose() {
 /**
  * Get beans directly sitting on the Compositions Beans
  */	
-public List getRootBeans() {
-	if (fBeans == null) fBeans = new ArrayList() ;
+public List<BeanPart> getRootBeans() {
+	if (fBeans == null) fBeans = new ArrayList<BeanPart>() ;
 	return fBeans ;
 }	
 
@@ -195,7 +195,7 @@ public BeanPart getDeleteDesignated(IJavaObjectInstance obj, boolean remove) {
 public void deleteDesignatedBeans() {
         for(int i=0; i<fBeanDeleteCandidates.size(); i++) {
           try {
-            BeanPart b = (BeanPart) fBeanDeleteCandidates.get(i) ;        
+            BeanPart b = fBeanDeleteCandidates.get(i) ;        
             BeanPartFactory bgen = new BeanPartFactory(this,getCompositionModel()) ;
             bgen.removeBeanPart(b) ;
           }
@@ -211,10 +211,10 @@ public void deleteDesignatedBeans() {
  * Return all beans initialized by this method
  */	
 public BeanPart[] getBeansInializedByMethod(String methodHandle) {
-	List beans = new ArrayList () ;
-	Iterator itr = getBeans(false).iterator() ;
+	List<BeanPart> beans = new ArrayList<BeanPart> () ;
+	Iterator<BeanPart> itr = getBeans(false).iterator() ;
 	while (itr.hasNext()) {
-		BeanPart b = (BeanPart)itr.next() ;
+		BeanPart b = itr.next() ;
 		if(b.getInitMethod()!=null && // consider beanparts with fields but no methods
 		   b.getInitMethod().getMethodHandle().equals(methodHandle))
 		   beans.add(b) ;
@@ -223,7 +223,7 @@ public BeanPart[] getBeansInializedByMethod(String methodHandle) {
 	if (beans.size() > 0) {
 		result = new BeanPart[beans.size()] ;
 		for (int i=0; i<beans.size(); i++) {
-			result[i] = (BeanPart)beans.get(i) ;
+			result[i] = beans.get(i) ;
 		}
 	}
 	else
@@ -275,7 +275,7 @@ public void removeBean (BeanPart bean) {
  *
  */
 public BeanPart getABean(String name) {
-   BeanPart bp = (BeanPart) fBeansKey.get(name)	 ;
+   BeanPart bp = fBeansKey.get(name)	 ;
    if(bp!=null && !bp.isActive())
 	   bp.activate();
    return bp;
@@ -319,7 +319,7 @@ public void lazyCreateBean(IJavaObjectInstance obj) {
  *
  */
 public BeanPart getABean(EObject obj) {
-   BeanPart result = (BeanPart) fRefObjKey.get(obj); 
+   BeanPart result = fRefObjKey.get(obj); 
    if (result==null) 
 	   result= lazyCreateBeanInstance(obj);
    return result;   
@@ -437,7 +437,7 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
  *  return the corresponding bean part.
  */
 public BeanPart getBeanReturned(String methodName) {
-   BeanPart bp = (BeanPart) fBeanReturns.get(methodName)	 ;
+   BeanPart bp = fBeanReturns.get(methodName)	 ;
    if(bp!=null && !bp.isActive())
 	   bp.activate();
    return bp;
@@ -466,16 +466,16 @@ public void addMethodInitializingABean (CodeMethodRef methodRef) {
  */
 public CodeMethodRef getMethodInitializingABean (String methodHandle) {
 	// TODO  Need to deal with more than one bean
-	return (CodeMethodRef) fBeanInitMethod.get(methodHandle) ;
+	return fBeanInitMethod.get(methodHandle) ;
 }
 
 public void removeMethodRef(CodeMethodRef mr) {
 	// TODO  Need to deal with multi beans per method
 	fBeanInitMethod.remove(mr.getMethodHandle()) ;
 	fBeanReturns.remove(mr.getMethodName()) ;
-	Iterator allBeans = getBeans(false).iterator();
+	Iterator<BeanPart> allBeans = getBeans(false).iterator();
 	while(allBeans.hasNext()){
-		BeanPart bean = (BeanPart)allBeans.next();
+		BeanPart bean = allBeans.next();
 		if(bean.getInitMethod()!=null && bean.getInitMethod().equals(mr))
 			bean.removeInitMethod(mr);
 		if(bean.getReturnedMethod()!=null && bean.getReturnedMethod().equals(mr))
@@ -483,12 +483,12 @@ public void removeMethodRef(CodeMethodRef mr) {
 	}
 	allBeans = getBeans(false).iterator();
 	while(allBeans.hasNext()){
-		BeanPart bean = (BeanPart)allBeans.next();
+		BeanPart bean = allBeans.next();
 		CodeExpressionRef exps[] = new CodeExpressionRef[bean.getRefExpressions().size()];
-		Iterator beansExps = bean.getRefExpressions().iterator();
+		Iterator<CodeExpressionRef> beansExps = bean.getRefExpressions().iterator();
 		int count =0;
 		while(beansExps.hasNext()){
-			exps[count] = (CodeExpressionRef)beansExps.next();
+			exps[count] = beansExps.next();
 			count++;
 		}
 		if (!isStateSet(BDM_STATE_DOWN)) {
@@ -562,13 +562,13 @@ public boolean isStateSet(int state){
 	return ((getState() & state) == state);
 }
 
-public Collection getBeansInitilizedByMethod(CodeMethodRef mref) {
+public Collection<BeanPart> getBeansInitilizedByMethod(CodeMethodRef mref) {
    // TODO  We should have a hash table for these
    if (mref == null) return null ;
-   ArrayList beans = new ArrayList() ;
-   Iterator itr = getBeans(false).iterator() ;
+   ArrayList<BeanPart> beans = new ArrayList<BeanPart>() ;
+   Iterator<BeanPart> itr = getBeans(false).iterator() ;
    while (itr.hasNext()) {
-	BeanPart b = (BeanPart) itr.next();
+	BeanPart b = itr.next();
 	if (b.getInitMethod()!=null && b.getInitMethod().equals(mref)) beans.add(b) ;
    }	
    return beans ;
@@ -612,14 +612,14 @@ public void updateBeanNameChange(BeanPart bp) {
 		}
 	}
 	
-	public Iterator getAllMethods() {		
-		ArrayList list = new ArrayList() ;
-		Iterator m = getTypeRef().getMethods() ;
+	public Iterator<CodeMethodRef> getAllMethods() {		
+		ArrayList<CodeMethodRef> list = new ArrayList<CodeMethodRef>() ;
+		Iterator<CodeMethodRef> m = getTypeRef().getMethods() ;
 		while (m.hasNext())
 		   list.add(m.next()) ;
-		Iterator t = getEventHandlers().iterator() ;
+		Iterator<CodeEventHandlerRef> t = getEventHandlers().iterator() ;
 		while (t.hasNext()) {
-			CodeEventHandlerRef handler = (CodeEventHandlerRef) t.next();
+			CodeEventHandlerRef handler = t.next();
 			m = handler.getMethods() ;
 			while (m.hasNext())
 				list.add(m.next()) ;
@@ -634,17 +634,17 @@ public void updateBeanNameChange(BeanPart bp) {
 	 * @param delta changes in document content
 	 */
 	public void driveExpressionChangedEvent(CodeMethodRef sourceMethod, int docOff, int delta) {		
-		Iterator m = getAllMethods() ;
+		Iterator<CodeMethodRef> m = getAllMethods() ;
 		while (m.hasNext())
-		  updateMethodOffset(sourceMethod, (CodeMethodRef)m.next(), docOff, delta) ;
+		  updateMethodOffset(sourceMethod, m.next(), docOff, delta) ;
 	}
 	
 
 	
 	public CodeMethodRef getMethod(String handle) {
-		Iterator itr = getAllMethods() ;
+		Iterator<CodeMethodRef> itr = getAllMethods() ;
 		while (itr.hasNext()) {
-			CodeMethodRef m = (CodeMethodRef) itr.next() ;
+			CodeMethodRef m = itr.next() ;
 			if (m.getMethodHandle().equals(handle))
 			   return m ;
 		}
@@ -690,16 +690,16 @@ public void updateBeanNameChange(BeanPart bp) {
 		}
 		catch (JavaModelException e) {}
 		IType mainType = CodeGenUtil.getMainType(getCompilationUnit());
-		HashMap map = new HashMap() ;
+		HashMap<String,IMethod> map = new HashMap<String,IMethod>() ;
 		try {
 			IMethod[] mtds = mainType.getMethods() ;
 			for (int i = 0; i < mtds.length; i++) {
 				map.put(mtds[i].getHandleIdentifier(),mtds[i]) ;
 			}
-			Iterator itr = getAllMethods();
+			Iterator<CodeMethodRef> itr = getAllMethods();
 			while (itr.hasNext()) {
-				CodeMethodRef m = (CodeMethodRef) itr.next();
-				m.refreshIMethod((IMethod)map.get(m.getMethodHandle())) ;			
+				CodeMethodRef m = itr.next();
+				m.refreshIMethod(map.get(m.getMethodHandle())) ;			
 			}
 		} catch (JavaModelException e1) {
 			JavaVEPlugin.log(e1, Level.WARNING);
@@ -722,7 +722,7 @@ public void updateBeanNameChange(BeanPart bp) {
 		return getModelDecleration(d.getDeclerationHandle());
 	}
 	public BeanPartDecleration getModelDecleration(String handle) {
-		return (BeanPartDecleration) fBeanDecleration.get(handle);
+		return fBeanDecleration.get(handle);
 	}
 	
 	/**
@@ -744,32 +744,32 @@ public void updateBeanNameChange(BeanPart bp) {
 	 */
 	public BeanPart[] getUnreferencedBeanParts(){
 		// determine references first
-		HashMap beanDependentsMap = new HashMap();
-		for (Iterator unrefItr = getBeans(false).iterator(); unrefItr.hasNext();) {
-			BeanPart bp = (BeanPart) unrefItr.next();
-			Collection all = bp.getRefExpressions();
+		HashMap<BeanPart,List<BeanPart>> beanDependentsMap = new HashMap<BeanPart,List<BeanPart>>();
+		for (Iterator<BeanPart> unrefItr = getBeans(false).iterator(); unrefItr.hasNext();) {
+			BeanPart bp = unrefItr.next();
+			Collection<CodeExpressionRef> all = bp.getRefExpressions();
 			all.addAll(bp.getNoSrcExpressions());						
-			Iterator expItr = all.iterator();
+			Iterator<CodeExpressionRef> expItr = all.iterator();
 			while (expItr.hasNext()) {
-				CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
-				List refs = exp.getReferences();
+				CodeExpressionRef exp = expItr.next();
+				List<EObject> refs = exp.getReferences();
 				if(refs!=null && refs.size()>0){
-					for (Iterator iter = refs.iterator(); iter.hasNext();) {
-						EObject ref = (EObject) iter.next();
+					for (Iterator<EObject> iter = refs.iterator(); iter.hasNext();) {
+						EObject ref = iter.next();
 						BeanPart refBP = getABean(ref);
 						if(refBP!=null){
 							// add link 'bp TO refBP'
-							List bpList = (List) beanDependentsMap.get(bp);
+							List<BeanPart> bpList = beanDependentsMap.get(bp);
 							if(bpList==null){
-								bpList = new ArrayList();
+								bpList = new ArrayList<BeanPart>();
 								beanDependentsMap.put(bp, bpList);
 							}
 							bpList.add(refBP);
 							
 							// add link 'refBP TO bp'
-							List refBPList = (List) beanDependentsMap.get(refBP);
+							List<BeanPart> refBPList = beanDependentsMap.get(refBP);
 							if(refBPList==null){
-								refBPList = new ArrayList();
+								refBPList = new ArrayList<BeanPart>();
 								beanDependentsMap.put(refBP, refBPList);
 							}
 							refBPList.add(bp);
@@ -779,11 +779,11 @@ public void updateBeanNameChange(BeanPart bp) {
 			}			
 		}
 		
-		List unreferenced = new ArrayList(getBeans(false));
-		List referenced = new ArrayList();
+		List<BeanPart> unreferenced = new ArrayList<BeanPart>(getBeans(false));
+		List<BeanPart> referenced = new ArrayList<BeanPart>();
 		
-		for (Iterator unrefItr = unreferenced.iterator(); unrefItr.hasNext();) {
-			BeanPart unrefBP = (BeanPart) unrefItr.next();
+		for (Iterator<BeanPart> unrefItr = unreferenced.iterator(); unrefItr.hasNext();) {
+			BeanPart unrefBP = unrefItr.next();
 			if(referenced.contains(unrefBP))
 				continue;
 			boolean isReferenced = false;
@@ -808,27 +808,27 @@ public void updateBeanNameChange(BeanPart bp) {
 			}
 			if(isReferenced){
 				referenced.add(unrefBP);
-				List list = (List) beanDependentsMap.get(unrefBP);
+				List<BeanPart> list = beanDependentsMap.get(unrefBP);
 				// Rule 3&4
 				addReferencedBeans(referenced, list, beanDependentsMap);
 			}
 		}
 		unreferenced.removeAll(referenced);
-		return (BeanPart[]) unreferenced.toArray(new BeanPart[unreferenced.size()]);
+		return unreferenced.toArray(new BeanPart[unreferenced.size()]);
 	}
 	/*
 	 * Recursively adds referenced beans to the referencedList.
 	 */
-	private void addReferencedBeans(List referencedList, List currentReferences, HashMap beanDependentsMap) {
+	private void addReferencedBeans(List<BeanPart> referencedList, List<BeanPart> currentReferences, HashMap<BeanPart,List<BeanPart>> beanDependentsMap) {
 		if(currentReferences==null || currentReferences.size()<1)
 			return;
-		for (Iterator iter = currentReferences.iterator(); iter.hasNext();) {
-			BeanPart bp = (BeanPart) iter.next();
+		for (Iterator<BeanPart> iter = currentReferences.iterator(); iter.hasNext();) {
+			BeanPart bp = iter.next();
 			if(referencedList.contains(bp))
 				continue;
 			referencedList.add(bp);
 			// Rule 3
-			List list = (List) beanDependentsMap.get(bp);
+			List<BeanPart> list = beanDependentsMap.get(bp);
 			addReferencedBeans(referencedList, list, beanDependentsMap);
 		}
 	}
@@ -844,9 +844,9 @@ public void updateBeanNameChange(BeanPart bp) {
 	}
 
 	public void createLazyBeans() {
-		Object[] lazyBeans = flazyCreateList.toArray();
+		EObject[] lazyBeans = flazyCreateList.toArray(new EObject[0]);
 		for (int bc = 0; bc < lazyBeans.length; bc++) {
-			lazyCreateBeanInstance((EObject) lazyBeans[bc]);
+			lazyCreateBeanInstance(lazyBeans[bc]);
 		}
 	}
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JPanelBeanInfo.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:19:32 $ 
  */
 
 import java.beans.*;
@@ -150,7 +150,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	 * @see org.eclipse.ve.internal.jfc.beaninfo.IvjBeanInfo#overridePropertyDescriptors(java.beans.PropertyDescriptor[])
 	 */
 	protected PropertyDescriptor[] overridePropertyDescriptors(PropertyDescriptor[] pds) {
-		PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
+		PropertyDescriptor[] newPDs = pds.clone();
 		
 		replacePropertyDescriptor(newPDs, "border", null, new Object[] { //$NON-NLS-1$
 			EXPERT, Boolean.FALSE,

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: PropertyDescriptorInformationImpl.java,v $
- *  $Revision: 1.11 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.12 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 
@@ -95,6 +95,7 @@ public class PropertyDescriptorInformationImpl extends EAnnotationImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return DecoratorsPackage.Literals.PROPERTY_DESCRIPTOR_INFORMATION;
 	}
@@ -146,6 +147,7 @@ public class PropertyDescriptorInformationImpl extends EAnnotationImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_INFORMATION__ADAPTER:
@@ -161,6 +163,7 @@ public class PropertyDescriptorInformationImpl extends EAnnotationImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_INFORMATION__ADAPTER:
@@ -178,6 +181,7 @@ public class PropertyDescriptorInformationImpl extends EAnnotationImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_INFORMATION__ADAPTER:
@@ -231,6 +235,7 @@ public class PropertyDescriptorInformationImpl extends EAnnotationImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

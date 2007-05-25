@@ -79,6 +79,6 @@ public interface BeanSubclassComposition extends BeanComposition{
 	 * @model type="org.eclipse.ve.internal.jcm.JCMMethod" containment="true"
 	 * @generated
 	 */
-	EList getMethods();
+	EList<JCMMethod> getMethods();
 
 } // BeanSubclassComposition

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: CDMPackage.java,v $
- *  $Revision: 1.8 $  $Date: 2006-05-17 20:13:53 $ 
+ *  $Revision: 1.9 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -36,6 +36,13 @@ import org.eclipse.emf.ecore.EReference;
  * @generated
  */
 public interface CDMPackage extends EPackage {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	String copyright = "";
+
 	/**
 	 * The package name.
 	 * <!-- begin-user-doc -->

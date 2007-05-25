@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: PropertyDescriptorDecorator.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 /**
@@ -19,6 +19,10 @@ package org.eclipse.ve.internal.cde.decorators;
  * A representation of the model object '<em><b>Property Descriptor Decorator</b></em>'.
  * This is the decorator for a StructuralFeature to supply the information for editing this property.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * This is the decorator for a StructuralFeature to supply the information for editing this property.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -29,7 +33,7 @@ package org.eclipse.ve.internal.cde.decorators;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getPropertyDescriptorDecorator()
- * @model 
+ * @model
  * @generated
  */
 public interface PropertyDescriptorDecorator extends FeatureDescriptorDecorator, BasePropertyDecorator{

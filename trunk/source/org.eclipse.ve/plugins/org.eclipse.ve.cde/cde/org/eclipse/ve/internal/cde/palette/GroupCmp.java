@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: GroupCmp.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 
@@ -59,6 +59,6 @@ public interface GroupCmp extends Group{
 	 * @model type="org.eclipse.ve.internal.cde.palette.Entry" containment="true" transient="true" volatile="true"
 	 * @generated
 	 */
-	EList getCmpEntries();
+	EList<Entry> getCmpEntries();
 
 }

@@ -77,7 +77,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * @generated
 	 * @ordered
 	 */
-	protected EList helpContextIdsString = null;
+	protected EList<String> helpContextIdsString = null;
 	/**
 	 * The default value of the '{@link #isPreferred() <em>Preferred</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -115,7 +115,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * @generated
 	 * @ordered
 	 */
-	protected EList filterFlagStrings = null;
+	protected EList<AbstractString> filterFlagStrings = null;
 	/**
 	 * The cached value of the '{@link #getDisplayNameString() <em>Display Name String</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -149,6 +149,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return DecoratorsPackage.Literals.FEATURE_DESCRIPTOR_DECORATOR;
 	}
@@ -170,6 +171,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
@@ -185,6 +187,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__HIDDEN:
@@ -211,6 +214,8 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__HIDDEN:
@@ -218,7 +223,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 				return;
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
 				getHelpContextIdsString().clear();
-				getHelpContextIdsString().addAll((Collection)newValue);
+				getHelpContextIdsString().addAll((Collection<? extends String>)newValue);
 				return;
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__PREFERRED:
 				setPreferred(((Boolean)newValue).booleanValue());
@@ -228,7 +233,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 				return;
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:
 				getFilterFlagStrings().clear();
-				getFilterFlagStrings().addAll((Collection)newValue);
+				getFilterFlagStrings().addAll((Collection<? extends AbstractString>)newValue);
 				return;
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
 				setDisplayNameString((AbstractString)newValue);
@@ -245,6 +250,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__HIDDEN:
@@ -409,9 +415,9 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getHelpContextIdsString() {
+	public EList<String> getHelpContextIdsString() {
 		if (helpContextIdsString == null) {
-			helpContextIdsString = new EDataTypeUniqueEList(String.class, this, DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING);
+			helpContextIdsString = new EDataTypeUniqueEList<String>(String.class, this, DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING);
 		}
 		return helpContextIdsString;
 	}
@@ -480,9 +486,9 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getFilterFlagStrings() {
+	public EList<AbstractString> getFilterFlagStrings() {
 		if (filterFlagStrings == null) {
-			filterFlagStrings = new EObjectResolvingEList(AbstractString.class, this, DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS);
+			filterFlagStrings = new EObjectResolvingEList<AbstractString>(AbstractString.class, this, DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS);
 		}
 		return filterFlagStrings;
 	}
@@ -519,6 +525,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

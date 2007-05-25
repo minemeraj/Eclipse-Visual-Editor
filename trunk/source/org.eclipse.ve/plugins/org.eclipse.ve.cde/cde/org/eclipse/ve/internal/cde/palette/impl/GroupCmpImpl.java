@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: GroupCmpImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:36 $ 
  */
 import java.util.Collection;
 
@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.ve.internal.cde.palette.Entry;
 import org.eclipse.ve.internal.cde.palette.GroupCmp;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
 
@@ -56,6 +57,7 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.GROUP_CMP;
 	}
@@ -73,10 +75,11 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case PalettePackage.GROUP_CMP__CMP_ENTRIES:
-				return ((InternalEList)getCmpEntries()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getCmpEntries()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -86,6 +89,7 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.GROUP_CMP__CMP_ENTRIES:
@@ -99,11 +103,13 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.GROUP_CMP__CMP_ENTRIES:
 				getCmpEntries().clear();
-				getCmpEntries().addAll((Collection)newValue);
+				getCmpEntries().addAll((Collection<? extends Entry>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -114,6 +120,7 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.GROUP_CMP__CMP_ENTRIES:
@@ -128,6 +135,7 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.GROUP_CMP__CMP_ENTRIES:

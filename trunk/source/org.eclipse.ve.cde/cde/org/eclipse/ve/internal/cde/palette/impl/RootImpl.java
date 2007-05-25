@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: RootImpl.java,v 1.3 2006-02-07 17:21:33 rkulp Exp $
+ * $Id: RootImpl.java,v 1.4 2007-05-25 04:09:36 srobenalt Exp $
  */
 package org.eclipse.ve.internal.cde.palette.impl;
 
@@ -62,6 +62,7 @@ public class RootImpl extends ContainerImpl implements Root {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.ROOT;
 	}
@@ -109,6 +110,7 @@ public class RootImpl extends ContainerImpl implements Root {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.ROOT__DEF_ENTRY:
@@ -123,6 +125,7 @@ public class RootImpl extends ContainerImpl implements Root {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.ROOT__DEF_ENTRY:
@@ -137,6 +140,7 @@ public class RootImpl extends ContainerImpl implements Root {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.ROOT__DEF_ENTRY:
@@ -151,6 +155,7 @@ public class RootImpl extends ContainerImpl implements Root {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.ROOT__DEF_ENTRY:

@@ -11,17 +11,23 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: CDMFactoryImpl.java,v $
- *  $Revision: 1.10 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.11 $  $Date: 2007-05-25 04:09:35 $ 
  */
 
 import java.util.Map;
 
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.ve.internal.cdm.*;
-import org.eclipse.ve.internal.cdm.model.*;
+import org.eclipse.ve.internal.cdm.model.Dimension;
+import org.eclipse.ve.internal.cdm.model.Point;
+import org.eclipse.ve.internal.cdm.model.Rectangle;
 
 import com.ibm.icu.util.StringTokenizer;
 
@@ -32,6 +38,13 @@ import com.ibm.icu.util.StringTokenizer;
  * @generated
  */
 public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
@@ -66,6 +79,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case CDMPackage.DIAGRAM_DATA: return createDiagramData();
@@ -92,6 +106,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
 			case CDMPackage.VIEW_DIMENSION:
@@ -110,6 +125,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
 			case CDMPackage.VIEW_DIMENSION:
@@ -158,7 +174,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map.Entry createKeyedLocation() {
+	public Map.Entry<String, Point> createKeyedLocation() {
 		KeyedLocationImpl keyedLocation = new KeyedLocationImpl();
 		return keyedLocation;
 	}
@@ -168,7 +184,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map.Entry createKeyedSize() {
+	public Map.Entry<String, Dimension> createKeyedSize() {
 		KeyedSizeImpl keyedSize = new KeyedSizeImpl();
 		return keyedSize;
 	}
@@ -178,7 +194,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map.Entry createKeyedConstraint() {
+	public Map.Entry<String, Rectangle> createKeyedConstraint() {
 		KeyedConstraintImpl keyedConstraint = new KeyedConstraintImpl();
 		return keyedConstraint;
 	}
@@ -188,7 +204,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map.Entry createKeyedPoints() {
+	public Map.Entry<String, EList<Point>> createKeyedPoints() {
 		KeyedPointsImpl keyedPoints = new KeyedPointsImpl();
 		return keyedPoints;
 	}
@@ -228,7 +244,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map.Entry createKeyedGeneric() {
+	public Map.Entry<String, EObject> createKeyedGeneric() {
 		KeyedGenericImpl keyedGeneric = new KeyedGenericImpl();
 		return keyedGeneric;
 	}
@@ -238,7 +254,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map.Entry createKeyedInteger() {
+	public Map.Entry<String, Integer> createKeyedInteger() {
 		KeyedIntegerImpl keyedInteger = new KeyedIntegerImpl();
 		return keyedInteger;
 	}
@@ -248,7 +264,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map.Entry createKeyedDynamic() {
+	public Map.Entry<String, Object> createKeyedDynamic() {
 		KeyedDynamicImpl keyedDynamic = new KeyedDynamicImpl();
 		return keyedDynamic;
 	}
@@ -258,7 +274,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map.Entry createKeyedBoolean() {
+	public Map.Entry<String, Boolean> createKeyedBoolean() {
 		KeyedBooleanImpl keyedBoolean = new KeyedBooleanImpl();
 		return keyedBoolean;
 	}
@@ -290,7 +306,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * @generated
 	 */
 	public String convertViewDimensionToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+		return super.convertToString(instanceValue);
 	}
 
 	public Point createViewPointFromString(EDataType eDataType, String initialValue) {
@@ -320,7 +336,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * @generated
 	 */
 	public String convertViewPointToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+		return super.convertToString(instanceValue);
 	}
 
 	public Rectangle createViewRectangleFromString(EDataType eDataType, String initialValue) {
@@ -358,7 +374,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * @generated
 	 */
 	public String convertViewRectangleToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+		return super.convertToString(instanceValue);
 	}
 
 	/**
@@ -376,6 +392,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * @deprecated
 	 * @generated
 	 */
+	@Deprecated
 	public static CDMPackage getPackage() {
 		return CDMPackage.eINSTANCE;
 	}

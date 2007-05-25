@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: ContainerImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:36 $ 
  */
 import java.util.Collection;
 
@@ -61,7 +61,7 @@ public abstract class ContainerImpl extends EntryImpl implements Container {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList children = null;
+	protected EList<Entry> children = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -77,6 +77,7 @@ public abstract class ContainerImpl extends EntryImpl implements Container {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.CONTAINER;
 	}
@@ -86,9 +87,9 @@ public abstract class ContainerImpl extends EntryImpl implements Container {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getChildren() {
+	public EList<Entry> getChildren() {
 		if (children == null) {
-			children = new EObjectContainmentEList(Entry.class, this, PalettePackage.CONTAINER__CHILDREN);
+			children = new EObjectContainmentEList<Entry>(Entry.class, this, PalettePackage.CONTAINER__CHILDREN);
 		}
 		return children;
 	}
@@ -98,10 +99,11 @@ public abstract class ContainerImpl extends EntryImpl implements Container {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case PalettePackage.CONTAINER__CHILDREN:
-				return ((InternalEList)getChildren()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getChildren()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -111,6 +113,7 @@ public abstract class ContainerImpl extends EntryImpl implements Container {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.CONTAINER__CHILDREN:
@@ -124,11 +127,13 @@ public abstract class ContainerImpl extends EntryImpl implements Container {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.CONTAINER__CHILDREN:
 				getChildren().clear();
-				getChildren().addAll((Collection)newValue);
+				getChildren().addAll((Collection<? extends Entry>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -139,6 +144,7 @@ public abstract class ContainerImpl extends EntryImpl implements Container {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.CONTAINER__CHILDREN:
@@ -153,6 +159,7 @@ public abstract class ContainerImpl extends EntryImpl implements Container {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.CONTAINER__CHILDREN:

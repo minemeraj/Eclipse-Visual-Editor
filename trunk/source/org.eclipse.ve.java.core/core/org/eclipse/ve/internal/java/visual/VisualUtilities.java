@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualUtilities.java,v $
- *  $Revision: 1.14 $  $Date: 2005-11-11 23:20:55 $ 
+ *  $Revision: 1.15 $  $Date: 2007-05-25 04:18:47 $ 
  */
 package org.eclipse.ve.internal.java.visual;
 
@@ -69,11 +69,11 @@ public static ILayoutPolicyFactory getLayoutPolicyFactory(EClassifier layoutMana
 	BeanDecorator decr = (BeanDecorator) policy.findDecorator(layoutManagerClass, BeanDecorator.class, LAYOUT_POLICY_FACTORY_CLASSNAME_KEY);
 	String layoutFactoryClassname = null;
 	if (decr != null)
-		layoutFactoryClassname = (String) decr.getKeyedValues().get(LAYOUT_POLICY_FACTORY_CLASSNAME_KEY);
+		layoutFactoryClassname = (String)decr.getKeyedValues().get(LAYOUT_POLICY_FACTORY_CLASSNAME_KEY);
 	if (layoutFactoryClassname != null) {
 		try {
-			Class factoryClass = CDEPlugin.getClassFromString(layoutFactoryClassname);
-			ILayoutPolicyFactory fact = (ILayoutPolicyFactory) factoryClass.newInstance();
+			Class<ILayoutPolicyFactory> factoryClass = CDEPlugin.getClassFromString(layoutFactoryClassname);
+			ILayoutPolicyFactory fact = factoryClass.newInstance();
 			CDEPlugin.setInitializationData(fact, layoutFactoryClassname, null);
 			return fact;
 		} catch (ClassNotFoundException e) {

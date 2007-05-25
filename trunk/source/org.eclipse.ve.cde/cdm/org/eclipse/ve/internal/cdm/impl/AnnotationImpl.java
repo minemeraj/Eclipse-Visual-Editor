@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: AnnotationImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:35 $ 
  */
 import java.util.Collection;
 import java.util.Iterator;
@@ -45,6 +45,12 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+	/**
 	 * The cached value of the '{@link #getVisualInfos() <em>Visual Infos</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -52,7 +58,7 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * @generated
 	 * @ordered
 	 */
-	protected EList visualInfos = null;
+	protected EList<VisualInfo> visualInfos = null;
 	
 	/**
 	 * <!-- begin-user-doc -->
@@ -68,6 +74,7 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.ANNOTATION;
 	}
@@ -87,10 +94,11 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION__VISUAL_INFOS:
-				return ((InternalEList)getVisualInfos()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getVisualInfos()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -100,6 +108,7 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION__VISUAL_INFOS:
@@ -113,11 +122,13 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION__VISUAL_INFOS:
 				getVisualInfos().clear();
-				getVisualInfos().addAll((Collection)newValue);
+				getVisualInfos().addAll((Collection<? extends VisualInfo>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -128,6 +139,7 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION__VISUAL_INFOS:
@@ -142,6 +154,7 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.ANNOTATION__VISUAL_INFOS:
@@ -155,9 +168,9 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getVisualInfos() {
+	public EList<VisualInfo> getVisualInfos() {
 		if (visualInfos == null) {
-			visualInfos = new EObjectContainmentEList(VisualInfo.class, this, CDMPackage.ANNOTATION__VISUAL_INFOS);
+			visualInfos = new EObjectContainmentEList<VisualInfo>(VisualInfo.class, this, CDMPackage.ANNOTATION__VISUAL_INFOS);
 		}
 		return visualInfos;
 	}

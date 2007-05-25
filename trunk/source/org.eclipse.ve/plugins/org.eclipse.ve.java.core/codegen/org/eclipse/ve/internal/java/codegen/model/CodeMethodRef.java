@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.52 $  $Date: 2006-05-22 17:19:53 $ 
+ *  $Revision: 1.53 $  $Date: 2007-05-25 04:18:47 $ 
  */
 
 import java.util.*;
@@ -19,8 +19,7 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -44,8 +43,8 @@ public class CodeMethodRef extends AbstractCodeRef {
 
 protected   MethodDeclaration		fdeclMethod = null ;
 protected   CodeTypeRef				fTypeRef = null ;
-protected   ArrayList				fExpressions = new ArrayList() ;
-protected   ArrayList				fEventExpressions = new ArrayList() ;
+protected   ArrayList<CodeExpressionRef>	fExpressions = new ArrayList<CodeExpressionRef>() ;
+protected   ArrayList<CodeExpressionRef>	fEventExpressions = new ArrayList<CodeExpressionRef>() ;
 protected	String					fMethodHandle = null ;  // Unique handle in a class
 protected   String					fMethodName ;
 protected   Object					fSync ;
@@ -83,12 +82,12 @@ protected void setDeclMethod(MethodDeclaration method){
 	fdeclMethod = method ;
 	if(fdeclMethod!=null){// && fMethod==null){
 		fMethodName = method.getName().getIdentifier();
-		List parameters = method.parameters();
+		List<SingleVariableDeclaration> parameters = method.parameters();
 		fArgumentNames = null;
 		if(parameters!=null){
 			fArgumentNames = new String[parameters.size()];
 			for (int argCount = 0; argCount < parameters.size(); argCount++) {
-				SingleVariableDeclaration svd = (SingleVariableDeclaration) parameters.get(argCount);
+				SingleVariableDeclaration svd = parameters.get(argCount);
 				fArgumentNames[argCount] = svd.getName().getFullyQualifiedName();
 			}
 		}
@@ -107,9 +106,9 @@ public void setMethodHandle(String handle) {
 	fMethodHandle = handle ;
 	// The unique name of beans may have changed. 
 	if (fModel!=null) { 
-		Collection beans = fModel.getBeansInitilizedByMethod(this) ;
-		for (Iterator iter = beans.iterator(); iter.hasNext();) {
-			BeanPart bean = (BeanPart) iter.next();
+		Collection<BeanPart> beans = fModel.getBeansInitilizedByMethod(this) ;
+		for (Iterator<BeanPart> iter = beans.iterator(); iter.hasNext();) {
+			BeanPart bean = iter.next();
 			fModel.updateBeanNameChange(bean) ;
 		}
 	}
@@ -133,12 +132,12 @@ public  void addExpressionRef(CodeExpressionRef ref) {
 	if (!fExpressions.contains(ref)) {
 		int offset = ref.getOffset() ;
 		if (fExpressions == null) 
-			fExpressions = new ArrayList() ;
+			fExpressions = new ArrayList<CodeExpressionRef>() ;
 		if((ref.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)) && //((ref.getState()&CodeExpressionRef.STATE_SRC_LOC_FIXED)==CodeExpressionRef.STATE_SRC_LOC_FIXED) && 
 		   (offset>-1)){
 			int index;
 			for (index=0; index<fExpressions.size(); index++) 
-				if (((CodeExpressionRef)fExpressions.get(index)).getOffset()>offset) break ;
+				if ((fExpressions.get(index)).getOffset()>offset) break ;
 		      if (index == fExpressions.size())
 			   fExpressions.add(ref) ;
 			else
@@ -159,12 +158,12 @@ public  void addExpressionRef(CodeExpressionRef ref) {
 public  void addEventExpressionRef(CodeEventRef ref) {
 	int offset = ref.getOffset() ;
 	if (fEventExpressions == null) 
-		fEventExpressions = new ArrayList() ;
+		fEventExpressions = new ArrayList<CodeExpressionRef>() ;
 	if((ref.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)) && //((ref.getState()&CodeExpressionRef.STATE_SRC_LOC_FIXED)==CodeExpressionRef.STATE_SRC_LOC_FIXED) && 
 	   (offset>-1)){
 		int index;
 		for (index=0; index<fEventExpressions.size(); index++) 
-			if (((CodeEventRef)fEventExpressions.get(index)).getOffset()>offset) break ;
+			if ((fEventExpressions.get(index)).getOffset()>offset) break ;
 	      if (index == fEventExpressions.size())
 		   fEventExpressions.add(ref) ;
 		else
@@ -191,31 +190,31 @@ public  void removeEventRef(CodeEventRef ref) {
 /**
  * Get all expressions in this method that impact bean/s in the model
  */
-public  Iterator getExpressions() {
-	if (fExpressions == null) fExpressions = new ArrayList () ;
-	return new ArrayList(fExpressions).iterator() ; // return new arraylist to avoid Concurrent Modification Exceptions
+public  Iterator<CodeExpressionRef> getExpressions() {
+	if (fExpressions == null) fExpressions = new ArrayList<CodeExpressionRef> () ;
+	return new ArrayList<CodeExpressionRef>(fExpressions).iterator() ; // return new arraylist to avoid Concurrent Modification Exceptions
 }
 /**
  * Get all Event expressions in this method that impact bean/s in the model
  */
-public  Iterator getEventExpressions() {
-	if (fEventExpressions == null) fEventExpressions = new ArrayList () ;
-	return new ArrayList(fEventExpressions).iterator() ; // return new arraylist to avoid Concurrent Modification Exceptions
+public  Iterator<CodeExpressionRef> getEventExpressions() {
+	if (fEventExpressions == null) fEventExpressions = new ArrayList<CodeExpressionRef> () ;
+	return new ArrayList<CodeExpressionRef>(fEventExpressions).iterator() ; // return new arraylist to avoid Concurrent Modification Exceptions
 }
 
-public  Iterator getAllExpressions() {
+public  Iterator<CodeExpressionRef> getAllExpressions() {
 	
-	final Iterator exp = getExpressions() ;
-	final Iterator events = getEventExpressions() ;	
+	final Iterator<CodeExpressionRef> exp = getExpressions() ;
+	final Iterator<CodeExpressionRef> events = getEventExpressions() ;	
 	
-	return new Iterator() {
+	return new Iterator<CodeExpressionRef>() {
 		boolean eventsFlag = false ;
 		
 		public boolean hasNext() {
 			return exp.hasNext() || events.hasNext() ;
 		}
 
-		public java.lang.Object next() {
+		public CodeExpressionRef next() {
 			if (exp.hasNext()) 
 			   return exp.next() ;
 			else {
@@ -242,7 +241,7 @@ public  Iterator getAllExpressions() {
 protected void resetExpressionPriorities(){
 	// Reset priority of normal expressions
 	for(int count=0;count<fExpressions.size();count++){
-		CodeExpressionRef expression = (CodeExpressionRef)fExpressions.get(count);
+		CodeExpressionRef expression = fExpressions.get(count);
 		try{			
 			if ((!expression.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) &&  //((expression.getState()& expression.STATE_NO_OP) == 0) && 
 				(expression.isAnyStateSet()) &&
@@ -261,7 +260,7 @@ protected void resetExpressionPriorities(){
 	
 	// Reset priority of event expressions
 	for(int count=0;count<fEventExpressions.size();count++){
-		CodeExpressionRef expression = (CodeExpressionRef)fEventExpressions.get(count);
+		CodeExpressionRef expression = fEventExpressions.get(count);
 		try{			
 			if ((!expression.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) &&  //((expression.getState()& expression.STATE_NO_OP) == 0) && 
 				(expression.isAnyStateSet()) &&
@@ -288,13 +287,13 @@ protected Object[] getUsableOffsetAndFiller() throws CodeGenException{
 	String filler = null;
 	
 	
-	ArrayList list = new ArrayList();
+	ArrayList<CodeExpressionRef> list = new ArrayList<CodeExpressionRef>();
 	list.addAll(fExpressions);
 	list.addAll(fEventExpressions);
 	
 	// find the last expression in our model
 	for(int i=list.size()-1;i>=0;i--){
-	 	CodeExpressionRef ce = (CodeExpressionRef) list.get(i);
+	 	CodeExpressionRef ce = list.get(i);
 	 	if(ce.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED) && ce.getOffset()>=0 && !ce.isStateSet(CodeExpressionRef.STATE_NO_SRC)){
 	 		offset = ce.getOffset()+ce.getLen();
 	 		filler = ce.getFillerContent();
@@ -329,28 +328,28 @@ protected Object[] getUsableOffsetAndFiller() throws CodeGenException{
  * 
  * Add the expression, and set up its offset/filler
  */
-protected void addExpression (List l, CodeExpressionRef exp, int index) throws CodeGenException {
+protected void addExpression (List<CodeExpressionRef> l, CodeExpressionRef exp, int index) throws CodeGenException {
 	int offset;
 	String filler;
 		
 	int prevIndex = index-1;  // Previous valid expression	
 	if (index<l.size()) {
 		// find the first insertion target
-		CodeExpressionRef targetExp = (CodeExpressionRef)l.get(index);	
+		CodeExpressionRef targetExp = l.get(index);	
 		while (index<l.size() && targetExp.isStateSet(CodeExpressionRef.STATE_NO_SRC)){
 			index++;
 			if (index<l.size())
-			   targetExp = (CodeExpressionRef)l.get(index);
+			   targetExp = l.get(index);
 		}
 	}
 	
 	if (prevIndex>0) {	
 		// find previous valid expression
-		CodeExpressionRef targetExp = (CodeExpressionRef)l.get(prevIndex);
+		CodeExpressionRef targetExp = l.get(prevIndex);
 		while (prevIndex>=0 && targetExp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
 			prevIndex--;
 			if (prevIndex>=0)
-			   targetExp = (CodeExpressionRef)l.get(prevIndex);
+			   targetExp = l.get(prevIndex);
 		}
 	}
 					
@@ -364,16 +363,16 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
 		CodeExpressionRef cExp;
 		if (prevIndex>=0) {
 			// use the previou's filler.. we come right after
-			cExp = (CodeExpressionRef) l.get(prevIndex);
+			cExp = l.get(prevIndex);
 			offset = cExp.getOffset()+cExp.getLen();
 		}
 		else {
 			// use the one we come in front off
-			cExp = (CodeExpressionRef) l.get(index);
+			cExp = l.get(index);
 			offset = cExp.getOffset();
 		}
 		if(cExp.isStateSet(CodeExpressionRef.STATE_SHARED_LINE)){
-			filler = ((CodeExpressionRef) cExp.getSameLineExpressions().get(0)).getFillerContent();
+			filler = ( cExp.getSameLineExpressions().get(0)).getFillerContent();
 			cExp.updateSharedLineExpressions(true);
 			// offsets are update - refresh the offsets again
 			if (prevIndex>=0) {
@@ -405,7 +404,7 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
  * 
  * @since 1.1.0
  */
-protected  boolean isGrouping (BeanPart bp, List expressions, int index) {
+protected  boolean isGrouping (BeanPart bp, List<CodeExpressionRef> expressions, int index) {
 	boolean result = false;
 	if (bp.isImplicit() &&
 		bp.getInitExpression()!=null && 
@@ -413,7 +412,7 @@ protected  boolean isGrouping (BeanPart bp, List expressions, int index) {
 		
 		bp = bp.getImplicitParent();
 	for (int i=index; i>=0; i--) {	
-	    CodeExpressionRef exp = (CodeExpressionRef) expressions.get(i);
+	    CodeExpressionRef exp = expressions.get(i);
 		if (exp.getBean()!=bp)
 			break; // Not in the grouping anymore
 		if (exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
@@ -430,11 +429,11 @@ protected  boolean isGrouping (BeanPart bp, List expressions, int index) {
  * 
  * @since 1.1.0.1
  */
-protected boolean isLowZOrderInGroup(BeanPart bp, List expressions, int index, VEexpressionPriority pri) {
+protected boolean isLowZOrderInGroup(BeanPart bp, List<CodeExpressionRef> expressions, int index, VEexpressionPriority pri) {
 	boolean result = false;
 	if (pri.isIndexed()) {
 		for (int i=index; i>=0; i--) {	
-		    CodeExpressionRef exp = (CodeExpressionRef) expressions.get(i);
+		    CodeExpressionRef exp = expressions.get(i);
 		    VEexpressionPriority cp = exp.getPriority();
 		    if (cp.isIndexed()&&pri.comparePriority(cp)>0) { // pri comes before cp
 		    	result = true;
@@ -450,13 +449,13 @@ protected boolean isLowZOrderInGroup(BeanPart bp, List expressions, int index, V
     return result;
 }
 
-protected int getGroupLastIndex(List sortedList, BeanPart bp) {
+protected int getGroupLastIndex(List<CodeExpressionRef> sortedList, BeanPart bp) {
 	int idx=0;
 	while (idx<sortedList.size()) {
-		CodeExpressionRef exp = (CodeExpressionRef)sortedList.get(idx);
+		CodeExpressionRef exp = sortedList.get(idx);
 		if (exp.getBean()==bp && exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
 			while (idx<sortedList.size()) {
-				CodeExpressionRef exp2 = (CodeExpressionRef)sortedList.get(idx);
+				CodeExpressionRef exp2 = sortedList.get(idx);
 				if (exp2.getBean()!=bp)
 					return idx-1;
 				idx++;
@@ -480,7 +479,7 @@ protected int getGroupLastIndex(List sortedList, BeanPart bp) {
  * 
  * @since 1.1.0
  */
- private boolean isRelated(CodeExpressionRef exp, List references) {
+ private boolean isRelated(CodeExpressionRef exp, List<EObject> references) {
 	 
  	EReference sf = (EReference)exp.getPriority().getProiorityIndex().getSf();
 	if (VCEPostSetCommand.isChildRelationShip(sf)) {
@@ -530,7 +529,7 @@ protected int getGroupLastIndex(List sortedList, BeanPart bp) {
  * 
  * @since 1.1.0
  */
-protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp) throws CodeGenException {
+protected void addExpressionToSortedList(List<CodeExpressionRef> sortedList, CodeExpressionRef exp) throws CodeGenException {
 	// 
 	// The sorted list may not be sorted the way we prioratize expressions, (it is may
 	// be coming from the source code like this) .... so we have to go through ALL expressions
@@ -538,7 +537,7 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 	
 	int index = -1;
 	VEexpressionPriority expPriority = exp.getPriority();
-	List dependantBeans = exp.getReferences();
+	List<EObject> dependantBeans = exp.getReferences();
 	if (exp.getBean().isImplicit())
 		dependantBeans.add(exp.getBean().getImplicitParent().getEObject());
 	
@@ -558,7 +557,7 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 			
 		   if (first>=0) break; 
 			
-		   CodeExpressionRef cExp = (CodeExpressionRef) sortedList.get(i);		   
+		   CodeExpressionRef cExp = sortedList.get(i);		   
 		   if (cExp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) 
 			   continue;
 		   
@@ -621,7 +620,7 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 				   int firstIndex = (i+1)>=sortedList.size()? sortedList.size() : i+1;
 				   // skip all expressions for this bean
 				   for (int j=i+1; j<sortedList.size(); j++) {
-						CodeExpressionRef skip = (CodeExpressionRef) sortedList.get(j);
+						CodeExpressionRef skip = sortedList.get(j);
 						if (skip.getBean()!=cExp.getBean())
 							break; // different grouping
 						firstIndex = (j+1)>=sortedList.size()? sortedList.size() : j+1;						
@@ -667,15 +666,15 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 	}	
 	addExpression (sortedList, exp, index) ;	
 }
-protected ArrayList sortExpressions(List list) throws CodeGenException {
+protected ArrayList<CodeExpressionRef> sortExpressions(List<CodeExpressionRef> list) throws CodeGenException {
 	
-	ArrayList  sortedList = new ArrayList();
-	ArrayList  needSorting = new ArrayList();
-	ArrayList  notReadyForSorting = new ArrayList(); 
+	ArrayList<CodeExpressionRef>  sortedList = new ArrayList<CodeExpressionRef>();
+	ArrayList<CodeExpressionRef>  needSorting = new ArrayList<CodeExpressionRef>();
+	ArrayList<CodeExpressionRef>  notReadyForSorting = new ArrayList<CodeExpressionRef>(); 
 	
 	
 	for (int i=0; i<list.size(); i++) {
-		CodeExpressionRef exp = (CodeExpressionRef) list.get(i);
+		CodeExpressionRef exp = list.get(i);
 		if (!exp.isStateSet(CodeExpressionRef.STATE_IN_SYNC)) {
 			//  expression generation may induce the generation of another one
 			//  e.g., a lazy creation of a BeanPart... so this one is not ready to 
@@ -700,7 +699,7 @@ protected ArrayList sortExpressions(List list) throws CodeGenException {
 		  throw new CodeGenException ("Limitation ... only one new expression is allowed"); //$NON-NLS-1$
 	
 	for (int i=0; i<needSorting.size(); i++) {
-		addExpressionToSortedList(sortedList, (CodeExpressionRef)needSorting.get(i));
+		addExpressionToSortedList(sortedList, needSorting.get(i));
 	}		
 	sortedList.addAll(notReadyForSorting);
 	return sortedList;	
@@ -708,13 +707,13 @@ protected ArrayList sortExpressions(List list) throws CodeGenException {
 
 public  void updateExpressionOrder() throws CodeGenException {
 	
-	ArrayList sortedList = sortExpressions(fExpressions);
+	ArrayList<CodeExpressionRef> sortedList = sortExpressions(fExpressions);
 	fExpressions = sortedList;
 	
 	// sorting of events has to take into consideration the sorted
 	// order of regular expressions as well. 
 	if(fEventExpressions!=null && fEventExpressions.size()>0){
-		List allExpressions = new ArrayList(fExpressions);
+		List<CodeExpressionRef> allExpressions = new ArrayList<CodeExpressionRef>(fExpressions);
 		allExpressions.addAll(fEventExpressions);
 		sortedList = sortExpressions(allExpressions); // sort all expressions in the method
 		sortedList.removeAll(fExpressions); // remove the regular expressions as they were added only for reference
@@ -729,15 +728,15 @@ public  void updateExpressionOrder() throws CodeGenException {
  * @todo Generated comment
  * @deprecated
  */
-protected static Enumeration determineBeanOrder(Enumeration beans){
-	SortedSet beanSorter = new TreeSet(getDefaultBeanOrderComparator());
+protected static Enumeration<BeanPart> determineBeanOrder(Enumeration<BeanPart> beans){
+	SortedSet<BeanPart> beanSorter = new TreeSet<BeanPart>(getDefaultBeanOrderComparator());
 	while(beans.hasMoreElements()){
 		boolean added = beanSorter.add(beans.nextElement());
 		if(!added)
 			JavaVEPlugin.log("No addition to the treeset", Level.FINE); //$NON-NLS-1$
 	};
-	Vector order = new Vector();
-	Iterator sorted = beanSorter.iterator();
+	Vector<BeanPart> order = new Vector<BeanPart>();
+	Iterator<BeanPart> sorted = beanSorter.iterator();
 	while(sorted.hasNext())
 		order.add(sorted.next());
 	return order.elements();
@@ -749,11 +748,9 @@ protected static Enumeration determineBeanOrder(Enumeration beans){
  *	       second.
  *  warning: Never return zero, as values are overwritten if equal.
  */
-protected static Comparator getDefaultBeanOrderComparator(){
-	return new Comparator(){
-		public int compare(Object o1, Object o2){
-			BeanPart bp1 = (BeanPart) o1;
-			BeanPart bp2 = (BeanPart) o2;
+protected static Comparator<BeanPart> getDefaultBeanOrderComparator(){
+	return new Comparator<BeanPart>(){
+		public int compare(BeanPart bp1, BeanPart bp2){
 			int np1 = getImportanceCount(bp1, bp2);
 			int np2 = getImportanceCount(bp2, bp1);
 			if(np1 < np2){
@@ -794,9 +791,9 @@ protected static Comparator getDefaultBeanOrderComparator(){
 		
 		
 		protected boolean isAChildOf(BeanPart parent, BeanPart reference){
-			Iterator children = parent.getChildren();
+			Iterator<BeanPart> children = parent.getChildren();
 			while(children.hasNext()){
-				BeanPart child = (BeanPart) children.next();
+				BeanPart child = children.next();
 				if(child.getSimpleName().equals(reference.getSimpleName()))
 					return true;
 				if(isAChildOf(child, reference))
@@ -835,9 +832,9 @@ protected static Comparator getDefaultBeanOrderComparator(){
 public  void dispose() {
 	
 	if (fModel != null) {
-		Iterator itr = fModel.getBeansInitilizedByMethod(this).iterator();
+		Iterator<BeanPart> itr = fModel.getBeansInitilizedByMethod(this).iterator();
 		while (itr.hasNext()) {
-			BeanPart b = (BeanPart) itr.next();
+			BeanPart b = itr.next();
 			b.removeInitMethod(this);
 			b.removeReturnMethod(this);
 		}
@@ -936,10 +933,10 @@ public String _debugExpressions() {
     StringBuffer sb = new StringBuffer() ;
     int mOffset = getOffset() ;
     String   doc = fModel.getDocumentBuffer().getContents() ;
-    Iterator itr = getExpressions() ;
+    Iterator<CodeExpressionRef> itr = getExpressions() ;
 	try {
       while (itr.hasNext()) {
-        CodeExpressionRef exp = (CodeExpressionRef)itr.next() ;
+        CodeExpressionRef exp = itr.next() ;
         sb.append(exp.toString()+"\n\"") ; //$NON-NLS-1$
         if (!exp.isStateSet(CodeExpressionRef.STATE_DELETE) && !exp.isStateSet(CodeEventRef.STATE_NO_SRC))
             sb.append(doc.substring(mOffset+exp.getOffset(),mOffset+exp.getOffset()+exp.getLen())) ;
@@ -979,9 +976,9 @@ public JCMMethod getCompMethod() {
  */
 public void restore() {
 	if (fcompMethod==null) {
-		EList methods = fTypeRef.getBeanComposition().getMethods();
+		EList<JCMMethod> methods = fTypeRef.getBeanComposition().getMethods();
 		for (int i = 0; i < methods.size(); i++) {
-			JCMMethod method = (JCMMethod)methods.get(i);
+			JCMMethod method = methods.get(i);
 			if (method.getName().equals(getMethodName())) {
 				fcompMethod = method;
 				MemberDecoderAdapter a = new MemberDecoderAdapter(fModel) ;
@@ -1054,9 +1051,9 @@ public void setContent(String content) {
  * @param delta
  */
 public void updateExpressionsOffset(int offset, int delta) {
-	Iterator itr = getAllExpressions();
+	Iterator<CodeExpressionRef> itr = getAllExpressions();
 	while (itr.hasNext()) {
-		CodeExpressionRef exp = (CodeExpressionRef) itr.next();
+		CodeExpressionRef exp = itr.next();
 		// If this expression has updated the document, skip it
 		if (exp.isStateSet(CodeExpressionRef.STATE_UPDATING_SOURCE) || exp.isStateSet(CodeExpressionRef.STATE_DELETE))
 			continue;
@@ -1065,7 +1062,7 @@ public void updateExpressionsOffset(int offset, int delta) {
 	}
 }
 
-protected void refreshExpressionOrder(List currentList, CodeExpressionRef exp) throws CodeGenException {
+protected void refreshExpressionOrder(List<CodeExpressionRef> currentList, CodeExpressionRef exp) throws CodeGenException {
 	currentList.remove(exp);
 	addExpressionToSortedList(currentList, exp);
 	

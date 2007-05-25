@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: KeyedValueHolderImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:35 $ 
  */
  
 
@@ -44,6 +44,12 @@ import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
  */
 public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedValueHolder {
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+	/**
 	 * The cached value of the '{@link #getKeyedValues() <em>Keyed Values</em>}' map.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -51,7 +57,7 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * @generated
 	 * @ordered
 	 */
-	protected EMap keyedValues = null;
+	protected EMap<String, String> keyedValues = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -67,6 +73,7 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.KEYED_VALUE_HOLDER;
 	}
@@ -87,10 +94,11 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES:
-				return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getKeyedValues()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -100,6 +108,7 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES:
@@ -114,6 +123,7 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES:
@@ -128,6 +138,7 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES:
@@ -142,6 +153,7 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES:

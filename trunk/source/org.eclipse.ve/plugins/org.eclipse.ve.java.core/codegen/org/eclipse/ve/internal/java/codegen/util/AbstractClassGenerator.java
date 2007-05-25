@@ -14,7 +14,7 @@
 
 /*
 *  $RCSfile: AbstractClassGenerator.java,v $
-*  $Revision: 1.8 $
+*  $Revision: 1.9 $
 */
 
 package org.eclipse.ve.internal.java.codegen.util;
@@ -84,9 +84,9 @@ public abstract class AbstractClassGenerator {
 		if (fTemplate != null) return fTemplate ;
 		
 		try {
-			List list = TemplateUtil.getPluginAndPreReqJarPath(getBasePlugin());
+			List<String> list = TemplateUtil.getPluginAndPreReqJarPath(getBasePlugin());
 			list.addAll(TemplateUtil.getPlatformJREPath());
-			String[] classPath = (String[]) list.toArray(new String[list.size()]);
+			String[] classPath = list.toArray(new String[list.size()]);
 			String   templatePath = TemplateUtil.getPathForBundleFile(getBasePlugin(), getTemplateDirPath()) ;
 			
 			fTemplate = (IClassTemplate)

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: PaletteCmp.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 
@@ -63,7 +63,7 @@ public interface PaletteCmp extends Root{
 	 * @model type="org.eclipse.ve.internal.cde.palette.Category" containment="true"
 	 * @generated
 	 */
-	EList getCmpCategories();
+	EList<Category> getCmpCategories();
 
 	/**
 	 * Returns the value of the '<em><b>Cmp Control Group</b></em>' containment reference.

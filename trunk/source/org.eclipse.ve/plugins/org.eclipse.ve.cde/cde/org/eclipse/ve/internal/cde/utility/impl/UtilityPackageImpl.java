@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: UtilityPackageImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2006-05-17 20:13:53 $ 
+ *  $Revision: 1.9 $  $Date: 2007-05-25 04:09:36 $ 
  */
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -382,6 +382,10 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 
 		// Obtain other dependent packages
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+
+		// Create type parameters
+
+		// Set bounds for type parameters
 
 		// Add supertypes to classes
 		constantStringEClass.getESuperTypes().add(this.getAbstractString());

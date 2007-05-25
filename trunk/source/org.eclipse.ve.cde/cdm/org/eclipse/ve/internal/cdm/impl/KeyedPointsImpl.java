@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: KeyedPointsImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.9 $  $Date: 2007-05-25 04:09:35 $ 
  */
  
 import java.util.Collection;
@@ -43,7 +43,14 @@ import org.eclipse.ve.internal.cdm.model.Point;
  *
  * @generated
  */
-public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
+public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry<String,EList<Point>> {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
 	/**
 	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' attribute list.
 	 * <!-- begin-user-doc -->
@@ -52,7 +59,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList value = null;
+	protected EList<Point> value = null;
 
 	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
@@ -88,6 +95,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.KEYED_POINTS;
 	}
@@ -97,9 +105,9 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getTypedValue() {
+	public EList<Point> getTypedValue() {
 		if (value == null) {
-			value = new EDataTypeUniqueEList(Point.class, this, CDMPackage.KEYED_POINTS__VALUE);
+			value = new EDataTypeUniqueEList<Point>(Point.class, this, CDMPackage.KEYED_POINTS__VALUE);
 		}
 		return value;
 	}
@@ -130,6 +138,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.KEYED_POINTS__VALUE:
@@ -145,11 +154,13 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.KEYED_POINTS__VALUE:
 				getTypedValue().clear();
-				getTypedValue().addAll((Collection)newValue);
+				getTypedValue().addAll((Collection<? extends Point>)newValue);
 				return;
 			case CDMPackage.KEYED_POINTS__KEY:
 				setTypedKey((String)newValue);
@@ -163,6 +174,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_POINTS__VALUE:
@@ -180,6 +192,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_POINTS__VALUE:
@@ -195,6 +208,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
@@ -241,7 +255,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getKey() {
+	public String getKey() {
 		return getTypedKey();
 	}
 
@@ -250,8 +264,8 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setKey(Object key) {
-		setTypedKey((String)key);
+	public void setKey(String key) {
+		setTypedKey(key);
 	}
 
 	/**
@@ -259,7 +273,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getValue() {
+	public EList<Point> getValue() {
 		return getTypedValue();
 	}
 
@@ -268,10 +282,10 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object setValue(Object value) {
-		Object oldValue = getValue();
+	public EList<Point> setValue(EList<Point> value) {
+		EList<Point> oldValue = getValue();
 		getTypedValue().clear();
-		getTypedValue().addAll((Collection)value);
+		getTypedValue().addAll(value);
 		return oldValue;
 	}
 
@@ -280,9 +294,10 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EMap getEMap() {
+	@SuppressWarnings("unchecked")
+	public EMap<String, EList<Point>> getEMap() {
 		EObject container = eContainer();
-		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
+		return container == null ? null : (EMap<String, EList<Point>>)container.eGet(eContainmentFeature());
 	}
 
 } //KeyedPointsImpl

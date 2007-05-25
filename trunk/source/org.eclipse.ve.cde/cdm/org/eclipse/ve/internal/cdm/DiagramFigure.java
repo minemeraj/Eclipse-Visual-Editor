@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: DiagramFigure.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
+ *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -38,6 +38,13 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface DiagramFigure extends KeyedValueHolder{
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	String copyright = "";
+
 	/**
 	 * Returns the value of the '<em><b>Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -81,6 +88,6 @@ public interface DiagramFigure extends KeyedValueHolder{
 	 * @model type="org.eclipse.ve.internal.cdm.DiagramFigure" containment="true"
 	 * @generated
 	 */
-	EList getChildFigures();
+	EList<DiagramFigure> getChildFigures();
 
 } // DiagramFigure

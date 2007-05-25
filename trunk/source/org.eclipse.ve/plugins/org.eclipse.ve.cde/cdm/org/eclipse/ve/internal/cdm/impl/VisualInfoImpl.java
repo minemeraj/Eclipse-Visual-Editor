@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: VisualInfoImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:35 $ 
  */
  
 
@@ -40,6 +40,12 @@ import org.eclipse.ve.internal.cdm.VisualInfo;
  */
 public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+	/**
 	 * The cached value of the '{@link #getDiagram() <em>Diagram</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -63,6 +69,7 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.VISUAL_INFO;
 	}
@@ -132,6 +139,7 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case CDMPackage.VISUAL_INFO__DIAGRAM:
@@ -147,6 +155,7 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case CDMPackage.VISUAL_INFO__DIAGRAM:
@@ -160,6 +169,7 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.VISUAL_INFO__DIAGRAM:
@@ -174,6 +184,7 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.VISUAL_INFO__DIAGRAM:
@@ -188,6 +199,7 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.VISUAL_INFO__DIAGRAM:
@@ -202,6 +214,7 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.VISUAL_INFO__DIAGRAM:

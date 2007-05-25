@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodParser.java,v $
- *  $Revision: 1.11 $  $Date: 2006-05-17 20:14:52 $ 
+ *  $Revision: 1.12 $  $Date: 2007-05-25 04:18:47 $ 
  */
 
 import java.util.logging.Level;
@@ -68,7 +68,7 @@ public class MethodParser {
 		catch (JavaModelException e) {}
 		
 		if (fSource != null) {
-	   		ASTParser parser = ASTParser.newParser(AST.JLS2);
+	   		ASTParser parser = ASTParser.newParser(AST.JLS3);
 			parser.setSource(fSource.toCharArray());
 			fCU = (CompilationUnit) parser.createAST(null);
 		}

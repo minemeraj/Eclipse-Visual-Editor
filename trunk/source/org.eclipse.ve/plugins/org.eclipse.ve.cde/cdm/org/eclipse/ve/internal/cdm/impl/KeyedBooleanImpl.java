@@ -37,7 +37,14 @@ import org.eclipse.ve.internal.cdm.CDMPackage;
  *
  * @generated
  */
-public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
+public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry<String,Boolean> {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
 	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -92,6 +99,7 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return CDMPackage.Literals.KEYED_BOOLEAN;
 	}
@@ -143,6 +151,7 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CDMPackage.KEYED_BOOLEAN__KEY:
@@ -158,6 +167,7 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case CDMPackage.KEYED_BOOLEAN__KEY:
@@ -175,6 +185,7 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_BOOLEAN__KEY:
@@ -192,6 +203,7 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case CDMPackage.KEYED_BOOLEAN__KEY:
@@ -207,6 +219,7 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
@@ -253,7 +266,7 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getKey() {
+	public String getKey() {
 		return getTypedKey();
 	}
 
@@ -262,8 +275,8 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setKey(Object key) {
-		setTypedKey((String)key);
+	public void setKey(String key) {
+		setTypedKey(key);
 	}
 
 	/**
@@ -271,7 +284,7 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getValue() {
+	public Boolean getValue() {
 		return new Boolean(getTypedValue());
 	}
 
@@ -280,9 +293,9 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object setValue(Object value) {
-		Object oldValue = getValue();
-		setTypedValue(((Boolean)value).booleanValue());
+	public Boolean setValue(Boolean value) {
+		Boolean oldValue = getValue();
+		setTypedValue(value);
 		return oldValue;
 	}
 
@@ -291,9 +304,10 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EMap getEMap() {
+	@SuppressWarnings("unchecked")
+	public EMap<String, Boolean> getEMap() {
 		EObject container = eContainer();
-		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
+		return container == null ? null : (EMap<String, Boolean>)container.eGet(eContainmentFeature());
 	}
 
 } //KeyedBooleanImpl

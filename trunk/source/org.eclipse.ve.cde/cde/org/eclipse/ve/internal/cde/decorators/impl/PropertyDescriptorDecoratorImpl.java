@@ -61,7 +61,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 * @ordered
 	 */
-	protected EList cellEditorValidatorClassnames = null;
+	protected EList<String> cellEditorValidatorClassnames = null;
 
 	/**
 	 * The default value of the '{@link #getLabelProviderClassname() <em>Label Provider Classname</em>}' attribute.
@@ -243,6 +243,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return DecoratorsPackage.Literals.PROPERTY_DESCRIPTOR_DECORATOR;
 	}
@@ -319,6 +320,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
@@ -344,11 +346,13 @@ public class PropertyDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
 				getCellEditorValidatorClassnames().clear();
-				getCellEditorValidatorClassnames().addAll((Collection)newValue);
+				getCellEditorValidatorClassnames().addAll((Collection<? extends String>)newValue);
 				return;
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__LABEL_PROVIDER_CLASSNAME:
 				setLabelProviderClassname((String)newValue);
@@ -377,6 +381,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
@@ -455,7 +460,8 @@ public class PropertyDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == BasePropertyDecorator.class) {
 			switch (derivedFeatureID) {
 				case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES: return DecoratorsPackage.BASE_PROPERTY_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES;
@@ -474,7 +480,8 @@ public class PropertyDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == BasePropertyDecorator.class) {
 			switch (baseFeatureID) {
 				case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES: return DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES;
@@ -493,9 +500,9 @@ public class PropertyDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getCellEditorValidatorClassnames() {
+	public EList<String> getCellEditorValidatorClassnames() {
 		if (cellEditorValidatorClassnames == null) {
-			cellEditorValidatorClassnames = new EDataTypeUniqueEList(String.class, this, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES);
+			cellEditorValidatorClassnames = new EDataTypeUniqueEList<String>(String.class, this, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES);
 		}
 		return cellEditorValidatorClassnames;
 	}
@@ -703,6 +710,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

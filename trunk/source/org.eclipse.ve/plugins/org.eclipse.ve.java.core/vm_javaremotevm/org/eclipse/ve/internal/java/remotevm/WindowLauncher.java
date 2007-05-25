@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.remotevm;
 /*
  *  $RCSfile: WindowLauncher.java,v $
- *  $Revision: 1.11 $  $Date: 2005-12-13 01:32:36 $ 
+ *  $Revision: 1.12 $  $Date: 2007-05-25 04:18:47 $ 
  */
 
 import java.awt.*;
@@ -36,7 +36,7 @@ public class WindowLauncher implements ICallback {
 	Component fComponent;
 	IBeanPropertyEditorDialog fDialog;
 	Window fWindow;
-	java.util.List fWindowListeners = new ArrayList(1);
+	java.util.List<WindowListener> fWindowListeners = new ArrayList<WindowListener>(1);
 	int windowState = Common.WIN_OPENED;
 	private boolean explicitPropertyChange = false;
 	
@@ -132,9 +132,9 @@ void launchEditor(){
 void listenToComponent() {
 		fWindow.addWindowListener(new WindowAdapter() {
 			public void windowClosed(WindowEvent event) {
-				Iterator iter = fWindowListeners.iterator();
+				Iterator<WindowListener> iter = fWindowListeners.iterator();
 				while (iter.hasNext()) {
-					((WindowListener) iter.next()).windowClosed();
+					iter.next().windowClosed();
 				}
 				callbackWindowClosed();
 			}
