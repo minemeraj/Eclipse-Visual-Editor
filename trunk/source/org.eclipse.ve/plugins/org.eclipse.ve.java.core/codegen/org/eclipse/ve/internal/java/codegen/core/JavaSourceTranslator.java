@@ -615,7 +615,7 @@ protected EObject  createAJavaInstance(BeanPart bean, JavaCacheData cache, IProg
 	   if (cache == null)
 	      obj = bean.createEObject() ;
 	   else {
-	   	  obj = (EObject) cache.getNamesToBeans().get(bean.getUniqueName());
+	   	  obj = cache.getNamesToBeans().get(bean.getUniqueName());
 	   	  bean.setEObject(obj);
 	   	  bean.setIsInJVEModel(obj!=null);
 	   }

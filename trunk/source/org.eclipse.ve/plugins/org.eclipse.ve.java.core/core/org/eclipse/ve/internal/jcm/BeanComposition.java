@@ -11,11 +11,12 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: BeanComposition.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-15 21:33:50 $ 
+ *  $Revision: 1.5 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ve.internal.cdm.DiagramData;
 
 /**
@@ -47,10 +48,10 @@ public interface BeanComposition extends DiagramData, MemberContainer{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Components</em>' reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanComposition_Components()
-	 * @model type="org.eclipse.emf.ecore.EObject"
+	 * @model
 	 * @generated
 	 */
-	EList getComponents();
+	EList<EObject> getComponents();
 
 	/**
 	 * Returns the value of the '<em><b>Listener Types</b></em>' containment reference list.
@@ -63,9 +64,9 @@ public interface BeanComposition extends DiagramData, MemberContainer{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Listener Types</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanComposition_ListenerTypes()
-	 * @model type="org.eclipse.ve.internal.jcm.ListenerType" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList getListenerTypes();
+	EList<ListenerType> getListenerTypes();
 
 } // BeanComposition

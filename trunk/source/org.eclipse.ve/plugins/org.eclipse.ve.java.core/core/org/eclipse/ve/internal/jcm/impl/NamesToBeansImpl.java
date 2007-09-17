@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: NamesToBeansImpl.java,v 1.5 2006-02-07 17:21:37 rkulp Exp $
+ * $Id: NamesToBeansImpl.java,v 1.6 2007-09-17 14:21:53 srobenalt Exp $
  */
 package org.eclipse.ve.internal.jcm.impl;
 /*******************************************************************************
@@ -42,7 +42,7 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
  *
  * @generated
  */
-public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
+public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry<String,EObject> {
 	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -71,7 +71,7 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject value = null;
+	protected EObject value;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -87,6 +87,7 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.NAMES_TO_BEANS;
 	}
@@ -155,6 +156,7 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.NAMES_TO_BEANS__KEY:
@@ -171,6 +173,7 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.NAMES_TO_BEANS__KEY:
@@ -188,6 +191,7 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.NAMES_TO_BEANS__KEY:
@@ -205,6 +209,7 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.NAMES_TO_BEANS__KEY:
@@ -220,6 +225,7 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
@@ -264,7 +270,7 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getKey() {
+	public String getKey() {
 		return getTypedKey();
 	}
 
@@ -273,8 +279,8 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setKey(Object key) {
-		setTypedKey((String)key);
+	public void setKey(String key) {
+		setTypedKey(key);
 	}
 
 	/**
@@ -282,7 +288,7 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getValue() {
+	public EObject getValue() {
 		return getTypedValue();
 	}
 
@@ -291,9 +297,9 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object setValue(Object value) {
-		Object oldValue = getValue();
-		setTypedValue((EObject)value);
+	public EObject setValue(EObject value) {
+		EObject oldValue = getValue();
+		setTypedValue(value);
 		return oldValue;
 	}
 
@@ -302,9 +308,10 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EMap getEMap() {
+	@SuppressWarnings("unchecked")
+	public EMap<String, EObject> getEMap() {
 		EObject container = eContainer();
-		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
+		return container == null ? null : (EMap<String, EObject>)container.eGet(eContainmentFeature());
 	}
 
 } //NamesToBeansImpl

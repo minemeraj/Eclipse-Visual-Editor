@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: AnnotationImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:35 $ 
+ *  $Revision: 1.7 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import java.util.Collection;
 import java.util.Iterator;
@@ -45,12 +45,6 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-	/**
 	 * The cached value of the '{@link #getVisualInfos() <em>Visual Infos</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -58,7 +52,7 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<VisualInfo> visualInfos = null;
+	protected EList<VisualInfo> visualInfos;
 	
 	/**
 	 * <!-- begin-user-doc -->

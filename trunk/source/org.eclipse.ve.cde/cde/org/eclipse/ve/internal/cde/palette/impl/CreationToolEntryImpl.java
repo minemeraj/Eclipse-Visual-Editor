@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: CreationToolEntryImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.8 $  $Date: 2007-09-17 14:17:13 $ 
  */
 
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.*;
 
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -41,6 +42,7 @@ import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 
 
 
+import org.eclipse.ve.internal.cdm.impl.MapEntryImpl;
 import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
 
 /**
@@ -66,7 +68,7 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 	 * @generated
 	 * @ordered
 	 */
-	protected EMap keyedValues = null;
+	protected EMap<String, String> keyedValues;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -82,6 +84,7 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return PalettePackage.Literals.CREATION_TOOL_ENTRY;
 	}
@@ -102,10 +105,11 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES:
-				return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getKeyedValues()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -115,6 +119,7 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES:
@@ -129,6 +134,7 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES:
@@ -143,6 +149,7 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES:
@@ -157,6 +164,7 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES:
@@ -176,7 +184,8 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == KeyedValueHolder.class) {
 			switch (derivedFeatureID) {
 				case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES: return CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES;
@@ -191,7 +200,8 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == KeyedValueHolder.class) {
 			switch (baseFeatureID) {
 				case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES: return PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES;

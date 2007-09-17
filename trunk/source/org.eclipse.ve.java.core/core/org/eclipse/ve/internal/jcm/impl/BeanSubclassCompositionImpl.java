@@ -59,7 +59,7 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected IJavaObjectInstance thisPart = null;
+	protected IJavaObjectInstance thisPart;
 
 	/**
 	 * The cached value of the '{@link #getMethods() <em>Methods</em>}' containment reference list.
@@ -69,7 +69,7 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected EList methods = null;
+	protected EList<JCMMethod> methods;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -85,6 +85,7 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.BEAN_SUBCLASS_COMPOSITION;
 	}
@@ -137,9 +138,9 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getMethods() {
+	public EList<JCMMethod> getMethods() {
 		if (methods == null) {
-			methods = new EObjectContainmentEList(JCMMethod.class, this, JCMPackage.BEAN_SUBCLASS_COMPOSITION__METHODS);
+			methods = new EObjectContainmentEList<JCMMethod>(JCMMethod.class, this, JCMPackage.BEAN_SUBCLASS_COMPOSITION__METHODS);
 		}
 		return methods;
 	}
@@ -149,12 +150,13 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__THIS_PART:
 				return basicSetThisPart(null, msgs);
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__METHODS:
-				return ((InternalEList)getMethods()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getMethods()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -164,6 +166,7 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__THIS_PART:
@@ -179,6 +182,8 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__THIS_PART:
@@ -186,7 +191,7 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 				return;
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__METHODS:
 				getMethods().clear();
-				getMethods().addAll((Collection)newValue);
+				getMethods().addAll((Collection<? extends JCMMethod>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -197,6 +202,7 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__THIS_PART:
@@ -214,6 +220,7 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__THIS_PART:

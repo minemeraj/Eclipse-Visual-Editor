@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMFactoryImpl.java,v $
- *  $Revision: 1.13 $  $Date: 2006-05-17 20:14:52 $ 
+ *  $Revision: 1.14 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import java.util.Map;
@@ -69,6 +69,7 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case JCMPackage.BEAN_DECORATOR: return createBeanDecorator();
@@ -96,6 +97,7 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
 			case JCMPackage.INSTANCE_LOCATION:
@@ -112,6 +114,7 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
 			case JCMPackage.INSTANCE_LOCATION:
@@ -208,7 +211,7 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map.Entry createKeyedInstanceLocation() {
+	public Map.Entry<String, InstanceLocation> createKeyedInstanceLocation() {
 		KeyedInstanceLocationImpl keyedInstanceLocation = new KeyedInstanceLocationImpl();
 		return keyedInstanceLocation;
 	}
@@ -228,7 +231,7 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map.Entry createNamesToBeans() {
+	public Map.Entry<String, EObject> createNamesToBeans() {
 		NamesToBeansImpl namesToBeans = new NamesToBeansImpl();
 		return namesToBeans;
 	}
@@ -328,6 +331,7 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	 * @deprecated
 	 * @generated
 	 */
+	@Deprecated
 	public static JCMPackage getPackage() {
 		return JCMPackage.eINSTANCE;
 	}

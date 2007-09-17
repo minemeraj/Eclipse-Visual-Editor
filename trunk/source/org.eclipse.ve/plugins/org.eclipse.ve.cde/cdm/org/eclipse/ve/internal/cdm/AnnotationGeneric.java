@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: AnnotationGeneric.java,v $
- *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.8 $  $Date: 2007-09-17 14:17:13 $ 
  */
  
  import java.lang.String;
@@ -38,13 +38,6 @@ package org.eclipse.ve.internal.cdm;
  */
 public interface AnnotationGeneric extends Annotation{
 
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	String copyright = "";
 
 	/**
 	 * Returns the value of the '<em><b>Annotates ID</b></em>' attribute.

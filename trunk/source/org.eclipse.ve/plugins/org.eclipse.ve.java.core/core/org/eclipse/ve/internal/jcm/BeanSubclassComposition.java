@@ -50,7 +50,7 @@ public interface BeanSubclassComposition extends BeanComposition{
 	 * @return the value of the '<em>This Part</em>' containment reference.
 	 * @see #setThisPart(IJavaObjectInstance)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanSubclassComposition_ThisPart()
-	 * @model containment="true" required="true"
+	 * @model type="org.eclipse.jem.internal.instantiation.IJavaObjectInstance" containment="true" required="true"
 	 * @generated
 	 */
 	IJavaObjectInstance getThisPart();
@@ -76,7 +76,7 @@ public interface BeanSubclassComposition extends BeanComposition{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Methods</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanSubclassComposition_Methods()
-	 * @model type="org.eclipse.ve.internal.jcm.JCMMethod" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<JCMMethod> getMethods();

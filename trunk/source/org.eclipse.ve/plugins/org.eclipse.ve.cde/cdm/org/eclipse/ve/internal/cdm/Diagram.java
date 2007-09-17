@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: Diagram.java,v $
- *  $Revision: 1.5 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.6 $  $Date: 2007-09-17 14:17:13 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -38,12 +38,6 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface Diagram extends KeyedValueHolder{
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	String copyright = "";
 	// A default id to use for a diagram. It can be used for the primary diagram, if desired.	
 	// It is how the diagram is found. It would usually be used for the diagram that goes with
 	// the graph viewer of the model itself. This would be an easy way to find it, but it is not necessary.	
@@ -142,7 +136,7 @@ public interface Diagram extends KeyedValueHolder{
 	 * @return the value of the '<em>Visual Infos</em>' reference list.
 	 * @see org.eclipse.ve.internal.cdm.CDMPackage#getDiagram_VisualInfos()
 	 * @see org.eclipse.ve.internal.cdm.VisualInfo#getDiagram
-	 * @model type="org.eclipse.ve.internal.cdm.VisualInfo" opposite="diagram"
+	 * @model opposite="diagram"
 	 * @generated
 	 */
 	EList<VisualInfo> getVisualInfos();
@@ -158,7 +152,7 @@ public interface Diagram extends KeyedValueHolder{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Figures</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.cdm.CDMPackage#getDiagram_Figures()
-	 * @model type="org.eclipse.ve.internal.cdm.DiagramFigure" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<DiagramFigure> getFigures();

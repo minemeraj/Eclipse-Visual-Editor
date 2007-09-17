@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ListenerImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2006-02-07 17:21:37 $ 
+ *  $Revision: 1.6 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import java.util.Collection;
@@ -65,7 +65,7 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList listenedBy = null;
+	protected EList<AbstractEventInvocation> listenedBy;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -81,6 +81,7 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.LISTENER;
 	}
@@ -90,9 +91,9 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getListenedBy() {
+	public EList<AbstractEventInvocation> getListenedBy() {
 		if (listenedBy == null) {
-			listenedBy = new EObjectWithInverseResolvingEList(AbstractEventInvocation.class, this, JCMPackage.LISTENER__LISTENED_BY, JCMPackage.ABSTRACT_EVENT_INVOCATION__LISTENER);
+			listenedBy = new EObjectWithInverseResolvingEList<AbstractEventInvocation>(AbstractEventInvocation.class, this, JCMPackage.LISTENER__LISTENED_BY, JCMPackage.ABSTRACT_EVENT_INVOCATION__LISTENER);
 		}
 		return listenedBy;
 	}
@@ -112,6 +113,16 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public NotificationChain basicSetListenerType(ListenerType newListenerType, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newListenerType, JCMPackage.LISTENER__LISTENER_TYPE, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public void setListenerType(ListenerType newListenerType) {
 		if (newListenerType != eInternalContainer() || (eContainerFeatureID != JCMPackage.LISTENER__LISTENER_TYPE && newListenerType != null)) {
 			if (EcoreUtil.isAncestor(this, newListenerType))
@@ -121,7 +132,7 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 				msgs = eBasicRemoveFromContainer(msgs);
 			if (newListenerType != null)
 				msgs = ((InternalEObject)newListenerType).eInverseAdd(this, JCMPackage.LISTENER_TYPE__LISTENERS, ListenerType.class, msgs);
-			msgs = eBasicSetContainer((InternalEObject)newListenerType, JCMPackage.LISTENER__LISTENER_TYPE, msgs);
+			msgs = basicSetListenerType(newListenerType, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
@@ -133,14 +144,16 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.LISTENER__LISTENED_BY:
-				return ((InternalEList)getListenedBy()).basicAdd(otherEnd, msgs);
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getListenedBy()).basicAdd(otherEnd, msgs);
 			case JCMPackage.LISTENER__LISTENER_TYPE:
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
-				return eBasicSetContainer(otherEnd, JCMPackage.LISTENER__LISTENER_TYPE, msgs);
+				return basicSetListenerType((ListenerType)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -150,12 +163,13 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.LISTENER__LISTENED_BY:
-				return ((InternalEList)getListenedBy()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getListenedBy()).basicRemove(otherEnd, msgs);
 			case JCMPackage.LISTENER__LISTENER_TYPE:
-				return eBasicSetContainer(null, JCMPackage.LISTENER__LISTENER_TYPE, msgs);
+				return basicSetListenerType(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -165,6 +179,7 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID) {
 			case JCMPackage.LISTENER__LISTENER_TYPE:
@@ -178,6 +193,7 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.LISTENER__LISTENED_BY:
@@ -193,11 +209,13 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.LISTENER__LISTENED_BY:
 				getListenedBy().clear();
-				getListenedBy().addAll((Collection)newValue);
+				getListenedBy().addAll((Collection<? extends AbstractEventInvocation>)newValue);
 				return;
 			case JCMPackage.LISTENER__LISTENER_TYPE:
 				setListenerType((ListenerType)newValue);
@@ -211,6 +229,7 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.LISTENER__LISTENED_BY:
@@ -228,6 +247,7 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.LISTENER__LISTENED_BY:

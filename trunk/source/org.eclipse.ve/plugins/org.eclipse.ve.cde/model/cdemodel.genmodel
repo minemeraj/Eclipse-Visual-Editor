@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.ve.cde/cde"
-    editDirectory="/org.eclipse.ve.cde.edit/src" editorDirectory="/org.eclipse.ve.cde.editor/src"
-    modelPluginID="" modelName="CDE" editPluginClass="org.eclipse.ve.internal.cde.decorators.provider.DecoratorsEditPlugin"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText=""
+    modelDirectory="/org.eclipse.ve.cde/cde" editDirectory="/org.eclipse.ve.cde.edit/src"
+    editorDirectory="/org.eclipse.ve.cde.editor/src" modelPluginID="" modelName="CDE"
+    editPluginClass="org.eclipse.ve.internal.cde.decorators.provider.DecoratorsEditPlugin"
     editorPluginClass="org.eclipse.ve.internal.cde.decorators.presentation.DecoratorsEditorPlugin"
     updateClasspath="false" booleanFlagsField="eFlags" booleanFlagsReservedBits="8"
-    importerID="org.eclipse.emf.importer.rose" complianceLevel="5.0" usedGenPackages="cdmmodel.genmodel#//cdm ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
-  <foreignModel>..\rose\cdeModels.mdl</foreignModel>
+    importerID="org.eclipse.emf.importer.rose" complianceLevel="5.0" suppressGenModelAnnotations="false"
+    usedGenPackages="cdmmodel.genmodel#//cdm ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+  <foreignModel>../rose/cdeModels.mdl</foreignModel>
   <foreignModel>WorkspaceRoot</foreignModel>
   <foreignModel>../..</foreignModel>
   <genPackages prefix="Palette" basePackage="org.eclipse.ve.internal.cde" adapterFactory="false"

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: LinkType.java,v 1.4 2006-02-07 17:21:37 rkulp Exp $
+ * $Id: LinkType.java,v 1.5 2007-09-17 14:21:53 srobenalt Exp $
  */
 package org.eclipse.ve.internal.jcm;
 /*******************************************************************************
@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.util.AbstractEnumerator;
+import org.eclipse.emf.common.util.Enumerator;
 
 /**
  * <!-- begin-user-doc -->
@@ -34,7 +34,35 @@ import org.eclipse.emf.common.util.AbstractEnumerator;
  * @model
  * @generated
  */
-public final class LinkType extends AbstractEnumerator {
+public enum LinkType implements Enumerator
+{
+	/**
+	 * The '<em><b>NORMAL</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #NORMAL
+	 * @generated
+	 * @ordered
+	 */
+	NORMAL_LITERAL(0, "NORMAL", "NORMAL"),
+	/**
+	 * The '<em><b>CHILD</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #CHILD
+	 * @generated
+	 * @ordered
+	 */
+	CHILD_LITERAL(1, "CHILD", "CHILD"),
+	/**
+	 * The '<em><b>DEPENDENCY</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #DEPENDENCY
+	 * @generated
+	 * @ordered
+	 */
+	DEPENDENCY_LITERAL(2, "DEPENDENCY", "DEPENDENCY");
 	/**
 	 * The '<em><b>NORMAL</b></em>' literal value.
 	 * <!-- begin-user-doc -->
@@ -84,36 +112,6 @@ public final class LinkType extends AbstractEnumerator {
 	public static final int DEPENDENCY = 2;
 
 	/**
-	 * The '<em><b>NORMAL</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #NORMAL
-	 * @generated
-	 * @ordered
-	 */
-	public static final LinkType NORMAL_LITERAL = new LinkType(NORMAL, "NORMAL", "NORMAL");
-
-	/**
-	 * The '<em><b>CHILD</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #CHILD
-	 * @generated
-	 * @ordered
-	 */
-	public static final LinkType CHILD_LITERAL = new LinkType(CHILD, "CHILD", "CHILD");
-
-	/**
-	 * The '<em><b>DEPENDENCY</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #DEPENDENCY
-	 * @generated
-	 * @ordered
-	 */
-	public static final LinkType DEPENDENCY_LITERAL = new LinkType(DEPENDENCY, "DEPENDENCY", "DEPENDENCY");
-
-	/**
 	 * An array of all the '<em><b>Link Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -132,7 +130,7 @@ public final class LinkType extends AbstractEnumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+	public static final List<LinkType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
 	 * Returns the '<em><b>Link Type</b></em>' literal with the specified literal value.
@@ -178,8 +176,29 @@ public final class LinkType extends AbstractEnumerator {
 			case CHILD: return CHILD_LITERAL;
 			case DEPENDENCY: return DEPENDENCY_LITERAL;
 		}
-		return null;	
+		return null;
 	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final int value;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final String name;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final String literal;
 
 	/**
 	 * Only this class can construct instances.
@@ -188,7 +207,46 @@ public final class LinkType extends AbstractEnumerator {
 	 * @generated
 	 */
 	private LinkType(int value, String name, String literal) {
-		super(value, name, literal);
+		this.value = value;
+		this.name = name;
+		this.literal = literal;
 	}
 
-} //LinkType
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getValue() {
+	  return value;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getName() {
+	  return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getLiteral() {
+	  return literal;
+	}
+
+	/**
+	 * Returns the literal value of the enumerator, which is its string representation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		return literal;
+	}
+}

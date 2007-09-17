@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeEventInvocation.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-15 21:33:50 $ 
+ *  $Revision: 1.5 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import org.eclipse.jem.java.Method;
@@ -80,9 +80,9 @@ public interface PropertyChangeEventInvocation extends AbstractEventInvocation{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Properties</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getPropertyChangeEventInvocation_Properties()
-	 * @model type="org.eclipse.ve.internal.jcm.PropertyEvent" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList getProperties();
+	EList<PropertyEvent> getProperties();
 
 } // PropertyChangeEventInvocation

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: CDMPackageImpl.java,v $
- *  $Revision: 1.10 $  $Date: 2007-05-25 04:09:35 $ 
+ *  $Revision: 1.11 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import java.util.Map;
 
@@ -47,13 +47,6 @@ import org.eclipse.ve.internal.cdm.model.Rectangle;
  * @generated
  */
 public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -942,8 +935,8 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 		initEClass(annotationEClass, Annotation.class, "Annotation", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getAnnotation_VisualInfos(), this.getVisualInfo(), null, "visualInfos", null, 0, -1, Annotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		EOperation op = addEOperation(annotationEClass, this.getVisualInfo(), "getVisualInfo", 0, 1);
-		addEParameter(op, this.getDiagram(), "aDiagram", 0, 1);
+		EOperation op = addEOperation(annotationEClass, this.getVisualInfo(), "getVisualInfo", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getDiagram(), "aDiagram", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(keyedPointsEClass, Map.Entry.class, "KeyedPoints", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getKeyedPoints_Value(), this.getViewPoint(), "value", null, 0, -1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -986,6 +979,80 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// http://www.eclipse.org/emf/2002/GenModel
+		createGenModelAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/emf/2002/GenModel</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createGenModelAnnotations() {
+		String source = "http://www.eclipse.org/emf/2002/GenModel";		
+		addAnnotation
+		  (diagramDataEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "The diagram data, such as the annotations and viewer data."
+		   });		
+		addAnnotation
+		  (visualInfoEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "The visual info for a component. The id is used to allow the info to be for a specific viewer, in case the component may be visible in more than one viewer, e.g. the graphViewer and a specialized viewer."
+		   });		
+		addAnnotation
+		  (keyedValueHolderEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This class holds KeyedValues. It is used by mixing it in with multiple inheritance into where it is needed.\r\n\r\nThe operations allow treating the KeyedValues as properties. They should be used instead of the generic keyedValues relationship. It allows easier usage of the keyed values.\r\n\r\nNote: KeyedValues should be treated as dataTypes, in other words, individual KeyedValues shouldn\'t be updated, they should be replaced instead. This is because typically users area listening for new keyed values, not subvalues within individual keyed values being changed. If the users understands this and still listens on individual KeyedValues, that is OK as long thier model handles unlistening when the keyedvalue is removed."
+		   });		
+		addAnnotation
+		  (keyedPointsEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "List of Points"
+		   });		
+		addAnnotation
+		  (annotationEMFEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Annotation that can annotate an EMF object (RefObject)."
+		   });		
+		addAnnotation
+		  (annotationGenericEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is a generic annotation where the ID of the object being annotated is in the attribute annotatesID. This is used when the thing being annotated is not a RefObject, so we can\'t directly point to it. There will be a factory for each specific model that knows how to map from the id to the actual model object and back."
+		   });		
+		addAnnotation
+		  (diagramFigureEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "A figure on the diagram. This is used when the structure of objects in the diagram are not determined by the object model but are specified on a per diagram basis."
+		   });		
+		addAnnotation
+		  (getDiagramFigure_Type(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Indicate the type of the figure. This is used by the view to know the type of figure. It can be used to prevent the wrong type of figure being dropped on another figure. Or it can be used to determine the type of EditPart to create for it."
+		   });		
+		addAnnotation
+		  (keyedDynamicEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is used when the value is a dynamic eobject and you need it to be typed. This is treated as an abstract class. The dynamic model must create a subclass that has a \"typedValue\" attribute that is typed to a dynamic type. And it needs a \"keyString\" attribute this is typed to String. This allows the key to be given a default value. This makes it easier to use when there is only one key that makes sense."
+		   });		
+		addAnnotation
+		  (keyedBooleanEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Key/Value for when value is a boolean."
+		   });
 	}
 
 } //CDMPackageImpl

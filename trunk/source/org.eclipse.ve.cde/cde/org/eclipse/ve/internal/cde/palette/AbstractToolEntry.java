@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractToolEntry.java,v $
- *  $Revision: 1.5 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.6 $  $Date: 2007-09-17 14:17:14 $ 
  */
 package org.eclipse.ve.internal.cde.palette;
 
@@ -53,7 +53,7 @@ public interface AbstractToolEntry extends Entry{
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>String Properties</em>' map.
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getAbstractToolEntry_StringProperties()
-	 * @model mapType="org.eclipse.emf.ecore.EStringToStringMapEntry" keyType="java.lang.String" valueType="java.lang.String"
+	 * @model mapType="org.eclipse.emf.ecore.EStringToStringMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>"
 	 * @generated
 	 */
 	EMap<String, String> getStringProperties();

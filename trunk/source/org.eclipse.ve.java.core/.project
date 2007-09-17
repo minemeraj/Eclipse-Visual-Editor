@@ -25,15 +25,6 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
-		<buildCommand>
-			<name>com.ibm.rtp.tools.rose.builder</name>
-			<arguments>
-				<dictionary>
-					<key>rose</key>
-					<value></value>
-				</dictionary>
-			</arguments>
-		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.emf.codegen.jet.IJETNature</nature>

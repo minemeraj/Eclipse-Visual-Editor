@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: CategoryCmp.java,v $
- *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.8 $  $Date: 2007-09-17 14:17:14 $ 
  */
 
 
@@ -54,7 +54,7 @@ public interface CategoryCmp extends Category{
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Cmp Groups</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getCategoryCmp_CmpGroups()
-	 * @model type="org.eclipse.ve.internal.cde.palette.Group" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<Group> getCmpGroups();

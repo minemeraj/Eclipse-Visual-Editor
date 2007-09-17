@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: AnnotationGenericImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:35 $ 
+ *  $Revision: 1.8 $  $Date: 2007-09-17 14:17:13 $ 
  */
 
 import org.eclipse.emf.common.notify.Notification;
@@ -35,14 +35,6 @@ import org.eclipse.ve.internal.cdm.CDMPackage;
  * @generated
  */
 public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationGeneric {
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-
 
 	/**
 	 * The default value of the '{@link #getAnnotatesID() <em>Annotates ID</em>}' attribute.

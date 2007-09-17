@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: PaletteCmpImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.9 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import java.util.Collection;
 
@@ -62,7 +62,7 @@ public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Category> cmpCategories = null;
+	protected EList<Category> cmpCategories;
 
 	/**
 	 * The cached value of the '{@link #getCmpControlGroup() <em>Cmp Control Group</em>}' containment reference.
@@ -72,7 +72,7 @@ public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 	 * @generated
 	 * @ordered
 	 */
-	protected Group cmpControlGroup = null;
+	protected Group cmpControlGroup;
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CallbackImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2006-02-07 17:21:37 $ 
+ *  $Revision: 1.8 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import java.util.Collection;
@@ -84,7 +84,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * @generated
 	 * @ordered
 	 */
-	protected Method method = null;
+	protected Method method;
 
 	/**
 	 * The cached value of the '{@link #getStatements() <em>Statements</em>}' containment reference list.
@@ -94,7 +94,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList statements = null;
+	protected EList<PTExpression> statements;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -110,6 +110,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.CALLBACK;
 	}
@@ -178,9 +179,9 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getStatements() {
+	public EList<PTExpression> getStatements() {
 		if (statements == null) {
-			statements = new EObjectContainmentEList(PTExpression.class, this, JCMPackage.CALLBACK__STATEMENTS);
+			statements = new EObjectContainmentEList<PTExpression>(PTExpression.class, this, JCMPackage.CALLBACK__STATEMENTS);
 		}
 		return statements;
 	}
@@ -190,10 +191,11 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.CALLBACK__STATEMENTS:
-				return ((InternalEList)getStatements()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getStatements()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -203,6 +205,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.CALLBACK__SHARED_SCOPE:
@@ -221,6 +224,8 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.CALLBACK__SHARED_SCOPE:
@@ -231,7 +236,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 				return;
 			case JCMPackage.CALLBACK__STATEMENTS:
 				getStatements().clear();
-				getStatements().addAll((Collection)newValue);
+				getStatements().addAll((Collection<? extends PTExpression>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -242,6 +247,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.CALLBACK__SHARED_SCOPE:
@@ -262,6 +268,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.CALLBACK__SHARED_SCOPE:
@@ -279,6 +286,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

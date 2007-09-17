@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: TranslatableStringImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.9 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
@@ -67,7 +67,7 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 * @generated
 	 * @ordered
 	 */
-	protected ResourceBundle bundle = null;
+	protected ResourceBundle bundle;
 	
 	/**
 	 * <!-- begin-user-doc -->

@@ -75,7 +75,7 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList initializes = null;
+	protected EList<EObject> initializes;
 
 	/**
 	 * The cached value of the '{@link #getReturn() <em>Return</em>}' reference.
@@ -85,7 +85,7 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject return_ = null;
+	protected EObject return_;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -101,6 +101,7 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.JCM_METHOD;
 	}
@@ -131,9 +132,9 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getInitializes() {
+	public EList<EObject> getInitializes() {
 		if (initializes == null) {
-			initializes = new EObjectResolvingEList(EObject.class, this, JCMPackage.JCM_METHOD__INITIALIZES);
+			initializes = new EObjectResolvingEList<EObject>(EObject.class, this, JCMPackage.JCM_METHOD__INITIALIZES);
 		}
 		return initializes;
 	}
@@ -181,6 +182,7 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.JCM_METHOD__NAME:
@@ -199,6 +201,8 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.JCM_METHOD__NAME:
@@ -206,7 +210,7 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 				return;
 			case JCMPackage.JCM_METHOD__INITIALIZES:
 				getInitializes().clear();
-				getInitializes().addAll((Collection)newValue);
+				getInitializes().addAll((Collection<? extends EObject>)newValue);
 				return;
 			case JCMPackage.JCM_METHOD__RETURN:
 				setReturn((EObject)newValue);
@@ -220,6 +224,7 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.JCM_METHOD__NAME:
@@ -240,6 +245,7 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.JCM_METHOD__NAME:
@@ -257,6 +263,7 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

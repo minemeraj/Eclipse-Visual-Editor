@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: KeyedInstanceLocationImpl.java,v 1.5 2006-02-07 17:21:37 rkulp Exp $
+ * $Id: KeyedInstanceLocationImpl.java,v 1.6 2007-09-17 14:21:53 srobenalt Exp $
  */
 package org.eclipse.ve.internal.jcm.impl;
 /*******************************************************************************
@@ -42,7 +42,7 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
  *
  * @generated
  */
-public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.Entry {
+public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.Entry<String,InstanceLocation> {
 	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -97,6 +97,7 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.KEYED_INSTANCE_LOCATION;
 	}
@@ -148,6 +149,7 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.KEYED_INSTANCE_LOCATION__KEY:
@@ -163,6 +165,7 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.KEYED_INSTANCE_LOCATION__KEY:
@@ -180,6 +183,7 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.KEYED_INSTANCE_LOCATION__KEY:
@@ -197,6 +201,7 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.KEYED_INSTANCE_LOCATION__KEY:
@@ -212,6 +217,7 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
@@ -258,7 +264,7 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getKey() {
+	public String getKey() {
 		return getTypedKey();
 	}
 
@@ -267,8 +273,8 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setKey(Object key) {
-		setTypedKey((String)key);
+	public void setKey(String key) {
+		setTypedKey(key);
 	}
 
 	/**
@@ -276,7 +282,7 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getValue() {
+	public InstanceLocation getValue() {
 		return getTypedValue();
 	}
 
@@ -285,9 +291,9 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object setValue(Object value) {
-		Object oldValue = getValue();
-		setTypedValue((InstanceLocation)value);
+	public InstanceLocation setValue(InstanceLocation value) {
+		InstanceLocation oldValue = getValue();
+		setTypedValue(value);
 		return oldValue;
 	}
 
@@ -296,9 +302,10 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EMap getEMap() {
+	@SuppressWarnings("unchecked")
+	public EMap<String, InstanceLocation> getEMap() {
 		EObject container = eContainer();
-		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
+		return container == null ? null : (EMap<String, InstanceLocation>)container.eGet(eContainmentFeature());
 	}
 
 } //KeyedInstanceLocationImpl

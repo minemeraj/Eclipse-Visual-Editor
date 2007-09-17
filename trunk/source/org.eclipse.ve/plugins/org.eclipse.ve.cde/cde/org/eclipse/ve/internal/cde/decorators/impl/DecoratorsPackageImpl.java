@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: DecoratorsPackageImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.10 $  $Date: 2007-09-17 14:17:13 $ 
  */
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -541,6 +541,10 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 		UtilityPackage theUtilityPackage = (UtilityPackage)EPackage.Registry.INSTANCE.getEPackage(UtilityPackage.eNS_URI);
 		CDMPackage theCDMPackage = (CDMPackage)EPackage.Registry.INSTANCE.getEPackage(CDMPackage.eNS_URI);
 
+		// Create type parameters
+
+		// Set bounds for type parameters
+
 		// Add supertypes to classes
 		basePropertyDecoratorEClass.getESuperTypes().add(theEcorePackage.getEAnnotation());
 		propertySourceAdapterInformationEClass.getESuperTypes().add(theEcorePackage.getEAnnotation());
@@ -579,8 +583,8 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 		initEReference(getFeatureDescriptorDecorator_DisplayNameString(), theUtilityPackage.getAbstractString(), null, "displayNameString", null, 0, 1, FeatureDescriptorDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFeatureDescriptorDecorator_DescriptionString(), theUtilityPackage.getAbstractString(), null, "descriptionString", null, 0, 1, FeatureDescriptorDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		EOperation op = addEOperation(featureDescriptorDecoratorEClass, ecorePackage.getEBoolean(), "isFiltered", 0, 1);
-		addEParameter(op, ecorePackage.getEString(), "flag", 0, 1);
+		EOperation op = addEOperation(featureDescriptorDecoratorEClass, ecorePackage.getEBoolean(), "isFiltered", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "flag", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(classDescriptorDecoratorEClass, ClassDescriptorDecorator.class, "ClassDescriptorDecorator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getClassDescriptorDecorator_CustomizerClassname(), ecorePackage.getEString(), "customizerClassname", null, 0, 1, ClassDescriptorDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -593,6 +597,139 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// http://www.eclipse.org/emf/2002/GenModel
+		createGenModelAnnotations();
+	}
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/emf/2002/GenModel</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createGenModelAnnotations() {
+		String source = "http://www.eclipse.org/emf/2002/GenModel";		
+		addAnnotation
+		  (basePropertyDecoratorEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is base information for properties. This will be on an EClassifier for how to edit a property of the type of the EClassifier."
+		   });		
+		addAnnotation
+		  (getBasePropertyDecorator_LabelProviderClassname(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Label Provider Classname. If set, but is null, then that means there explicitly isn\'t one and don\'t use default."
+		   });		
+		addAnnotation
+		  (getBasePropertyDecorator_CellEditorClassname(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Cell Editor Classname. If set, but is null, then that means there explicitly isn\'t one and don\'t use default."
+		   });		
+		addAnnotation
+		  (getBasePropertyDecorator_NullInvalid(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Are null settings invalid. If this is true, then they will be prevented. If this is false, then the cell editor and validator will be used to determine if null is valid or not.\r\n\r\nThe search order will be find it explicitly set on:\r\n  1) The BasePropertyDescriptor on the feature, then if not set,\r\n  2) The BasePropertyDescriptor on the class, then if not set,\r\n  3) use false as the value."
+		   });		
+		addAnnotation
+		  (getBasePropertyDecorator_EntryExpandable(), 
+		   source, 
+		   new String[] {
+			 "documentation", "If this returns true, then the entry will expand in the property sheet if \r\nthere are child entries. If this returns false then it won\'t expand. This is useful when the cell editor handles the complete customization\r\nand it is not desired to allow sub-property customization.\r\n\r\nThe search order will be find it explicitly set on:\r\n  1) The BasePropertyDescriptor on the feature, then if not set,\r\n  2) The BasePropertyDescriptor on the class, then if not set,\r\n  3) use true as the value."
+		   });		
+		addAnnotation
+		  (propertySourceAdapterInformationEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is the information required to establish a PropertySourceAdapter.\r\n\r\nThis will be decorating a EClassifier to indicate what  PropertySourceAdapter to use for this EClassifier."
+		   });		
+		addAnnotation
+		  (getPropertySourceAdapterInformation_PropertySourceAdapterClassname(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Adapter classname. If explicitly set to null (versus not set, which is a default of null, isSet will return true, but value will be null), then this means there is no PropertySourceAdapter for this class, ever."
+		   });		
+		addAnnotation
+		  (propertyDescriptorDecoratorEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is the decorator for a StructuralFeature to supply the information for editing this property."
+		   });		
+		addAnnotation
+		  (getPropertyDescriptorDecorator_DesigntimeProperty(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Whether this property is designtime. If not explicitly set, then ignore this setting. If true then it is shown only on property sheet and not available for connections. If false, then it is available only for connections and not on property sheet."
+		   });		
+		addAnnotation
+		  (getPropertyDescriptorDecorator_AlwaysIncompatible(), 
+		   source, 
+		   new String[] {
+			 "documentation", "If true, then when multiple selections of this property is made, they will be considered incompatible."
+		   });		
+		addAnnotation
+		  (propertyDescriptorInformationEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is the information required to establish a PropertyDescriptorAdapter or a PropertyDescriptor.\r\n\r\nThis will be decorating a RefStructuralFeature to indicate what  PropertyDescriptorAdapter or PropertyDescscriptor  to use for this feature.\r\n\r\nIt depends upon whether the type flag is Adapter is true. If the flag is true, then an adapter will be created once for the feature.\r\n\r\nIf the flag is false, then it will create a descriptor each time a source is asked for descriptors. It will assume to have either a constructor that takes a RefObject and a RefStructuralFeature or one that takes just a RefObject. The RefObject is the source of the feature. This is useful when the descriptor needs to know the source to be able to answer its questions correctly, such as the celleditor, which may vary depending upon the source."
+		   });		
+		addAnnotation
+		  (featureDescriptorDecoratorEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This descriptor decorator for any kind of feature. It contains info that is generalized to features."
+		   });		
+		addAnnotation
+		  (featureDescriptorDecoratorEClass.getEOperations().get(0), 
+		   source, 
+		   new String[] {
+			 "documentation", "Answer whether this filter flag passed in is in this features filterFlags."
+		   });		
+		addAnnotation
+		  (classDescriptorDecoratorEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "The descriptor decorator for a class. Currently it adds nothing over FeatureDescriptorDecortor."
+		   });		
+		addAnnotation
+		  (getClassDescriptorDecorator_CustomizerClassname(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Classname string of the Customizer class.\r\n\r\nThe format of the string is \"classname:initdata\" or \"plugin/classname:initdata\""
+		   });		
+		addAnnotation
+		  (getClassDescriptorDecorator_TreeViewClassname(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Classname of the TreeView EditPart.\r\n\r\nThe format of the string is \"classname:initdata\" or \"plugin/classname:initdata\""
+		   });		
+		addAnnotation
+		  (getClassDescriptorDecorator_GraphViewClassname(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Classname of the GraphView EditPart.\r\n\r\nThe format of the string is \"classname:initdata\" or \"plugin/classname:initdata\""
+		   });		
+		addAnnotation
+		  (getClassDescriptorDecorator_ModelAdapterClassname(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Classname of the Model Adapter. This is the class that either implements all of the interfaces required by the model adapter, or it should be an IAdaptable that will return such adapters. See IModelAdapterFactory.\r\n\r\nThe format of the string is \"classname:initdata\" or \"plugin/classname:initdata\""
+		   });		
+		addAnnotation
+		  (getClassDescriptorDecorator_DefaultPalette(), 
+		   source, 
+		   new String[] {
+			 "documentation", "The default palette to use for this class if not specified by other means. It is in the form a MOF reference, i.e. \"filename#id of palette\"."
+		   });		
+		addAnnotation
+		  (getClassDescriptorDecorator_LabelProviderClassname(), 
+		   source, 
+		   new String[] {
+			 "documentation", "The classname for the label provider to be used for objects of the class that this decorator decorates. This label provider will be used in cases other than property sheet. In that case the labelProvider from the BasePropertyDecorator on this class will be used. (Though the default if there is no BasePropertyDecorator will be to use the string from this label provider, but not the image).\r\n\r\nThe format of the string is \"classname:initdata\" or \"plugin/classname:initdata\""
+		   });
 	}
 
 }

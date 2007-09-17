@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: VisualInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.5 $  $Date: 2007-09-17 14:17:13 $ 
  */
 
 /**
@@ -35,13 +35,6 @@ package org.eclipse.ve.internal.cdm;
  * @generated
  */
 public interface VisualInfo extends KeyedValueHolder{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	String copyright = "";
-
 	/**
 	 * Returns the value of the '<em><b>Diagram</b></em>' reference.
 	 * It is bidirectional and its opposite is '{@link org.eclipse.ve.internal.cdm.Diagram#getVisualInfos <em>Visual Infos</em>}'.

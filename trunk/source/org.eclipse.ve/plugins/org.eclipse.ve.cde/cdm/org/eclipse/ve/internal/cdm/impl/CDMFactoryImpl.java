@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: CDMFactoryImpl.java,v $
- *  $Revision: 1.11 $  $Date: 2007-05-25 04:09:35 $ 
+ *  $Revision: 1.12 $  $Date: 2007-09-17 14:17:13 $ 
  */
 
 import java.util.Map;
@@ -38,13 +38,6 @@ import com.ibm.icu.util.StringTokenizer;
  * @generated
  */
 public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
@@ -306,7 +299,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * @generated
 	 */
 	public String convertViewDimensionToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(instanceValue);
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	public Point createViewPointFromString(EDataType eDataType, String initialValue) {
@@ -336,7 +329,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * @generated
 	 */
 	public String convertViewPointToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(instanceValue);
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	public Rectangle createViewRectangleFromString(EDataType eDataType, String initialValue) {
@@ -374,7 +367,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * @generated
 	 */
 	public String convertViewRectangleToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(instanceValue);
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

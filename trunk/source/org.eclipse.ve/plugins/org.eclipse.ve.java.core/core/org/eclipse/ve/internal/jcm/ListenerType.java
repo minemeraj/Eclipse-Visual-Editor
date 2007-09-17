@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: ListenerType.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-15 21:33:50 $ 
+ *  $Revision: 1.5 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import org.eclipse.jem.java.JavaClass;
@@ -142,10 +142,10 @@ public interface ListenerType extends EObject{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Implements</em>' reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getListenerType_Implements()
-	 * @model type="org.eclipse.jem.java.JavaClass"
+	 * @model
 	 * @generated
 	 */
-	EList getImplements();
+	EList<JavaClass> getImplements();
 
 	/**
 	 * Returns the value of the '<em><b>Is</b></em>' reference.
@@ -186,9 +186,9 @@ public interface ListenerType extends EObject{
 	 * @return the value of the '<em>Listeners</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getListenerType_Listeners()
 	 * @see org.eclipse.ve.internal.jcm.Listener#getListenerType
-	 * @model type="org.eclipse.ve.internal.jcm.Listener" opposite="listenerType" containment="true"
+	 * @model opposite="listenerType" containment="true"
 	 * @generated
 	 */
-	EList getListeners();
+	EList<Listener> getListeners();
 
 } // ListenerType

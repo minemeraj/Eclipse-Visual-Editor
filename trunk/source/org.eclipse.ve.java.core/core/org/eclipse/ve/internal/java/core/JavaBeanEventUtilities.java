@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanEventUtilities.java,v $
- *  $Revision: 1.11 $  $Date: 2006-05-17 20:14:52 $ 
+ *  $Revision: 1.12 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import java.util.*;
@@ -227,7 +227,7 @@ public class JavaBeanEventUtilities {
 			if (existingListenerType.getExtends() != null) 
 			    existingListenerClass = existingListenerType.getExtends() ;
 			else if (existingListenerType.getImplements().size()>0)
-				existingListenerClass = (JavaClass) existingListenerType.getImplements().get(0) ;
+				existingListenerClass = existingListenerType.getImplements().get(0) ;
 			else
 			    existingListenerClass = existingListenerType.getIs() ; 
 			// Test a).  Anonymous inner classes have no name.  As a double backup check make sure the listener isn't shared ( although a listnerType with no name by definition can't be shared )

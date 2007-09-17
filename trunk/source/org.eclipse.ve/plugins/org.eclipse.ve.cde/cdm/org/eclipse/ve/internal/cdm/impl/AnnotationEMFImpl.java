@@ -42,13 +42,6 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 
 	
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-
 	public static final class ParentAdapterImpl extends AdapterImpl implements ParentAdapter {
 		protected Annotation parentAnnotation;
 		
@@ -79,7 +72,7 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject annotates = null;
+	protected EObject annotates;
 	
 	/**
 	 * <!-- begin-user-doc -->

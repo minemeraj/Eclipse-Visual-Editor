@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: EntryImpl.java,v $
- *  $Revision: 1.11 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.12 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -178,7 +178,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * @generated
 	 * @ordered
 	 */
-	protected AbstractString entryLabel = null;
+	protected AbstractString entryLabel;
 	/**
 	 * The cached value of the '{@link #getEntryShortDescription() <em>Entry Short Description</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -187,7 +187,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * @generated
 	 * @ordered
 	 */
-	protected AbstractString entryShortDescription = null;
+	protected AbstractString entryShortDescription;
 	
 	/**
 	 * <!-- begin-user-doc -->

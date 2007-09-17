@@ -77,10 +77,10 @@ public interface JCMMethod extends MemberContainer{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Initializes</em>' reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getJCMMethod_Initializes()
-	 * @model type="org.eclipse.emf.ecore.EObject"
+	 * @model
 	 * @generated
 	 */
-	EList getInitializes();
+	EList<EObject> getInitializes();
 
 	/**
 	 * Returns the value of the '<em><b>Return</b></em>' reference.

@@ -12,7 +12,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: PaletteFactoryImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.9 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import org.eclipse.ve.internal.cde.palette.*;
 
@@ -68,6 +68,7 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case PalettePackage.ROOT: return createRoot();
@@ -93,6 +94,7 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
 			case PalettePackage.PERMISSIONS:
@@ -111,6 +113,7 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
 			case PalettePackage.PERMISSIONS:
@@ -327,6 +330,7 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	 * @deprecated
 	 * @generated
 	 */
+	@Deprecated
 	public static PalettePackage getPackage() {
 		return PalettePackage.eINSTANCE;
 	}

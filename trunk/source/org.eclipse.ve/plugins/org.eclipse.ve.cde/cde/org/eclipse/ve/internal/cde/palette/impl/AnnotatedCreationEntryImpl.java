@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: AnnotatedCreationEntryImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.9 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import java.util.Collection;
 import java.util.Map;
@@ -64,7 +64,7 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 	 * @generated
 	 * @ordered
 	 */
-	protected CreationToolEntry objectCreationEntry = null;
+	protected CreationToolEntry objectCreationEntry;
 	/**
 	 * The cached value of the '{@link #getValues() <em>Values</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -73,7 +73,7 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<EObject> values = null;
+	protected EList<EObject> values;
 	
 	/**
 	 * <!-- begin-user-doc -->

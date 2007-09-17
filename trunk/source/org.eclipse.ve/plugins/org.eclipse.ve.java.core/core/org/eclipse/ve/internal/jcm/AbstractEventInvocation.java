@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventInvocation.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.3 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -53,10 +53,10 @@ public interface AbstractEventInvocation extends EObject{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Callbacks</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getAbstractEventInvocation_Callbacks()
-	 * @model type="org.eclipse.ve.internal.jcm.Callback" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList getCallbacks();
+	EList<Callback> getCallbacks();
 
 	/**
 	 * Returns the value of the '<em><b>Listener</b></em>' reference.

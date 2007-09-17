@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: DiagramImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:35 $ 
+ *  $Revision: 1.8 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import java.util.Collection;
 
@@ -50,14 +50,6 @@ import org.eclipse.ve.internal.cdm.VisualInfo;
  * @generated
  */
 public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -107,7 +99,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<VisualInfo> visualInfos = null;
+	protected EList<VisualInfo> visualInfos;
 	/**
 	 * The cached value of the '{@link #getFigures() <em>Figures</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -116,7 +108,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<DiagramFigure> figures = null;
+	protected EList<DiagramFigure> figures;
 	
 	/**
 	 * <!-- begin-user-doc -->

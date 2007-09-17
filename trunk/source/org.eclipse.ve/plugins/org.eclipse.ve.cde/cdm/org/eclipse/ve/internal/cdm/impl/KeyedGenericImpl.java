@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: KeyedGenericImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2007-05-25 04:09:35 $ 
+ *  $Revision: 1.10 $  $Date: 2007-09-17 14:17:13 $ 
  */
  
 import org.eclipse.emf.common.notify.Notification;
@@ -42,13 +42,6 @@ import org.eclipse.ve.internal.cdm.CDMPackage;
  */
 public class KeyedGenericImpl extends EObjectImpl implements BasicEMap.Entry<String,EObject> {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-
-	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -76,7 +69,7 @@ public class KeyedGenericImpl extends EObjectImpl implements BasicEMap.Entry<Str
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject value = null;
+	protected EObject value;
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: RootImpl.java,v 1.4 2007-05-25 04:09:36 srobenalt Exp $
+ * $Id: RootImpl.java,v 1.5 2007-09-17 14:17:13 srobenalt Exp $
  */
 package org.eclipse.ve.internal.cde.palette.impl;
 
@@ -46,7 +46,7 @@ public class RootImpl extends ContainerImpl implements Root {
 	 * @generated
 	 * @ordered
 	 */
-	protected AbstractToolEntry defEntry = null;
+	protected AbstractToolEntry defEntry;
 
 	/**
 	 * <!-- begin-user-doc -->

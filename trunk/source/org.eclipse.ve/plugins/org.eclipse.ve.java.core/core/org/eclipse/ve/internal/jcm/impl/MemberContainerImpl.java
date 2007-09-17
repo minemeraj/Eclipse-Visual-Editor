@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainerImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:37 $ 
+ *  $Revision: 1.5 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import java.util.Collection;
@@ -59,7 +59,7 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * @generated
 	 * @ordered
 	 */
-	protected EList properties = null;
+	protected EList<EObject> properties;
 
 	/**
 	 * The cached value of the '{@link #getMembers() <em>Members</em>}' containment reference list.
@@ -69,7 +69,7 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * @generated
 	 * @ordered
 	 */
-	protected EList members = null;
+	protected EList<EObject> members;
 
 	/**
 	 * The cached value of the '{@link #getImplicits() <em>Implicits</em>}' containment reference list.
@@ -79,7 +79,7 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * @generated
 	 * @ordered
 	 */
-	protected EList implicits = null;
+	protected EList<EObject> implicits;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -95,6 +95,7 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.MEMBER_CONTAINER;
 	}
@@ -104,9 +105,9 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getMembers() {
+	public EList<EObject> getMembers() {
 		if (members == null) {
-			members = new EObjectContainmentEList(EObject.class, this, JCMPackage.MEMBER_CONTAINER__MEMBERS);
+			members = new EObjectContainmentEList<EObject>(EObject.class, this, JCMPackage.MEMBER_CONTAINER__MEMBERS);
 		}
 		return members;
 	}
@@ -116,9 +117,9 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getImplicits() {
+	public EList<EObject> getImplicits() {
 		if (implicits == null) {
-			implicits = new EObjectContainmentEList(EObject.class, this, JCMPackage.MEMBER_CONTAINER__IMPLICITS);
+			implicits = new EObjectContainmentEList<EObject>(EObject.class, this, JCMPackage.MEMBER_CONTAINER__IMPLICITS);
 		}
 		return implicits;
 	}
@@ -128,14 +129,15 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.MEMBER_CONTAINER__PROPERTIES:
-				return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
 			case JCMPackage.MEMBER_CONTAINER__MEMBERS:
-				return ((InternalEList)getMembers()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getMembers()).basicRemove(otherEnd, msgs);
 			case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
-				return ((InternalEList)getImplicits()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getImplicits()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -145,6 +147,7 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.MEMBER_CONTAINER__PROPERTIES:
@@ -162,19 +165,21 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.MEMBER_CONTAINER__PROPERTIES:
 				getProperties().clear();
-				getProperties().addAll((Collection)newValue);
+				getProperties().addAll((Collection<? extends EObject>)newValue);
 				return;
 			case JCMPackage.MEMBER_CONTAINER__MEMBERS:
 				getMembers().clear();
-				getMembers().addAll((Collection)newValue);
+				getMembers().addAll((Collection<? extends EObject>)newValue);
 				return;
 			case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
 				getImplicits().clear();
-				getImplicits().addAll((Collection)newValue);
+				getImplicits().addAll((Collection<? extends EObject>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -185,6 +190,7 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.MEMBER_CONTAINER__PROPERTIES:
@@ -205,6 +211,7 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.MEMBER_CONTAINER__PROPERTIES:
@@ -222,9 +229,9 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getProperties() {
+	public EList<EObject> getProperties() {
 		if (properties == null) {
-			properties = new EObjectContainmentEList(EObject.class, this, JCMPackage.MEMBER_CONTAINER__PROPERTIES);
+			properties = new EObjectContainmentEList<EObject>(EObject.class, this, JCMPackage.MEMBER_CONTAINER__PROPERTIES);
 		}
 		return properties;
 	}

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="common"/>
-	<classpathentry output="vm_bin" kind="src" path="vm_javaremotevm"/>
-	<classpathentry output="vm_bin" kind="src" path="vm_vcelauncher"/>
+	<classpathentry kind="src" output="vm_bin" path="vm_javaremotevm"/>
+	<classpathentry kind="src" output="vm_bin" path="vm_vcelauncher"/>
 	<classpathentry kind="src" path="core"/>
 	<classpathentry kind="src" path="codegen"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

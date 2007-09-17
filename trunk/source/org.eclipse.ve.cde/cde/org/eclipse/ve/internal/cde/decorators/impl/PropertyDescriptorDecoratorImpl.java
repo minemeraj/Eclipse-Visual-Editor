@@ -61,7 +61,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> cellEditorValidatorClassnames = null;
+	protected EList<String> cellEditorValidatorClassnames;
 
 	/**
 	 * The default value of the '{@link #getLabelProviderClassname() <em>Label Provider Classname</em>}' attribute.

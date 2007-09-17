@@ -18,13 +18,14 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: Callback.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-15 21:33:50 $ 
+ *  $Revision: 1.6 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.jem.java.Method;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jem.internal.instantiation.PTExpression;
 
 /**
  * <!-- begin-user-doc -->
@@ -107,9 +108,9 @@ public interface Callback extends EObject{
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Statements</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getCallback_Statements()
-	 * @model type="org.eclipse.jem.internal.instantiation.PTExpression" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList getStatements();
+	EList<PTExpression> getStatements();
 
 } // Callback

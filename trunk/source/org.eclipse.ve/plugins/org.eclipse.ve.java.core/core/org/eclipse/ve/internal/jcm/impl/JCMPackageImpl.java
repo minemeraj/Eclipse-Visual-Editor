@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMPackageImpl.java,v $
- *  $Revision: 1.13 $  $Date: 2006-05-17 20:14:52 $ 
+ *  $Revision: 1.14 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import java.util.Map;
@@ -924,6 +924,10 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		InstantiationPackage theInstantiationPackage = (InstantiationPackage)EPackage.Registry.INSTANCE.getEPackage(InstantiationPackage.eNS_URI);
 		BeaninfoPackage theBeaninfoPackage = (BeaninfoPackage)EPackage.Registry.INSTANCE.getEPackage(BeaninfoPackage.eNS_URI);
 
+		// Create type parameters
+
+		// Set bounds for type parameters
+
 		// Add supertypes to classes
 		beanDecoratorEClass.getESuperTypes().add(theEcorePackage.getEAnnotation());
 		beanDecoratorEClass.getESuperTypes().add(theCDMPackage.getKeyedValueHolder());
@@ -1022,6 +1026,182 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// http://www.eclipse.org/emf/2002/GenModel
+		createGenModelAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/emf/2002/GenModel</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createGenModelAnnotations() {
+		String source = "http://www.eclipse.org/emf/2002/GenModel";		
+		addAnnotation
+		  (beanDecoratorEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Decorates the bean for bean specific inforamation, for example the BeanProxyAdapter class."
+		   });		
+		addAnnotation
+		  (getBeanDecorator_BeanProxyClassName(), 
+		   source, 
+		   new String[] {
+			 "documentation", "The name of the class for the BeanProxyAdapter."
+		   });		
+		addAnnotation
+		  (getBeanDecorator_BeanLocation(), 
+		   source, 
+		   new String[] {
+			 "documentation", "The location of any beans of this type, or subclasses that are not overridden, if not specifically overridden by the BeanFeatureDecorator or the Annotation key of INSTANCELOC."
+		   });		
+		addAnnotation
+		  (getBeanDecorator_BeanReturn(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Will this bean have a return method or not. A return method is one that when called will answer the bean. This will only be used for locations of GLOBAL type."
+		   });		
+		addAnnotation
+		  (beanFeatureDecoratorEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Decorate a bean feature.  For example the mediator for handling bean feature application/canceling in the proxy adapter."
+		   });		
+		addAnnotation
+		  (getBeanFeatureDecorator_BeanProxyMediatorName(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Mediator to handle apply/cancel of bean properties."
+		   });		
+		addAnnotation
+		  (getBeanFeatureDecorator_LinkType(), 
+		   source, 
+		   new String[] {
+			 "documentation", "If true, then this is a child feature. This means that if the parent is deleted, then the child should be deleted except if the child is referenced by another feature that is a child feature."
+		   });		
+		addAnnotation
+		  (getBeanFeatureDecorator_BeanLocation(), 
+		   source, 
+		   new String[] {
+			 "documentation", "The location of any beans of this feature, if not specifically overridden by the Annotation key of INSTANCELOC."
+		   });		
+		addAnnotation
+		  (getListenerType_Name(), 
+		   source, 
+		   new String[] {
+			 "documentation", "The name of the inner class when it is a non-anonymous class."
+		   });		
+		addAnnotation
+		  (getListenerType_ThisPart(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Whether the listener is the this part. This is for VAJ style 1 where the this object itself implements all of the necessary listener interfaces."
+		   });		
+		addAnnotation
+		  (getMemberContainer_Properties(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Properties are values that are settings of properties on members, but do not have any settings on themselves. If the value has set property settings then it should be in members instead."
+		   });		
+		addAnnotation
+		  (getMemberContainer_Members(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is the collection of members. Members are values that are located in this container AND have either a declaration or property settings."
+		   });		
+		addAnnotation
+		  (getMemberContainer_Implicits(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This contains implicit settings. These are settings that are properties of members but they are not explicitly set. They are the value of a setting that has not been set. It is a default value. Unlike properties, implicit may have further settings on them."
+		   });		
+		addAnnotation
+		  (getCallback_Statements(), 
+		   source, 
+		   new String[] {
+			 "documentation", "List of modeled statements to be in this callback."
+		   });		
+		addAnnotation
+		  (instanceLocationEEnum, 
+		   source, 
+		   new String[] {
+			 "documentation", "Enumeration for the location of where the instance variable and initialization will be located."
+		   });		
+		addAnnotation
+		  (instanceLocationEEnum.getELiterals().get(0), 
+		   source, 
+		   new String[] {
+			 "documentation", "Instance Variable will be GLOBAL (i.e. a member of the class) and the initialization will be GLOBAL (i.e. there is a separate initialization method for the instance)."
+		   });		
+		addAnnotation
+		  (instanceLocationEEnum.getELiterals().get(1), 
+		   source, 
+		   new String[] {
+			 "documentation", "The instance variable will be GLOBAL (i.e. it will be a member of the class) and the initialization will be LOCAL (i.e. there is not a separate initialization method, the initialization will be in the initialization method of another instance),"
+		   });		
+		addAnnotation
+		  (instanceLocationEEnum.getELiterals().get(2), 
+		   source, 
+		   new String[] {
+			 "documentation", "The instance and initialization will be LOCAL (i.e. it will be declared and initialized in the initialization method of another instance)."
+		   });		
+		addAnnotation
+		  (instanceLocationEEnum.getELiterals().get(3), 
+		   source, 
+		   new String[] {
+			 "documentation", "There will be no instance variable. It will be a property. This will be applicable if there are no settings on the instance. If there are any settings, then it will promote up to LOCAL automatically."
+		   });		
+		addAnnotation
+		  (keyedInstanceLocationEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Map Entry for A InstanceLocation in the Key/Values of the Annotation. Used to supply override of InstanceLocation on a per-instance basis."
+		   });		
+		addAnnotation
+		  (linkTypeEEnum, 
+		   source, 
+		   new String[] {
+			 "documentation", "This indicates the linkage type of a feature (through the BeanFeatureDecorator)."
+		   });		
+		addAnnotation
+		  (linkTypeEEnum.getELiterals().get(0), 
+		   source, 
+		   new String[] {
+			 "documentation", "<p>This is a normal linkage (which is the default). When a source object is being deleted and a target object is pointed to through a feature listed as NORMAL, then this target object will be deleted if there are no other references to it."
+		   });		
+		addAnnotation
+		  (linkTypeEEnum.getELiterals().get(1), 
+		   source, 
+		   new String[] {
+			 "documentation", "<p>This is a child linkage. When a source object is being deleted and there is a target object pointed to through a CHILD linkage, then the target object will be deleted except if there are any other CHILD references to the target.\r\n<p>\r\nA child reference basically means that the target is a child of the source and if the source goes away you want the target to go away."
+		   });		
+		addAnnotation
+		  (linkTypeEEnum.getELiterals().get(2), 
+		   source, 
+		   new String[] {
+			 "documentation", "<p>This is a dependency linkage. This is slightly reversed from NORMAL and CHILD in that it comes into effect only from the target side instead of the source side.\r\n<p>\r\nSo, when a target is being deleted, it will look at all references to it and for any that are marked as dependency the source object will be investigated. If the source object has no child references to it, then the source object will be deleted too.\r\n<p>\r\nThat is what dependency means. It means the source depends on the target and if the target goes away the source should go away, except if it is being held on to by a strong link such as a CHILD link."
+		   });		
+		addAnnotation
+		  (javaCacheDataEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is used to cache info for quick caching of the model. It is not part of the model itself."
+		   });		
+		addAnnotation
+		  (namesToBeansEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is a map entry from a unique name (string) to a bean instance in the model."
+		   });		
+		addAnnotation
+		  (getNamesToBeans_Key(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Key for the map. It should be a unique name in the model."
+		   });
 	}
 
 } //JCMPackageImpl

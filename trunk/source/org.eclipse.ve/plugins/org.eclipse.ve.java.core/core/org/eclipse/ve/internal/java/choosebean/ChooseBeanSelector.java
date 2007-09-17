@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.choosebean;
 
 /*
- * $RCSfile: ChooseBeanSelector.java,v $ $Revision: 1.13 $ $Date: 2005-12-02 16:31:20 $
+ * $RCSfile: ChooseBeanSelector.java,v $ $Revision: 1.14 $ $Date: 2007-09-17 14:21:53 $
  */
 
 import org.eclipse.gef.tools.CreationTool;
@@ -26,7 +26,8 @@ public class ChooseBeanSelector implements SelectionCreationToolEntry.ISelector 
 
 	public Object[] getNewObjectAndType(CreationTool creationTool, org.eclipse.gef.EditDomain domain) {
 		EditDomain ed = (EditDomain) domain;
-		return ChooseBeanDialog.getChooseBeanResults(ed, null, null);
+		//TODO: 33 port. contributed by Erik Hecht. List all types in the dialog by default
+		return ChooseBeanDialog.getChooseBeanResults(ed, null, "**");
 	}
 
 }

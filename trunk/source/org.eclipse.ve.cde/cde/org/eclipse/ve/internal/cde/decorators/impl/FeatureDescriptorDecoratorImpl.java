@@ -77,7 +77,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> helpContextIdsString = null;
+	protected EList<String> helpContextIdsString;
 	/**
 	 * The default value of the '{@link #isPreferred() <em>Preferred</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -106,7 +106,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * @generated
 	 * @ordered
 	 */
-	protected AbstractString categoryString = null;
+	protected AbstractString categoryString;
 	/**
 	 * The cached value of the '{@link #getFilterFlagStrings() <em>Filter Flag Strings</em>}' reference list.
 	 * <!-- begin-user-doc -->
@@ -115,7 +115,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<AbstractString> filterFlagStrings = null;
+	protected EList<AbstractString> filterFlagStrings;
 	/**
 	 * The cached value of the '{@link #getDisplayNameString() <em>Display Name String</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -124,7 +124,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * @generated
 	 * @ordered
 	 */
-	protected AbstractString displayNameString = null;
+	protected AbstractString displayNameString;
 	/**
 	 * The cached value of the '{@link #getDescriptionString() <em>Description String</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -133,7 +133,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * @generated
 	 * @ordered
 	 */
-	protected AbstractString descriptionString = null;
+	protected AbstractString descriptionString;
 	
 	/**
 	 * <!-- begin-user-doc -->
