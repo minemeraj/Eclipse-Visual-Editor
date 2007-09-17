@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: CDMFactory.java,v $
- *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.7 $  $Date: 2007-09-17 14:17:13 $ 
  */
 
 import org.eclipse.emf.ecore.EFactory;
@@ -25,12 +25,6 @@ import org.eclipse.emf.ecore.EFactory;
  * @generated
  */
 public interface CDMFactory extends EFactory {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	String copyright = "";
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->

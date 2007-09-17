@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Container.java,v $
- *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.7 $  $Date: 2007-09-17 14:17:14 $ 
  */
 package org.eclipse.ve.internal.cde.palette;
 
@@ -53,7 +53,7 @@ public interface Container extends Entry{
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Children</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getContainer_Children()
-	 * @model type="org.eclipse.ve.internal.cde.palette.Entry" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<Entry> getChildren();

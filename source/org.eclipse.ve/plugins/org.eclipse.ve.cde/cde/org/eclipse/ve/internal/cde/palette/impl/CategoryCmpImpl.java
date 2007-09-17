@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: CategoryCmpImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.9 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import java.util.Collection;
 
@@ -55,7 +55,7 @@ public class CategoryCmpImpl extends CategoryImpl implements CategoryCmp {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Group> cmpGroups = null;
+	protected EList<Group> cmpGroups;
 	
 	/**
 	 * <!-- begin-user-doc -->

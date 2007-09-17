@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeEventInvocationImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2006-02-07 17:21:37 $ 
+ *  $Revision: 1.6 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import java.util.Collection;
@@ -63,7 +63,7 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * @generated
 	 * @ordered
 	 */
-	protected Method addMethod = null;
+	protected Method addMethod;
 
 	/**
 	 * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
@@ -73,7 +73,7 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * @generated
 	 * @ordered
 	 */
-	protected EList properties = null;
+	protected EList<PropertyEvent> properties;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -89,6 +89,7 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.PROPERTY_CHANGE_EVENT_INVOCATION;
 	}
@@ -136,9 +137,9 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getProperties() {
+	public EList<PropertyEvent> getProperties() {
 		if (properties == null) {
-			properties = new EObjectContainmentEList(PropertyEvent.class, this, JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES);
+			properties = new EObjectContainmentEList<PropertyEvent>(PropertyEvent.class, this, JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES);
 		}
 		return properties;
 	}
@@ -148,10 +149,11 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES:
-				return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -161,6 +163,7 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__ADD_METHOD:
@@ -177,6 +180,8 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__ADD_METHOD:
@@ -184,7 +189,7 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 				return;
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES:
 				getProperties().clear();
-				getProperties().addAll((Collection)newValue);
+				getProperties().addAll((Collection<? extends PropertyEvent>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -195,6 +200,7 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__ADD_METHOD:
@@ -212,6 +218,7 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__ADD_METHOD:

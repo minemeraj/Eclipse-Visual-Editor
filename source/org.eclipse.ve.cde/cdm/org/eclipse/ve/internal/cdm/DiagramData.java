@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: DiagramData.java,v $
- *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.8 $  $Date: 2007-09-17 14:17:13 $ 
  */
 
 
@@ -41,13 +41,6 @@ import org.eclipse.emf.ecore.EObject;
 public interface DiagramData extends EObject{
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	String copyright = "";
-
-	/**
 	 * Returns the value of the '<em><b>Diagrams</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.ve.internal.cdm.Diagram}.
 	 * It is bidirectional and its opposite is '{@link org.eclipse.ve.internal.cdm.Diagram#getDiagramData <em>Diagram Data</em>}'.
@@ -60,7 +53,7 @@ public interface DiagramData extends EObject{
 	 * @return the value of the '<em>Diagrams</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.cdm.CDMPackage#getDiagramData_Diagrams()
 	 * @see org.eclipse.ve.internal.cdm.Diagram#getDiagramData
-	 * @model type="org.eclipse.ve.internal.cdm.Diagram" opposite="diagramData" containment="true"
+	 * @model opposite="diagramData" containment="true"
 	 * @generated
 	 */
 	EList<Diagram> getDiagrams();
@@ -76,7 +69,7 @@ public interface DiagramData extends EObject{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Annotations</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.cdm.CDMPackage#getDiagramData_Annotations()
-	 * @model type="org.eclipse.ve.internal.cdm.Annotation" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<Annotation> getAnnotations();

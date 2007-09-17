@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: FeatureDescriptorDecorator.java,v $
- *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.8 $  $Date: 2007-09-17 14:17:14 $ 
  */
 
 
@@ -139,7 +139,7 @@ public interface FeatureDescriptorDecorator extends EAnnotation{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Help Context Ids String</em>' attribute list.
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getFeatureDescriptorDecorator_HelpContextIdsString()
-	 * @model type="java.lang.String"
+	 * @model
 	 * @generated
 	 */
 	EList<String> getHelpContextIdsString();
@@ -207,7 +207,7 @@ public interface FeatureDescriptorDecorator extends EAnnotation{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Filter Flag Strings</em>' reference list.
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getFeatureDescriptorDecorator_FilterFlagStrings()
-	 * @model type="org.eclipse.ve.internal.cde.utility.AbstractString"
+	 * @model
 	 * @generated
 	 */
 	EList<AbstractString> getFilterFlagStrings();

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.31 $  $Date: 2006-05-22 15:51:54 $ 
+ *  $Revision: 1.32 $  $Date: 2007-09-17 14:21:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -192,7 +192,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
     	      result.setExtends(extend) ;
     	   if (imp!=null && imp.length>0) 
     	   	  for (int i = 0; i < imp.length; i++) {
-				result.getImplements().add(imp[i]) ;
+				result.getImplements().add((JavaClass) imp[i]) ;
 			  }
     	}
     	return result ;
@@ -397,7 +397,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
     	ListenerType lt = getListenerType(c.getName().replace('$', '.'),false,null,null,null) ;
     	Listener l = null ; 
     	if (lt.getListeners().size()>0) 
-    		l = (Listener) lt.getListeners().get(0) ;
+    		l = lt.getListeners().get(0) ;
     	else {
 			l = org.eclipse.ve.internal.jcm.JCMFactory.eINSTANCE.createListener() ;
 		    l.setListenerType(lt) ;
@@ -459,7 +459,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
         ListenerType lt = getListenerType(c.getName().replace('$', '.'),false, null, null, c) ;
         Listener l = null ;
         if (lt.getListeners().size()>0) 
-    		l = (Listener) lt.getListeners().get(0) ;
+    		l = lt.getListeners().get(0) ;
     	else {
 			l = org.eclipse.ve.internal.jcm.JCMFactory.eINSTANCE.createListener() ;
 		    l.setListenerType(lt) ;

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: KeyedValueHolderImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:35 $ 
+ *  $Revision: 1.9 $  $Date: 2007-09-17 14:17:13 $ 
  */
  
 
@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
@@ -44,12 +45,6 @@ import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
  */
 public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedValueHolder {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-	/**
 	 * The cached value of the '{@link #getKeyedValues() <em>Keyed Values</em>}' map.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -57,7 +52,7 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * @generated
 	 * @ordered
 	 */
-	protected EMap<String, String> keyedValues = null;
+	protected EMap<String, String> keyedValues;
 
 	/**
 	 * <!-- begin-user-doc -->

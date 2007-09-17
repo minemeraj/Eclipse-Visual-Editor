@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: DiagramFigureImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:35 $ 
+ *  $Revision: 1.7 $  $Date: 2007-09-17 14:17:13 $ 
  */
  
 import java.util.Collection;
@@ -44,13 +44,6 @@ import org.eclipse.ve.internal.cdm.DiagramFigure;
  */
 public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFigure {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-
-	/**
 	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -78,7 +71,7 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<DiagramFigure> childFigures = null;
+	protected EList<DiagramFigure> childFigures;
 
 	/**
 	 * <!-- begin-user-doc -->

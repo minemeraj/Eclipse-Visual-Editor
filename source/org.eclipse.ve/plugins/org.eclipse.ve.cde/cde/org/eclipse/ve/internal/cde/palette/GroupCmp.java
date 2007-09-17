@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: GroupCmp.java,v $
- *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.8 $  $Date: 2007-09-17 14:17:14 $ 
  */
 
 
@@ -56,7 +56,7 @@ public interface GroupCmp extends Group{
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Cmp Entries</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getGroupCmp_CmpEntries()
-	 * @model type="org.eclipse.ve.internal.cde.palette.Entry" containment="true" transient="true" volatile="true"
+	 * @model containment="true" transient="true" volatile="true"
 	 * @generated
 	 */
 	EList<Entry> getCmpEntries();

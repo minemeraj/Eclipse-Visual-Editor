@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.cdm.impl;
 /*
- *  $RCSfile: CDMFactoryImpl.java,v $
- *  $Revision: 1.12 $  $Date: 2007-09-17 14:17:13 $ 
+ *  $RCSfile: CopyOfCDMFactoryImpl.java,v $
+ *  $Revision: 1.1 $  $Date: 2007-09-17 14:17:13 $ 
  */
 
 import java.util.Map;
@@ -37,7 +37,14 @@ import com.ibm.icu.util.StringTokenizer;
  * <!-- end-user-doc -->
  * @generated
  */
-public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
+public class CopyOfCDMFactoryImpl extends EFactoryImpl implements CDMFactory {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final String copyright = "";
+
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
@@ -54,7 +61,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 		catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
-		return new CDMFactoryImpl();
+		return new CopyOfCDMFactoryImpl();
 	}
 
 	/**
@@ -63,7 +70,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CDMFactoryImpl() {
+	public CopyOfCDMFactoryImpl() {
 		super();
 	}
 
@@ -299,7 +306,8 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * @generated
 	 */
 	public String convertViewDimensionToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+		//TODO: 33 port. contributed by Erik Hecht. REVIEWME Nulls should not happen
+		return instanceValue != null ? instanceValue.toString() : null;
 	}
 
 	public Point createViewPointFromString(EDataType eDataType, String initialValue) {
@@ -329,7 +337,8 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * @generated
 	 */
 	public String convertViewPointToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+		//TODO: 33 port. contributed by Erik Hecht. REVIEWME Nulls should not happen
+	    return instanceValue != null ? instanceValue.toString() : null;
 	}
 
 	public Rectangle createViewRectangleFromString(EDataType eDataType, String initialValue) {
@@ -367,7 +376,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	 * @generated
 	 */
 	public String convertViewRectangleToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+		return instanceValue != null ? instanceValue.toString() : null;
 	}
 
 	/**

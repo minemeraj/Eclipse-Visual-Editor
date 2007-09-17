@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyEventImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:37 $ 
+ *  $Revision: 1.5 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import org.eclipse.ve.internal.jcm.JCMPackage;
@@ -100,6 +100,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.PROPERTY_EVENT;
 	}
@@ -151,6 +152,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.PROPERTY_EVENT__PROPERTY_NAME:
@@ -166,6 +168,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.PROPERTY_EVENT__PROPERTY_NAME:
@@ -183,6 +186,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.PROPERTY_EVENT__PROPERTY_NAME:
@@ -200,6 +204,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.PROPERTY_EVENT__PROPERTY_NAME:
@@ -215,6 +220,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

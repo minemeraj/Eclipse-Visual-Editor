@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangedAllocationStyleHellper.java,v $
- *  $Revision: 1.13 $  $Date: 2005-09-06 16:40:32 $ 
+ *  $Revision: 1.14 $  $Date: 2007-09-17 14:21:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -329,7 +329,7 @@ public class PropertyChangedAllocationStyleHellper extends PropertyChangeInvocat
 		}
 		if (sr == null && fEventInvocation.getCallbacks().size()>0) {		
 			// No *if* statement, use the callBack's offset
-			Callback cb = (Callback) fEventInvocation.getCallbacks().get(0);
+			Callback cb = fEventInvocation.getCallbacks().get(0);
 			ICodeGenAdapter ca = (ICodeGenAdapter) EcoreUtil.getExistingAdapter(cb, ICodeGenAdapter.JVE_CODE_GEN_TYPE);
 			try {
 				if (ca != null)

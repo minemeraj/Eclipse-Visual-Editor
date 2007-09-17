@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $ $Revision: 1.15 $ $Date: 2006-05-17 20:14:52 $
+ * $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $ $Revision: 1.16 $ $Date: 2007-09-17 14:21:53 $
  */
 
 package org.eclipse.ve.internal.java.core;
@@ -198,7 +198,7 @@ public class EventInvocationAndListenerTreeEditPart extends AbstractTreeEditPart
 						.get(0);
 				if (propEventInvocation.getAddMethod().getParameters().size() == 2 && propEventInvocation.getProperties().size() > 0) {
 					// This is a two argument method. Get the property name and append it to the label
-					PropertyEvent propEvent = (PropertyEvent) propEventInvocation.getProperties().get(0);
+					PropertyEvent propEvent = propEventInvocation.getProperties().get(0);
 					buffer.append(propEvent.getPropertyName());
 					buffer.append(", "); //$NON-NLS-1$			
 				}
@@ -208,7 +208,7 @@ public class EventInvocationAndListenerTreeEditPart extends AbstractTreeEditPart
 		if (type == ANON_INTERFACE) {
 			Listener listener = eventInvocationAndListener.getListener();
 			if(listener.getListenerType() != null){
-				buffer.append(((JavaClass) listener.getListenerType().getImplements().get(0)).getName());
+				buffer.append(listener.getListenerType().getImplements().get(0).getName());
 			}
 		} else if (type == ANON_CLASS) {
 			Listener listener = eventInvocationAndListener.getListener();

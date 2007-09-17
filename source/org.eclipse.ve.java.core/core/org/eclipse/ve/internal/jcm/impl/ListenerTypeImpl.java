@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ListenerTypeImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2006-02-07 17:21:37 $ 
+ *  $Revision: 1.6 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import java.util.Collection;
@@ -106,7 +106,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * @generated
 	 * @ordered
 	 */
-	protected JavaClass extends_ = null;
+	protected JavaClass extends_;
 
 	/**
 	 * The cached value of the '{@link #getImplements() <em>Implements</em>}' reference list.
@@ -116,7 +116,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList implements_ = null;
+	protected EList<JavaClass> implements_;
 
 	/**
 	 * The cached value of the '{@link #getIs() <em>Is</em>}' reference.
@@ -126,7 +126,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * @generated
 	 * @ordered
 	 */
-	protected JavaClass is = null;
+	protected JavaClass is;
 
 	/**
 	 * The cached value of the '{@link #getListeners() <em>Listeners</em>}' containment reference list.
@@ -136,7 +136,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList listeners = null;
+	protected EList<Listener> listeners;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -152,6 +152,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.LISTENER_TYPE;
 	}
@@ -241,9 +242,9 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getImplements() {
+	public EList<JavaClass> getImplements() {
 		if (implements_ == null) {
-			implements_ = new EObjectResolvingEList(JavaClass.class, this, JCMPackage.LISTENER_TYPE__IMPLEMENTS);
+			implements_ = new EObjectResolvingEList<JavaClass>(JavaClass.class, this, JCMPackage.LISTENER_TYPE__IMPLEMENTS);
 		}
 		return implements_;
 	}
@@ -291,9 +292,9 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getListeners() {
+	public EList<Listener> getListeners() {
 		if (listeners == null) {
-			listeners = new EObjectContainmentWithInverseEList(Listener.class, this, JCMPackage.LISTENER_TYPE__LISTENERS, JCMPackage.LISTENER__LISTENER_TYPE);
+			listeners = new EObjectContainmentWithInverseEList<Listener>(Listener.class, this, JCMPackage.LISTENER_TYPE__LISTENERS, JCMPackage.LISTENER__LISTENER_TYPE);
 		}
 		return listeners;
 	}
@@ -303,10 +304,12 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.LISTENER_TYPE__LISTENERS:
-				return ((InternalEList)getListeners()).basicAdd(otherEnd, msgs);
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getListeners()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -316,10 +319,11 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.LISTENER_TYPE__LISTENERS:
-				return ((InternalEList)getListeners()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getListeners()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -329,6 +333,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.LISTENER_TYPE__NAME:
@@ -354,6 +359,8 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.LISTENER_TYPE__NAME:
@@ -367,14 +374,14 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 				return;
 			case JCMPackage.LISTENER_TYPE__IMPLEMENTS:
 				getImplements().clear();
-				getImplements().addAll((Collection)newValue);
+				getImplements().addAll((Collection<? extends JavaClass>)newValue);
 				return;
 			case JCMPackage.LISTENER_TYPE__IS:
 				setIs((JavaClass)newValue);
 				return;
 			case JCMPackage.LISTENER_TYPE__LISTENERS:
 				getListeners().clear();
-				getListeners().addAll((Collection)newValue);
+				getListeners().addAll((Collection<? extends Listener>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -385,6 +392,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.LISTENER_TYPE__NAME:
@@ -414,6 +422,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.LISTENER_TYPE__NAME:
@@ -437,6 +446,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

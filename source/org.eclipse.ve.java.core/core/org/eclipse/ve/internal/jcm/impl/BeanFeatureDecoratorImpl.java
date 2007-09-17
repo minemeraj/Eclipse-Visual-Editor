@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanFeatureDecoratorImpl.java,v $
- *  $Revision: 1.16 $  $Date: 2006-05-17 20:14:52 $ 
+ *  $Revision: 1.17 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import java.util.logging.Level;
@@ -84,7 +84,7 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * @generated
 	 * @ordered
 	 */
-	protected EMap keyedValues = null;
+	protected EMap<String, String> keyedValues;
 
 	/**
 	 * The default value of the '{@link #getBeanProxyMediatorName() <em>Bean Proxy Mediator Name</em>}' attribute.
@@ -169,6 +169,7 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.BEAN_FEATURE_DECORATOR;
 	}
@@ -284,10 +285,11 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.BEAN_FEATURE_DECORATOR__KEYED_VALUES:
-				return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getKeyedValues()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -297,6 +299,7 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.BEAN_FEATURE_DECORATOR__KEYED_VALUES:
@@ -317,6 +320,7 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.BEAN_FEATURE_DECORATOR__KEYED_VALUES:
@@ -340,6 +344,7 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.BEAN_FEATURE_DECORATOR__KEYED_VALUES:
@@ -403,7 +408,8 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == KeyedValueHolder.class) {
 			switch (derivedFeatureID) {
 				case JCMPackage.BEAN_FEATURE_DECORATOR__KEYED_VALUES: return CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES;
@@ -418,7 +424,8 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == KeyedValueHolder.class) {
 			switch (baseFeatureID) {
 				case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES: return JCMPackage.BEAN_FEATURE_DECORATOR__KEYED_VALUES;
@@ -433,6 +440,7 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

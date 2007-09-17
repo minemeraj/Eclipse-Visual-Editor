@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: DiagramDataImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:35 $ 
+ *  $Revision: 1.7 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import java.util.Collection;
 
@@ -47,12 +47,6 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-	/**
 	 * The cached value of the '{@link #getDiagrams() <em>Diagrams</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -60,7 +54,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Diagram> diagrams = null;
+	protected EList<Diagram> diagrams;
 	/**
 	 * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -69,7 +63,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Annotation> annotations = null;
+	protected EList<Annotation> annotations;
 	
 	/**
 	 * <!-- begin-user-doc -->

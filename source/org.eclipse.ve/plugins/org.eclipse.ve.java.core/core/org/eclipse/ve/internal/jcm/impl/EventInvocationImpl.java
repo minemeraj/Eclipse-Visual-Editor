@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:37 $ 
+ *  $Revision: 1.5 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 
@@ -53,7 +53,7 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected BeanEvent event = null;
+	protected BeanEvent event;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -69,6 +69,7 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.EVENT_INVOCATION;
 	}
@@ -116,6 +117,7 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.EVENT_INVOCATION__EVENT:
@@ -130,6 +132,7 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.EVENT_INVOCATION__EVENT:
@@ -144,6 +147,7 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.EVENT_INVOCATION__EVENT:
@@ -158,6 +162,7 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.EVENT_INVOCATION__EVENT:

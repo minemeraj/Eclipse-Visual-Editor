@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventSrcGenerator.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.8 $  $Date: 2007-09-17 14:21:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -66,7 +66,7 @@ public abstract class AbstractEventSrcGenerator implements IEventSrcGenerator {
    	  		fAllocatedClass = fListener.getListenerType().getExtends().getJavaName() ;
    	  	}
    	  	else {
-   	  		JavaClass imp = (JavaClass)fListener.getListenerType().getImplements().get(0) ;
+   	  		JavaClass imp = fListener.getListenerType().getImplements().get(0) ;
    	  	    fAllocatedClass = imp.getJavaName() ;   	  	    
    	  	    // This is the list of method this interface requires, make sure we generate them
 			methodsToImplements = imp.getMethods() ;
@@ -85,7 +85,7 @@ public abstract class AbstractEventSrcGenerator implements IEventSrcGenerator {
 		   else
 			   useIfExpr = false ;
    	  	   for (int i = 0; i < pee.getProperties().size(); i++) {
-			  fPropertyNames[i] = ((PropertyEvent)pee.getProperties().get(i)).getPropertyName() ;
+			  fPropertyNames[i] = pee.getProperties().get(i).getPropertyName() ;
 			  
 			  fPropertyIfFlag[i] = useIfExpr;
    	  	   }
@@ -103,7 +103,7 @@ public abstract class AbstractEventSrcGenerator implements IEventSrcGenerator {
    	  	// Determine the methods that should be generated
         for (int i = 0; i < fEE.getCallbacks().size(); i++) {
         	// This is the method that is requested
-			Method m = ((Callback)fEE.getCallbacks().get(i)).getMethod();
+			Method m = fEE.getCallbacks().get(i).getMethod();
 			fMethods[i] = m.getName() ;
 			if (fEventType == null)
 			   if(m.getParameters().size()==1)

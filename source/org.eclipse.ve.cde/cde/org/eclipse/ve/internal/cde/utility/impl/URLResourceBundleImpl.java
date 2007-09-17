@@ -74,7 +74,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> bundleURLs = null;
+	protected EList<String> bundleURLs;
 	
 	/**
 	 * <!-- begin-user-doc -->

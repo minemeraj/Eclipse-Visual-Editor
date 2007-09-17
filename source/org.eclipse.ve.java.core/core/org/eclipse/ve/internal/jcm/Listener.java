@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: Listener.java,v $
- *  $Revision: 1.3 $  $Date: 2005-09-15 21:33:50 $ 
+ *  $Revision: 1.4 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -55,10 +55,10 @@ public interface Listener extends EObject{
 	 * @return the value of the '<em>Listened By</em>' reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getListener_ListenedBy()
 	 * @see org.eclipse.ve.internal.jcm.AbstractEventInvocation#getListener
-	 * @model type="org.eclipse.ve.internal.jcm.AbstractEventInvocation" opposite="listener"
+	 * @model opposite="listener"
 	 * @generated
 	 */
-	EList getListenedBy();
+	EList<AbstractEventInvocation> getListenedBy();
 
 	/**
 	 * Returns the value of the '<em><b>Listener Type</b></em>' container reference.

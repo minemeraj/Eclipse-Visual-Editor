@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventInvocationImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:37 $ 
+ *  $Revision: 1.5 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import org.eclipse.emf.ecore.EClass;
@@ -64,7 +64,7 @@ public abstract class AbstractEventInvocationImpl extends EObjectImpl implements
 	 * @generated
 	 * @ordered
 	 */
-	protected EList callbacks = null;
+	protected EList<Callback> callbacks;
 
 	/**
 	 * The cached value of the '{@link #getListener() <em>Listener</em>}' reference.
@@ -74,7 +74,7 @@ public abstract class AbstractEventInvocationImpl extends EObjectImpl implements
 	 * @generated
 	 * @ordered
 	 */
-	protected Listener listener = null;
+	protected Listener listener;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -90,6 +90,7 @@ public abstract class AbstractEventInvocationImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.ABSTRACT_EVENT_INVOCATION;
 	}
@@ -99,9 +100,9 @@ public abstract class AbstractEventInvocationImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getCallbacks() {
+	public EList<Callback> getCallbacks() {
 		if (callbacks == null) {
-			callbacks = new EObjectContainmentEList(Callback.class, this, JCMPackage.ABSTRACT_EVENT_INVOCATION__CALLBACKS);
+			callbacks = new EObjectContainmentEList<Callback>(Callback.class, this, JCMPackage.ABSTRACT_EVENT_INVOCATION__CALLBACKS);
 		}
 		return callbacks;
 	}
@@ -171,6 +172,7 @@ public abstract class AbstractEventInvocationImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.ABSTRACT_EVENT_INVOCATION__LISTENER:
@@ -186,10 +188,11 @@ public abstract class AbstractEventInvocationImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.ABSTRACT_EVENT_INVOCATION__CALLBACKS:
-				return ((InternalEList)getCallbacks()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getCallbacks()).basicRemove(otherEnd, msgs);
 			case JCMPackage.ABSTRACT_EVENT_INVOCATION__LISTENER:
 				return basicSetListener(null, msgs);
 		}
@@ -201,6 +204,7 @@ public abstract class AbstractEventInvocationImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.ABSTRACT_EVENT_INVOCATION__CALLBACKS:
@@ -217,11 +221,13 @@ public abstract class AbstractEventInvocationImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.ABSTRACT_EVENT_INVOCATION__CALLBACKS:
 				getCallbacks().clear();
-				getCallbacks().addAll((Collection)newValue);
+				getCallbacks().addAll((Collection<? extends Callback>)newValue);
 				return;
 			case JCMPackage.ABSTRACT_EVENT_INVOCATION__LISTENER:
 				setListener((Listener)newValue);
@@ -235,6 +241,7 @@ public abstract class AbstractEventInvocationImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.ABSTRACT_EVENT_INVOCATION__CALLBACKS:
@@ -252,6 +259,7 @@ public abstract class AbstractEventInvocationImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.ABSTRACT_EVENT_INVOCATION__CALLBACKS:

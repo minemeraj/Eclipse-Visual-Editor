@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: StackImpl.java,v 1.4 2007-05-25 04:09:36 srobenalt Exp $
+ * $Id: StackImpl.java,v 1.5 2007-09-17 14:17:13 srobenalt Exp $
  */
 package org.eclipse.ve.internal.cde.palette.impl;
 
@@ -45,7 +45,7 @@ public class StackImpl extends ContainerImpl implements Stack {
 	 * @generated
 	 * @ordered
 	 */
-	protected Entry activeEntry = null;
+	protected Entry activeEntry;
 
 	/**
 	 * <!-- begin-user-doc -->

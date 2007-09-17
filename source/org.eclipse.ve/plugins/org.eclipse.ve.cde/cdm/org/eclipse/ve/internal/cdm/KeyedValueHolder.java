@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: KeyedValueHolder.java,v $
- *  $Revision: 1.6 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.7 $  $Date: 2007-09-17 14:17:13 $ 
  */
 
 import org.eclipse.emf.common.util.EMap;
@@ -42,13 +42,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface KeyedValueHolder extends EObject{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	String copyright = "";
-
 	/**
 	 * Returns the value of the '<em><b>Keyed Values</b></em>' map.
 	 * The key is of type {@link java.lang.String},

@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainer.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:57 $ 
+ *  $Revision: 1.5 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -57,10 +57,10 @@ public interface MemberContainer extends EObject{
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Members</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getMemberContainer_Members()
-	 * @model type="org.eclipse.emf.ecore.EObject" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList getMembers();
+	EList<EObject> getMembers();
 
 	/**
 	 * Returns the value of the '<em><b>Implicits</b></em>' containment reference list.
@@ -72,10 +72,10 @@ public interface MemberContainer extends EObject{
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Implicits</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getMemberContainer_Implicits()
-	 * @model type="org.eclipse.emf.ecore.EObject" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList getImplicits();
+	EList<EObject> getImplicits();
 
 	/**
 	 * Returns the value of the '<em><b>Properties</b></em>' containment reference list.
@@ -91,9 +91,9 @@ public interface MemberContainer extends EObject{
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Properties</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getMemberContainer_Properties()
-	 * @model type="org.eclipse.emf.ecore.EObject" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList getProperties();
+	EList<EObject> getProperties();
 
 } // MemberContainer

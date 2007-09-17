@@ -54,13 +54,6 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry<String,Object> {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-
-	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

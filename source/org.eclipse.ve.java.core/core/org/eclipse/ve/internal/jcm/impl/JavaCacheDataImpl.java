@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: JavaCacheDataImpl.java,v 1.3 2006-02-07 17:21:37 rkulp Exp $
+ * $Id: JavaCacheDataImpl.java,v 1.4 2007-09-17 14:21:53 srobenalt Exp $
  */
 package org.eclipse.ve.internal.jcm.impl;
 /*******************************************************************************
@@ -22,6 +22,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -55,7 +56,7 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * @generated
 	 * @ordered
 	 */
-	protected EMap namesToBeans = null;
+	protected EMap<String, EObject> namesToBeans;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -71,6 +72,7 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.JAVA_CACHE_DATA;
 	}
@@ -80,9 +82,9 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EMap getNamesToBeans() {
+	public EMap<String, EObject> getNamesToBeans() {
 		if (namesToBeans == null) {
-			namesToBeans = new EcoreEMap(JCMPackage.Literals.NAMES_TO_BEANS, NamesToBeansImpl.class, this, JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS);
+			namesToBeans = new EcoreEMap<String,EObject>(JCMPackage.Literals.NAMES_TO_BEANS, NamesToBeansImpl.class, this, JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS);
 		}
 		return namesToBeans;
 	}
@@ -92,10 +94,11 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS:
-				return ((InternalEList)getNamesToBeans()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getNamesToBeans()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -105,6 +108,7 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS:
@@ -119,6 +123,7 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS:
@@ -133,6 +138,7 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS:
@@ -147,6 +153,7 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS:

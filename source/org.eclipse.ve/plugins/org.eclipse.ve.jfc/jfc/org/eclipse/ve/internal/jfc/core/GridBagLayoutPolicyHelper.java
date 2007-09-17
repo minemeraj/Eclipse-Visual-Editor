@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2005-12-06 16:11:30 $ 
+ *  $Revision: 1.18 $  $Date: 2007-09-17 14:23:33 $ 
  */
 
 import java.util.*;
@@ -101,7 +101,8 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 			GridBagConstraint gridBagConstraint = (GridBagConstraint) constraint;
 			GridBagConstraint defaultConstraint = new GridBagConstraint(); //  used to compare default values
 			IJavaObjectInstance javaGridBagConstraint = (IJavaObjectInstance) BeanUtilities.createJavaObject(
-					"java.awt.GridBagConstraints", rset, (String) null); //$NON-NLS-1$
+					//TODO: 33 port. contributed by Erik Hecht. REVIEWME
+					"java.awt.GridBagConstraints", rset, "" /*(String) null*/); //$NON-NLS-1$
 			if (gridBagConstraint.gridx != defaultConstraint.gridx) {
 				Object gridx = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.gridx));
 				javaGridBagConstraint.eSet(sfGridX, gridx);

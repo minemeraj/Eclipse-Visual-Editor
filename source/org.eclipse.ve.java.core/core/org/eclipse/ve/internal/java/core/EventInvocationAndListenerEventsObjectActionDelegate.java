@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: EventInvocationAndListenerEventsObjectActionDelegate.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.10 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import java.util.Iterator;
@@ -58,7 +58,7 @@ public class EventInvocationAndListenerEventsObjectActionDelegate implements IOb
 		// so we actually need to look at who it implements and extends and compare these against the known types and adapter types
 		// of the available events to see the event, and then get the methods from there
 		JavaClass listenerImplements = null;
-		if ( listenerType.getImplements().size() == 1 ) listenerImplements = (JavaClass)listenerType.getImplements().get(0);  
+		if ( listenerType.getImplements().size() == 1 ) listenerImplements = listenerType.getImplements().get(0);  
 		JavaClass listenerExtends = listenerType.getExtends();
 		// Now we know who the listener extends and also implements
 		// We can't handle it if there is more than one listener.  If that's the case in expert mode our children will be for each interface and the Events menu works from there

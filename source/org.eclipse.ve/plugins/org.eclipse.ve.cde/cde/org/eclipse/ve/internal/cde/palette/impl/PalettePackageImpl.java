@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: PalettePackageImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.9 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -835,6 +835,10 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 		CDMPackage theCDMPackage = (CDMPackage)EPackage.Registry.INSTANCE.getEPackage(CDMPackage.eNS_URI);
 
+		// Create type parameters
+
+		// Set bounds for type parameters
+
 		// Add supertypes to classes
 		rootEClass.getESuperTypes().add(this.getContainer());
 		categoryEClass.getESuperTypes().add(this.getDrawer());
@@ -937,6 +941,314 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// http://www.eclipse.org/emf/2002/GenModel
+		createGenModelAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/emf/2002/GenModel</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createGenModelAnnotations() {
+		String source = "http://www.eclipse.org/emf/2002/GenModel";		
+		addAnnotation
+		  (rootEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is the palette root.\r\n<p>\r\nIts children can be anything except a Tool or a Stack."
+		   });		
+		addAnnotation
+		  (getRoot_DefEntry(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Default Tool Entry\r\n<p>\r\nThe entry selected when no entry is explicitly selected."
+		   });		
+		addAnnotation
+		  (categoryEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is obsolete. Use Drawer instead."
+		   });		
+		addAnnotation
+		  (getCategory_CategoryLabel(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is obsolete. Use Entry.entryLabel instead."
+		   });		
+		addAnnotation
+		  (groupEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is a group. \r\n<p>\r\nA group is a container that cannot be collapsed. It can accept any entry type."
+		   });		
+		addAnnotation
+		  (getGroup_GroupLabel(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is obsolete. Use Entry.entryLabel instead."
+		   });		
+		addAnnotation
+		  (entryEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "The root of the palette hierarchy.\r\n<p>\r\nIt is not abstract, but it is treated as basically abstract."
+		   });		
+		addAnnotation
+		  (getEntry_Icon16Name(), 
+		   source, 
+		   new String[] {
+			 "documentation", "The URL for the 16x16 (small) icon for the entry. If not set, then a default will be used. Some entries do not have an image as a default, others do. For example ToolEntries do not have an image while Drawers do."
+		   });		
+		addAnnotation
+		  (getEntry_Icon32Name(), 
+		   source, 
+		   new String[] {
+			 "documentation", "The URL for the 32x32 (large) icon. If not specified then the small icon will be used."
+		   });		
+		addAnnotation
+		  (getEntry_Visible(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Is entry visible? Default is true. false is useful for letting palette modifications occur and user can then turn it on."
+		   });		
+		addAnnotation
+		  (getEntry_DefaultEntry(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is obsolete. Only here for compatibility. It is ignored. Use Palette.defaultEntry instead."
+		   });		
+		addAnnotation
+		  (getEntry_Id(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Entry ID. (optional)\r\n<p>\r\nOnly used for programatically inserting other palette entries. It provides a reference point for palette contributors to find and add into the section that contains this palette entry."
+		   });		
+		addAnnotation
+		  (getEntry_EntryLabel(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Label for the entry"
+		   });		
+		addAnnotation
+		  (getEntry_EntryShortDescription(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Short description for the entry (optional)"
+		   });		
+		addAnnotation
+		  (toolEntryEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Generic ToolEntry\r\n<p>\r\nThis is a generic tool entry. You will need to supply the classname and any of the properties for it.\r\n"
+		   });		
+		addAnnotation
+		  (getToolEntry_ToolClassName(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Tool class name.\r\n<p>\r\nThe classname of the tool entry. Because it is not known the namespace for the class, you need to use a special format:\r\n<p>\r\n<ul>\r\n<li><b>packagename.classname</b>: This means it must be available from the default class loader. (In Eclipse, this will be the org.eclipse.ve.cde plugin. It must be visible to this to be found).\r\n<li><b>namespace/packagename.classname</b>: This means it will be found  in the namespace. (In Eclipse the namespace is the name of a bundle. It will look within that bundle to find the class).\r\n</ul>"
+		   });		
+		addAnnotation
+		  (creationToolEntryEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Creation Tool\r\n<p>\r\nThis is abstract.\r\n<p>\r\nIf there are any annotation values, then an annotation will be created for the object that the factory returns. The annotation values come from the mixin KeyedValueHolder.keyedValues."
+		   });		
+		addAnnotation
+		  (abstractToolEntryEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Base ToolEntry."
+		   });		
+		addAnnotation
+		  (getAbstractToolEntry_StringProperties(), 
+		   source, 
+		   new String[] {
+			 "documentation", "Key/Value properties.\r\n<p>\r\nThis is a map of property name to string property values. These will be applied to the GEF ToolEntry using the key/value setProperty method.\r\n<p>\r\nIf string keys and string values is not sufficient, you will need to create your own AbstractToolEntry subclass instead to supply those."
+		   });		
+		addAnnotation
+		  (paletteCmpEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is obsolete. Use Root instead."
+		   });		
+		addAnnotation
+		  (getPaletteCmp_CmpCategories(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is obsolete. Add to Container.children instead."
+		   });		
+		addAnnotation
+		  (getPaletteCmp_CmpControlGroup(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is obsolete. Use Container.children instead."
+		   });		
+		addAnnotation
+		  (categoryCmpEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is obsolete. Use Drawer instead."
+		   });		
+		addAnnotation
+		  (getCategoryCmp_CmpGroups(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is obsolete. Categories can no longer contain groups."
+		   });		
+		addAnnotation
+		  (groupCmpEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is obsolete. Use Group instead."
+		   });		
+		addAnnotation
+		  (getGroupCmp_CmpEntries(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is obsolete. Use Container.children instead."
+		   });		
+		addAnnotation
+		  (containerEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Basic Palette Container.\r\n<p>\r\nIt contains other entries."
+		   });		
+		addAnnotation
+		  (getContainer_Children(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is the children of the container. Each container subclass can limit the type of children allowed."
+		   });		
+		addAnnotation
+		  (emfCreationToolEntryEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Creation Tool for creating EMF instances given just the EMF class.\r\n<p>\r\nA default empty instance with no features set will be created."
+		   });		
+		addAnnotation
+		  (getEMFCreationToolEntry_CreationClassURI(), 
+		   source, 
+		   new String[] {
+			 "documentation", "The URI of the class for which an instance is to be created. "
+		   });		
+		addAnnotation
+		  (emfPrototypeToolEntryEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This is like an EMFCreationToolEntry, but instead of creating a new instance based upon a classtype, a copy of the supplied prototype is returned instead."
+		   });		
+		addAnnotation
+		  (getEMFPrototypeToolEntry_PrototypeURI(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is the string containing the prototype URI for the prototype. \r\n<p>\r\nThe URI is to the object protoype that is being created. The URI must point to an EObject in a resource. That EObject must be contained directly by the Resource it is in (i.e. it mustn\'t be contained by another EObject). Also in the resource can be Annotations for any of the EObjects that are part of the template. These will automatically be added in."
+		   });		
+		addAnnotation
+		  (annotatedCreationEntryEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This will wrapper a CreationToolEntry and provide for creating an annotation too. This is the entry that should be in the palette when an annotation entry is desired.\r\n<p>\r\nThis is obsolete. The CreationToolEntry now can handle this itself."
+		   });		
+		addAnnotation
+		  (selectionCreationToolEntryEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "A creation tool entry where the actual object created is determined by the selectionCreation class. This allows the actual object created to be determined at selection time rather than statically defined in the palette entry itself."
+		   });		
+		addAnnotation
+		  (getSelectionCreationToolEntry_SelectorClassName(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is the classname of the selector class. It must implement the ISelector interface.  Because it is not known the namespace for the class, you need to use a special format:\r\n<p>\r\n<ul>\r\n<li><b>packagename.classname</b>: This means it must be available from the default class loader. (In Eclipse, this will be the org.eclipse.ve.cde plugin. It must be visible to this to be found).\r\n<li><b>namespace/packagename.classname</b>: This means it will be found  in the namespace. (In Eclipse the namespace is the name of a bundle. It will look within that bundle to find the class).\r\n</ul>"
+		   });		
+		addAnnotation
+		  (drawerEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Palette Drawer.\r\n<p>\r\nThis is a collapsable collection of entries. It accepts anything except a Group or a Drawer."
+		   });		
+		addAnnotation
+		  (permissionsEEnum, 
+		   source, 
+		   new String[] {
+			 "documentation", "The valid modification permissions for this entry. Used in the palette customizer."
+		   });		
+		addAnnotation
+		  (permissionsEEnum.getELiterals().get(0), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is the default permission for the entry. Each entry type has a default permission. It may different depending on the entry type."
+		   });		
+		addAnnotation
+		  (permissionsEEnum.getELiterals().get(1), 
+		   source, 
+		   new String[] {
+			 "documentation", "Full modification by the customizer is allowed."
+		   });		
+		addAnnotation
+		  (permissionsEEnum.getELiterals().get(2), 
+		   source, 
+		   new String[] {
+			 "documentation", "The customizer can only hide/show the entry."
+		   });		
+		addAnnotation
+		  (permissionsEEnum.getELiterals().get(3), 
+		   source, 
+		   new String[] {
+			 "documentation", "Limited modification is allowed. It is not allowed to move to another container or to be deleted."
+		   });		
+		addAnnotation
+		  (permissionsEEnum.getELiterals().get(4), 
+		   source, 
+		   new String[] {
+			 "documentation", "No modification is allowed."
+		   });		
+		addAnnotation
+		  (initialStateEEnum, 
+		   source, 
+		   new String[] {
+			 "documentation", "Drawer initial state."
+		   });		
+		addAnnotation
+		  (initialStateEEnum.getELiterals().get(0), 
+		   source, 
+		   new String[] {
+			 "documentation", "Initially open."
+		   });		
+		addAnnotation
+		  (initialStateEEnum.getELiterals().get(1), 
+		   source, 
+		   new String[] {
+			 "documentation", "Initially closed."
+		   });		
+		addAnnotation
+		  (initialStateEEnum.getELiterals().get(2), 
+		   source, 
+		   new String[] {
+			 "documentation", "Initially pinned open."
+		   });		
+		addAnnotation
+		  (stackEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Stack Entry.\r\n<p>\r\nA grouping of ToolEntries. They are represented by one entry on the palette and there can be a dropdown list to select from and a current active entry.\r\n<p>\r\nIt can only accept ToolEntries."
+		   });		
+		addAnnotation
+		  (getStack_ActiveEntry(), 
+		   source, 
+		   new String[] {
+			 "documentation", "The current active entry, if any. This is the entry that would be selected if the stack was selected."
+		   });		
+		addAnnotation
+		  (separatorEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "Palette Separator\r\n<p>\r\nIt is a spacer. But in addition it can be used a section marker for letting other entries be added into the section. The id of the separator can be used for this."
+		   });
 	}
 
 } //PalettePackageImpl

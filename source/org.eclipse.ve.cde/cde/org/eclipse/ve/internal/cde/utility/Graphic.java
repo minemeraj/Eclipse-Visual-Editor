@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility;
 /*
  *  $RCSfile: Graphic.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.6 $  $Date: 2007-09-17 14:17:14 $ 
  */
 
 
@@ -30,7 +30,7 @@ import org.eclipse.ve.internal.cde.emf.IGraphic;
  *
  *
  * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getGraphic()
- * @model abstract="true"
+ * @model abstract="true" superTypes="org.eclipse.emf.ecore.EObject org.eclipse.ve.internal.cde.utility.IGraphic"
  * @generated
  */
 public interface Graphic extends EObject, IGraphic{

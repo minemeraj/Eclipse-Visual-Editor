@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: VisualInfoImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2007-05-25 04:09:35 $ 
+ *  $Revision: 1.9 $  $Date: 2007-09-17 14:17:13 $ 
  */
  
 
@@ -40,12 +40,6 @@ import org.eclipse.ve.internal.cdm.VisualInfo;
  */
 public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-	/**
 	 * The cached value of the '{@link #getDiagram() <em>Diagram</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -53,7 +47,7 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * @generated
 	 * @ordered
 	 */
-	protected Diagram diagram = null;
+	protected Diagram diagram;
 
 	/**
 	 * <!-- begin-user-doc -->

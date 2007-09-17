@@ -24,7 +24,7 @@ public class RCPViewSourceGenerator implements org.eclipse.ve.internal.java.code
     return result;
   }
 
-  protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "import org.eclipse.ui.part.ViewPart;" + NL + "import org.eclipse.swt.widgets.Composite;" + NL + "import org.eclipse.swt.SWT;" + NL + "import org.eclipse.swt.layout.GridLayout;" + NL + "" + NL + "public class ";
   protected final String TEXT_2 = " extends ViewPart {" + NL + "" + NL + "\tpublic static final String ID = \"";
   protected final String TEXT_3 = "\"; // TODO Needs to be whatever is mentioned in plugin.xml" + NL + "\t" + NL + "\tprivate Composite top = null;" + NL + "\t" + NL + "\tpublic void createPartControl(Composite ";

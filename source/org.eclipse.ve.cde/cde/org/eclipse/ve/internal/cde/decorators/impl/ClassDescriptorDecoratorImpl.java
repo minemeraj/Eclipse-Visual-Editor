@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: ClassDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.14 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.15 $  $Date: 2007-09-17 14:17:13 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.TreeEditPart;
@@ -87,7 +88,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * @generated
 	 * @ordered
 	 */
-	protected EMap keyedValues = null;
+	protected EMap<String, String> keyedValues;
 
 
 	/**
@@ -218,7 +219,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * @generated
 	 * @ordered
 	 */
-  protected Graphic graphic = null;
+  protected Graphic graphic;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -234,7 +235,8 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  protected EClass eStaticClass() {
+  @Override
+		protected EClass eStaticClass() {
 		return DecoratorsPackage.Literals.CLASS_DESCRIPTOR_DECORATOR;
 	}
 
@@ -442,10 +444,11 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES:
-				return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getKeyedValues()).basicRemove(otherEnd, msgs);
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__GRAPHIC:
 				return basicSetGraphic(null, msgs);
 		}
@@ -457,6 +460,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES:
@@ -485,6 +489,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES:
@@ -520,6 +525,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES:
@@ -605,7 +611,8 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+  @Override
+		public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == KeyedValueHolder.class) {
 			switch (derivedFeatureID) {
 				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES: return CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES;
@@ -620,7 +627,8 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+  @Override
+		public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == KeyedValueHolder.class) {
 			switch (baseFeatureID) {
 				case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES: return DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES;
@@ -635,7 +643,8 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public String toString() {
+  @Override
+		public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());

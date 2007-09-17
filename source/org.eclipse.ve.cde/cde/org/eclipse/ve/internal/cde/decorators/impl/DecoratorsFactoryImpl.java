@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: DecoratorsFactoryImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2006-05-17 20:13:52 $ 
+ *  $Revision: 1.10 $  $Date: 2007-09-17 14:17:13 $ 
  */
 import org.eclipse.ve.internal.cde.decorators.*;
 
@@ -67,6 +67,7 @@ public class DecoratorsFactoryImpl extends EFactoryImpl implements DecoratorsFac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case DecoratorsPackage.BASE_PROPERTY_DECORATOR: return createBasePropertyDecorator();
@@ -145,6 +146,7 @@ public class DecoratorsFactoryImpl extends EFactoryImpl implements DecoratorsFac
 	 * @deprecated
 	 * @generated
 	 */
+	@Deprecated
 	public static DecoratorsPackage getPackage() {
 		return DecoratorsPackage.eINSTANCE;
 	}

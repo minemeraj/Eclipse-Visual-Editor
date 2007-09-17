@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: KeyedIntegerImpl.java,v $
- *  $Revision: 1.10 $  $Date: 2007-05-25 04:09:35 $ 
+ *  $Revision: 1.11 $  $Date: 2007-09-17 14:17:13 $ 
  */
  
 import org.eclipse.emf.common.notify.Notification;
@@ -39,13 +39,6 @@ import org.eclipse.ve.internal.cdm.CDMPackage;
  * @generated
  */
 public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry<String,Integer> {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-
 	/**
 	 * The default value of the '{@link #getTypedValue() <em>Value</em>}' attribute.
 	 * <!-- begin-user-doc -->

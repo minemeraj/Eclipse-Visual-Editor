@@ -39,13 +39,6 @@ import org.eclipse.ve.internal.cdm.CDMPackage;
  */
 public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry<String,Boolean> {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final String copyright = "";
-
-	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

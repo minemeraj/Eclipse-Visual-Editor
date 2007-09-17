@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: UtilityPackageImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.10 $  $Date: 2007-09-17 14:17:14 $ 
  */
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -420,6 +420,50 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// http://www.eclipse.org/emf/2002/GenModel
+		createGenModelAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/emf/2002/GenModel</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createGenModelAnnotations() {
+		String source = "http://www.eclipse.org/emf/2002/GenModel";		
+		addAnnotation
+		  (urlResourceBundleEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "A bundle url is of the form:\r\n\r\n...directory...\r\n\r\nFor example:\r\n\r\nplatform:/plugin/pluginname/nls/\r\n\r\nThis will look in the plugin directory \"nls/\" in the plugin \"pluginname\".\r\n\r\nNOTE: If this is a directory then the URL MUST end with \'/\' or it won\'t work, it will think \"nls\" is a file and not a directory.\r\n\r\nThere can be more than one if they are to be searched in order."
+		   });		
+		addAnnotation
+		  (getURLResourceBundle_BundleURLs(), 
+		   source, 
+		   new String[] {
+			 "documentation", "The URL\'s to use to search for the bundle. If there is more, then they will be searched in order for the bundle (or bundles if this is locale specific override type bundle)."
+		   });		
+		addAnnotation
+		  (graphicEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "A Graphic. This is an Abstract class. Subclasses of it will return an IImage."
+		   });		
+		addAnnotation
+		  (gifFileGraphicEClass, 
+		   source, 
+		   new String[] {
+			 "documentation", "This class caches the Image from a resource name of a gif file."
+		   });		
+		addAnnotation
+		  (getGIFFileGraphic_ResourceName(), 
+		   source, 
+		   new String[] {
+			 "documentation", "This is the resource name of the gif file. It is of the form of a URL. This means that to access GIF\'s within a plugin, use the format of \"platform:/plugin/PLUGINID/GIFILENAME\"."
+		   });
 	}
 
 }

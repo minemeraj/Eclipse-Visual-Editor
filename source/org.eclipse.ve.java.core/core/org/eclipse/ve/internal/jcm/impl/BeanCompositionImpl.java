@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanCompositionImpl.java,v $
- *  $Revision: 1.14 $  $Date: 2006-05-17 20:14:52 $ 
+ *  $Revision: 1.15 $  $Date: 2007-09-17 14:21:53 $ 
  */
 
 import java.util.Collection;
@@ -70,7 +70,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * @generated
 	 * @ordered
 	 */
-	protected EList properties = null;
+	protected EList<EObject> properties;
 
 	/**
 	 * The cached value of the '{@link #getMembers() <em>Members</em>}' containment reference list.
@@ -80,7 +80,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * @generated
 	 * @ordered
 	 */
-	protected EList members = null;
+	protected EList<EObject> members;
 
 	/**
 	 * The cached value of the '{@link #getImplicits() <em>Implicits</em>}' containment reference list.
@@ -90,7 +90,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * @generated
 	 * @ordered
 	 */
-	protected EList implicits = null;
+	protected EList<EObject> implicits;
 
 	/**
 	 * The cached value of the '{@link #getComponents() <em>Components</em>}' reference list.
@@ -100,7 +100,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * @generated
 	 * @ordered
 	 */
-	protected EList components = null;
+	protected EList<EObject> components;
 
 	/**
 	 * The cached value of the '{@link #getListenerTypes() <em>Listener Types</em>}' containment reference list.
@@ -110,7 +110,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * @generated
 	 * @ordered
 	 */
-	protected EList listenerTypes = null;
+	protected EList<ListenerType> listenerTypes;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -126,6 +126,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return JCMPackage.Literals.BEAN_COMPOSITION;
 	}
@@ -135,9 +136,9 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getMembers() {
+	public EList<EObject> getMembers() {
 		if (members == null) {
-			members = new EObjectContainmentEList(EObject.class, this, JCMPackage.BEAN_COMPOSITION__MEMBERS);
+			members = new EObjectContainmentEList<EObject>(EObject.class, this, JCMPackage.BEAN_COMPOSITION__MEMBERS);
 		}
 		return members;
 	}
@@ -147,9 +148,9 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getImplicits() {
+	public EList<EObject> getImplicits() {
 		if (implicits == null) {
-			implicits = new EObjectContainmentEList(EObject.class, this, JCMPackage.BEAN_COMPOSITION__IMPLICITS);
+			implicits = new EObjectContainmentEList<EObject>(EObject.class, this, JCMPackage.BEAN_COMPOSITION__IMPLICITS);
 		}
 		return implicits;
 	}
@@ -159,9 +160,9 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getProperties() {
+	public EList<EObject> getProperties() {
 		if (properties == null) {
-			properties = new EObjectContainmentEList(EObject.class, this, JCMPackage.BEAN_COMPOSITION__PROPERTIES);
+			properties = new EObjectContainmentEList<EObject>(EObject.class, this, JCMPackage.BEAN_COMPOSITION__PROPERTIES);
 		}
 		return properties;
 	}
@@ -171,9 +172,9 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getComponents() {
+	public EList<EObject> getComponents() {
 		if (components == null) {
-			components = new EObjectResolvingEList(EObject.class, this, JCMPackage.BEAN_COMPOSITION__COMPONENTS);
+			components = new EObjectResolvingEList<EObject>(EObject.class, this, JCMPackage.BEAN_COMPOSITION__COMPONENTS);
 		}
 		return components;
 	}
@@ -183,9 +184,9 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getListenerTypes() {
+	public EList<ListenerType> getListenerTypes() {
 		if (listenerTypes == null) {
-			listenerTypes = new EObjectContainmentEList(ListenerType.class, this, JCMPackage.BEAN_COMPOSITION__LISTENER_TYPES);
+			listenerTypes = new EObjectContainmentEList<ListenerType>(ListenerType.class, this, JCMPackage.BEAN_COMPOSITION__LISTENER_TYPES);
 		}
 		return listenerTypes;
 	}
@@ -195,16 +196,17 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case JCMPackage.BEAN_COMPOSITION__PROPERTIES:
-				return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
 			case JCMPackage.BEAN_COMPOSITION__MEMBERS:
-				return ((InternalEList)getMembers()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getMembers()).basicRemove(otherEnd, msgs);
 			case JCMPackage.BEAN_COMPOSITION__IMPLICITS:
-				return ((InternalEList)getImplicits()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getImplicits()).basicRemove(otherEnd, msgs);
 			case JCMPackage.BEAN_COMPOSITION__LISTENER_TYPES:
-				return ((InternalEList)getListenerTypes()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getListenerTypes()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -214,6 +216,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case JCMPackage.BEAN_COMPOSITION__PROPERTIES:
@@ -235,27 +238,29 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+		@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case JCMPackage.BEAN_COMPOSITION__PROPERTIES:
 				getProperties().clear();
-				getProperties().addAll((Collection)newValue);
+				getProperties().addAll((Collection<? extends EObject>)newValue);
 				return;
 			case JCMPackage.BEAN_COMPOSITION__MEMBERS:
 				getMembers().clear();
-				getMembers().addAll((Collection)newValue);
+				getMembers().addAll((Collection<? extends EObject>)newValue);
 				return;
 			case JCMPackage.BEAN_COMPOSITION__IMPLICITS:
 				getImplicits().clear();
-				getImplicits().addAll((Collection)newValue);
+				getImplicits().addAll((Collection<? extends EObject>)newValue);
 				return;
 			case JCMPackage.BEAN_COMPOSITION__COMPONENTS:
 				getComponents().clear();
-				getComponents().addAll((Collection)newValue);
+				getComponents().addAll((Collection<? extends EObject>)newValue);
 				return;
 			case JCMPackage.BEAN_COMPOSITION__LISTENER_TYPES:
 				getListenerTypes().clear();
-				getListenerTypes().addAll((Collection)newValue);
+				getListenerTypes().addAll((Collection<? extends ListenerType>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -266,6 +271,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case JCMPackage.BEAN_COMPOSITION__PROPERTIES:
@@ -292,6 +298,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case JCMPackage.BEAN_COMPOSITION__PROPERTIES:
@@ -313,7 +320,8 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == MemberContainer.class) {
 			switch (derivedFeatureID) {
 				case JCMPackage.BEAN_COMPOSITION__PROPERTIES: return JCMPackage.MEMBER_CONTAINER__PROPERTIES;
@@ -330,7 +338,8 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == MemberContainer.class) {
 			switch (baseFeatureID) {
 				case JCMPackage.MEMBER_CONTAINER__PROPERTIES: return JCMPackage.BEAN_COMPOSITION__PROPERTIES;

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility;
 /*
  *  $RCSfile: URLResourceBundle.java,v $
- *  $Revision: 1.7 $  $Date: 2007-05-25 04:09:36 $ 
+ *  $Revision: 1.8 $  $Date: 2007-09-17 14:17:14 $ 
  */
 
 
@@ -105,7 +105,7 @@ public interface URLResourceBundle extends ResourceBundle{
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Bundle UR Ls</em>' attribute list.
 	 * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getURLResourceBundle_BundleURLs()
-	 * @model type="java.lang.String"
+	 * @model
 	 * @generated
 	 */
 	EList<String> getBundleURLs();
