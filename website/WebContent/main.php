@@ -46,7 +46,13 @@
     </tr>
   </tbody>
 </table>
-
+<p><b>Please note:</b> 2007-10-03: Current official builds of the Visual Editor
+require <a
+href="http://archive.eclipse.org/eclipse/downloads/drops/R-3.2.2-200702121330/index.php>Eclipse
+3.2 (Callisto)</a>. The Visual Editor is migrating progressively to Eclipse 3.3
+(Europa). Preliminary instructions on testing preview builds are available on
+the <a href="http://wiki.eclipse.org/VE/Installing" >VE wiki</a>. Thank you for
+your patience and supporting the project!</p>
 	
 		<h2>About Us</h2>
 		<p>The Eclipse Visual Editor project is a vendor-neutral, open
@@ -70,7 +76,7 @@
 		<div class="homeitem3col">
 			<h3>What's New</h3>
 			<ul>
-				<li><img src="http://www.eclipse.org/images/new.gif" height="14" width="31"><a href="http://download.eclipse.org/tools/ve/downloads/drops/R-1.2-200606280938/index.html">VE v1.2 final release</a> <span class="dates">June 30, 2006</span></li>
+				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/R-1.2-200606280938/index.html">VE v1.2 final release</a> <span class="dates">June 30, 2006</span></li>
 				<li><a href="docs/v1.1/VE11grid.html">VE v1.1 Grid support</a> <span class="dates">07/13/05</span></li>
 				<li><a href="http://eclipse.org/articles/Article-VE-Custom-Widget/customwidget.html">Extending the Visual Editor Tutorial: Enabling support for a custom widget</a> <span class="dates">06/15/05</span></li>
 				<li><a href="docs/newsArchive/main.html">News Archive...</a></li>
