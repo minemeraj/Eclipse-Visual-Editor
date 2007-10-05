@@ -46,13 +46,14 @@
     </tr>
   </tbody>
 </table>
+<table style="border: 1px dashed black; background-color: #FFFFDD;"><tr><td width="100%">
 <p><b>Please note:</b> 2007-10-03: Current official builds of the Visual Editor
 require <a
 href="http://archive.eclipse.org/eclipse/downloads/drops/R-3.2.2-200702121330/">Eclipse
 3.2 (Callisto)</a>. The Visual Editor is migrating progressively to Eclipse 3.3
 (Europa). Preliminary instructions on testing preview builds are available on
 the <a href="http://wiki.eclipse.org/VE/Installing" >VE wiki</a>. Thank you for
-your patience and supporting the project!</p>
+your patience and supporting the project!</p></td></tr></table>
 	
 		<h2>About Us</h2>
 		<p>The Eclipse Visual Editor project is a vendor-neutral, open
