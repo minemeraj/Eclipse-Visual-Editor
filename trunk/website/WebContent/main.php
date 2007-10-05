@@ -48,7 +48,7 @@
 </table>
 <p><b>Please note:</b> 2007-10-03: Current official builds of the Visual Editor
 require <a
-href="http://archive.eclipse.org/eclipse/downloads/drops/R-3.2.2-200702121330/index.php>Eclipse
+href="http://archive.eclipse.org/eclipse/downloads/drops/R-3.2.2-200702121330/">Eclipse
 3.2 (Callisto)</a>. The Visual Editor is migrating progressively to Eclipse 3.3
 (Europa). Preliminary instructions on testing preview builds are available on
 the <a href="http://wiki.eclipse.org/VE/Installing" >VE wiki</a>. Thank you for
