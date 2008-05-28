@@ -11,22 +11,18 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.15 $  $Date: 2005-11-15 21:48:50 $ 
+ *  $Revision: 1.16 $  $Date: 2008-05-28 22:37:04 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
-import org.eclipse.gef.ui.actions.UndoRetargetAction;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditorActionContributor;
 import org.eclipse.jface.action.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.*;
-import org.eclipse.ui.actions.LabelRetargetAction;
-import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.texteditor.*;
+import org.eclipse.ui.texteditor.StatusLineContributionItem;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
-import org.eclipse.ve.internal.cde.core.MenuCreatorRetargetAction;
 import org.eclipse.ve.internal.java.core.CustomizeJavaBeanAction;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2006-05-17 20:15:54 $ 
+ *  $Revision: 1.7 $  $Date: 2008-05-28 22:37:09 $ 
  */
 package org.eclipse.ve.internal.rcp;
 
@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -160,7 +159,7 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 			// Tab style (square or rounded)
 			boolean traditionalTabStyle = PlatformUI.getPreferenceStore().getBoolean(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS);
 			// Tab location (top or bottom)
-			int tabPosition = WorkbenchPlugin.getDefault().getPreferenceStore().getInt(IPreferenceConstants.VIEW_TAB_POSITION);
+			int tabPosition = WorkbenchPlugin.getDefault().getPreferenceStore().getInt(IWorkbenchPreferenceConstants.VIEW_TAB_POSITION);
 			
 			
 			IProxy ffParent = ffHost.add(false, expression);
