@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.24 $  $Date: 2005-12-14 21:33:30 $ 
+ *  $Revision: 1.25 $  $Date: 2008-05-28 22:37:04 $ 
  */
 
 
@@ -36,7 +36,6 @@ import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 
 import org.eclipse.jem.internal.proxy.core.*;
@@ -160,7 +159,7 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 		setupClasspath(configuration, args);
 		
 		// Add IDE preferences to the argument buffer for use on the VM.
-		int fTabPosition = WorkbenchPlugin.getDefault().getPreferenceStore().getInt(IPreferenceConstants.VIEW_TAB_POSITION);
+		int fTabPosition = WorkbenchPlugin.getDefault().getPreferenceStore().getInt(IWorkbenchPreferenceConstants.VIEW_TAB_POSITION);
 		boolean fTraditionalTabs = PlatformUI.getPreferenceStore().getBoolean(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS);
 		String activeLinkColor = JFaceResources.getColorRegistry().getRGB(JFacePreferences.ACTIVE_HYPERLINK_COLOR).toString();
 		String errorColor = JFaceResources.getColorRegistry().getRGB(JFacePreferences.ERROR_COLOR).toString();
