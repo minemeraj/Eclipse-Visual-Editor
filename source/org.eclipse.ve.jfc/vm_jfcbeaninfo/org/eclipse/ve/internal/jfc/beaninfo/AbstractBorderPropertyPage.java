@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: AbstractBorderPropertyPage.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.4 $  $Date: 2008-05-29 20:10:14 $ 
  */
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -19,6 +19,11 @@ import javax.swing.border.Border;
 public abstract class AbstractBorderPropertyPage extends JPanel {
 
 
+
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5503489435066594295L;
 
 // called to initialize gui when added to the editor
 public abstract void buildPropertyPage();
