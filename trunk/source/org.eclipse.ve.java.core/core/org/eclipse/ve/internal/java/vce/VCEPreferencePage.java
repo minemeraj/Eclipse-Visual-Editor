@@ -11,18 +11,19 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.36 $  $Date: 2005-10-24 18:58:19 $ 
+ *  $Revision: 1.37 $  $Date: 2008-09-21 17:31:37 $ 
  */
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.UIManager;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.preference.*;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
@@ -45,8 +46,6 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.rules.*;
-
-import org.eclipse.ve.internal.propertysheet.PropertysheetMessages;
 
 public class VCEPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -76,13 +75,10 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 	protected Button splitRadioButton;
 	protected Button notebookRadioButton;
-	protected Button generateExpressionComment;
 	protected Table stylesTable;
 	protected StackLayout stylesContributorAreaLayout;
 	protected Composite styleContributorArea;
 	//    protected Button requireIVJforComponents ;
-	protected Button generateTryCatchBlock;
-	protected Text sourceToVisual;
 	protected Group sourceSyncGrp;
 
 	protected Image fJavaBeansToSourceImage;
@@ -99,6 +95,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	private TableItem currentLookAndFeelItem;
 
 	private String fStyleID = null;
+	private java.util.List fieldEditors = new ArrayList();
 
 	protected Label createLabel(Composite group, String aLabelString, Image aLabelImage) {
 		Label label = new Label(group, SWT.LEFT);
@@ -226,8 +223,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 		return contentsParent;
 	}
+	
 	protected void createAppearanceTab() {
-
 		appearanceTab = new TabItem(tabFolder, SWT.NONE);
 		appearanceTab.setText(VCEMessages.VCEPreferencePage_Tab_Appearance_Text); 
 		Composite appearanceComposite = new Composite(tabFolder, SWT.NONE);
@@ -376,6 +373,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		if (!VCEPreferences.isClipboardText())
 			showClipboardCheckBox.setVisible(false);		
 	}
+	
 	protected int getButtonWidthHint(Button aButton) {
 		GC fGC = new GC(aButton);
 		fGC.setFont(aButton.getFont());
@@ -383,6 +381,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		fGC.dispose();
 		return Math.max(widthHint, aButton.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
 	}
+	
 	protected void addLookAndFeel() {
 		// Open a dialog showing all available look and feel classes
 		Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -396,6 +395,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			item.setData(USER_ITEM);
 		}
 	}
+	
 	protected void editLookAndFeel() {
 		// Open a dialog showing all available look and feel classes
 		Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -413,8 +413,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			item.setText(1, dialog.fClass);
 		}
 	}
+	
 	protected void removeLookAndFeel() {
-
 		TableItem selectedItem = lookAndFeelTable.getSelection()[0];
 		selectedItem.dispose();
 		// If the current look and feel was removed make the <default> current
@@ -422,8 +422,15 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			currentLookAndFeelItem = lookAndFeelTable.getItem(0);
 			currentLookAndFeelItem.setChecked(true);
 		}
-
 	}
+	
+	protected void addVCEFieldEditor(FieldEditor editor, Composite targetComponent, int width) {
+		editor.setPreferenceStore(VCEPreferences.getPlugin().getPreferenceStore()); 
+		editor.fillIntoGrid(targetComponent, width);
+		fieldEditors.add(editor);
+		editor.setPage(this);
+	}
+	
 	protected void createCodeGenerationTab() {
 
 		codeGenTab = new TabItem(tabFolder, SWT.NONE);
@@ -435,27 +442,30 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 		Group codeGenGroup_Gen = createGroup(codeGenComposite, VCEMessages.PreferencePage_CodeGen_ParsingGeneration_Style_1, 1); 
 
-		generateExpressionComment = createCheckBox(codeGenGroup_Gen, VCEMessages.PreferencePage_NewExpressionCommentPrompt, 0); 
-		generateTryCatchBlock = createCheckBox(codeGenGroup_Gen, VCEMessages.PreferencePage_GenerateTryCatchBlock, 0); 
-
-		// Create a listener to see when the values in text boxes changes so we can trigger revalidation
-		ModifyListener modifyListener = new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-					// Validate that the value in the sourceToVisual is an integer between 1 and 9;
-	validateFields();
-			}
-		};
-
-		sourceSyncGrp = createGroup(codeGenComposite, VCEMessages.PreferencePage_CodeGen_Source_Synchronization_Delay, 6); 
-		// The group is 5 wide.
-
-		// The JavaBeansToSource are 6 wide in the group
-		createLabel(sourceSyncGrp, VCEMessages.PreferencePage_CodeGen_SourceToJavaBeans, null); 
-		sourceToVisual = createText(sourceSyncGrp, 11, 1); //$NON-NLS-1$
-		sourceToVisual.addModifyListener(modifyListener);
-		sourceToVisual.setTextLimit(9);
+		addVCEFieldEditor(new BooleanFieldEditor(VCEPreferences.GENERATE_COMMENT, VCEMessages.PreferencePage_NewExpressionCommentPrompt, SWT.NONE, codeGenGroup_Gen), codeGenGroup_Gen, 1);
+		addVCEFieldEditor(new BooleanFieldEditor(VCEPreferences.GENERATE_TRY_CATCH_BLOCK, VCEMessages.PreferencePage_GenerateTryCatchBlock, SWT.NONE, codeGenGroup_Gen), codeGenGroup_Gen, 1);
+		{ // restore the default margin
+			GridLayout groupLayout = (GridLayout) codeGenGroup_Gen.getLayout();
+			groupLayout.marginWidth = 5;
+			groupLayout.marginHeight = 5;
+		}
 		
+		sourceSyncGrp = createGroup(codeGenComposite, VCEMessages.PreferencePage_CodeGen_Source_Synchronization_Delay, 3); 
+
+		IntegerFieldEditor fieldEditor = new IntegerFieldEditor(VCEPreferences.SOURCE_SYNC_DELAY, VCEMessages.PreferencePage_CodeGen_SourceToJavaBeans, sourceSyncGrp, 9);
+		fieldEditor.setValidateStrategy(IntegerFieldEditor.VALIDATE_ON_KEY_STROKE);
+		fieldEditor.setValidRange(VCEPreferences.DEFAULT_SYNC_DELAY, Integer.MAX_VALUE);
+		fieldEditor.setErrorMessage(VCEMessages.PreferencePage_CodeGen_Error_DelayTimeMustBeInteger_ERROR_);
+		
+		addVCEFieldEditor(fieldEditor, sourceSyncGrp, 2);
+
 		Label spacer = new Label(sourceSyncGrp, SWT.NONE);
+		
+		{ // restore the default margin
+			GridLayout groupLayout = (GridLayout) sourceSyncGrp.getLayout();
+			groupLayout.marginWidth = 5;
+			groupLayout.marginHeight = 5;
+		}
 		spacer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	}
 	
@@ -689,7 +699,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected void initializeGUIControlsFromStore() {
 
 		getStore();
-
+		
 		initializeBasicLookAndFeelItems(lookAndFeelTable);
 		// Get the current look and feel class name
 		String lookAndFeelClass = fStore.getString(VCEPreferences.SWING_LOOKANDFEEL);
@@ -746,52 +756,36 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		//	requireIVJforComponents.setSelection(fStore.getString(VCEPreferences.REQUIRE_IVJ_COMPONENTS).length()==0 ?
 		//	                                     false : fStore.getBoolean(VCEPreferences.REQUIRE_IVJ_COMPONENTS)) ;		
 
-		generateExpressionComment.setSelection(fStore.getBoolean(VCEPreferences.GENERATE_COMMENT));
-		generateTryCatchBlock.setSelection(fStore.getBoolean(VCEPreferences.GENERATE_TRY_CATCH_BLOCK));
-		sourceToVisual.setText(fStore.getString(VCEPreferences.SOURCE_SYNC_DELAY));
-		calculateTotalSourceToVisualTime();
-	}
-	protected void validateFields() {
-		// Validate that the sourceSyncDelayText is an integer greater than the default of 500ms
-		boolean isValid = true;
-		try {
-			int val = Integer.parseInt(sourceToVisual.getText());
-			if (val < VCEPreferences.DEFAULT_SYNC_DELAY) {
-				isValid = false;
-				setErrorMessage(VCEMessages.PreferencePage_CodeGen_Error_DelayTimeMinimum_ERROR_); 
-				setValid(false);
-			}
-		} catch (NumberFormatException ex) {
-			isValid = false;
-			setErrorMessage(VCEMessages.PreferencePage_CodeGen_Error_DelayTimeMustBeInteger_ERROR_); 
-			setValid(false);
+		for (Iterator iterator = fieldEditors.iterator(); iterator.hasNext();) {
+			FieldEditor fieldEditor = (FieldEditor) iterator.next();
+			fieldEditor.load();
 		}
-		// If we got no errors then clear the error message and refresh the total source to visual time
-		if (isValid) {
-			// The next step is to calculate the total time which is the delay time * the factor
-			// it is possible that is an integer that is too large.
-			boolean isValidTotalTime = calculateTotalSourceToVisualTime();
-			if (isValidTotalTime) {
-				setValid(true);
-				setErrorMessage(null);
-			} else {
-				setValid(false);
-			}
+		checkFieldEditorsForErrors();
+
+		for (Iterator iterator = fieldEditors.iterator(); iterator.hasNext();) {
+			FieldEditor fieldEditor = (FieldEditor) iterator.next();
+			fieldEditor.load();
 		}
 	}
-	protected boolean calculateTotalSourceToVisualTime() {
-		try {
-			int total = Integer.parseInt(sourceToVisual.getText());
-			if(total<0 || total>Integer.MAX_VALUE){
-				setErrorMessage(PropertysheetMessages.not_integer_WARN_);
+	
+	protected boolean checkFieldEditorsForErrors() {
+		for (Iterator iterator = fieldEditors.iterator(); iterator.hasNext();) {
+			FieldEditor fieldEditor = (FieldEditor) iterator.next();
+			if (!fieldEditor.isValid()) {
+				setValid(false);
 				return false;
 			}
-			return true;
-		} catch (NumberFormatException exc) {
-			// This should not occur because the number have already been validated
-			return false;
 		}
+		setValid(true);
+		return true;
 	}
+	
+	@Override
+	public void setErrorMessage(String newMessage) {
+		checkFieldEditorsForErrors();
+		super.setErrorMessage(newMessage);
+	}
+
 	public boolean performOk() {
 
 		// Save the Swing look and feel
@@ -843,12 +837,14 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		fStore.setValue(VCEPreferences.OPEN_PROPERTIES_VIEW, openPropertiesViewIfRequired.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_JAVABEANS_VIEW, openJavaBeansViewIfRequired.getSelection());
 
-		fStore.setValue(VCEPreferences.GENERATE_COMMENT, generateExpressionComment.getSelection());
-		fStore.setValue(VCEPreferences.GENERATE_TRY_CATCH_BLOCK, generateTryCatchBlock.getSelection());
-		fStore.setValue(VCEPreferences.SOURCE_SYNC_DELAY, Integer.parseInt(sourceToVisual.getText()));		
 		//	fStore.setValue(VCEPreferences.REQUIRE_IVJ_COMPONENTS,requireIVJforComponents.getSelection()) ;
 
 		fStore.setValue(VCEPreferences.JVE_PATTERN_STYLE_ID, fStyleID);
+		
+		for (Iterator iterator = fieldEditors.iterator(); iterator.hasNext();) {
+			FieldEditor fieldEditor = (FieldEditor) iterator.next();
+			fieldEditor.store();
+		}
 		
 		ProxyPlugin.getPlugin().getPluginPreferences().setValue(ProxyPlugin.PREFERENCES_VM_NOVERIFY_KEY, noverifyCheckbox.getSelection());
 		ProxyPlugin.getPlugin().savePluginPreferences();
@@ -905,16 +901,18 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		currentLookAndFeelItem.setChecked(true);
 
 		notebookRadioButton.setSelection(store.getDefaultBoolean(VCEPreferences.NOTEBOOK_PAGE));
-		generateExpressionComment.setSelection(store.getDefaultBoolean(VCEPreferences.GENERATE_COMMENT));
-		generateTryCatchBlock.setSelection(store.getDefaultBoolean(VCEPreferences.GENERATE_TRY_CATCH_BLOCK));
 		splitRadioButton.setSelection(!store.getDefaultBoolean(VCEPreferences.NOTEBOOK_PAGE));
-		sourceToVisual.setText(Integer.toString(VCEPreferences.DEFAULT_SYNC_DELAY));
 		
 		openPropertiesViewIfRequired.setSelection(true);
 		openJavaBeansViewIfRequired.setSelection(true);
 		//	requireIVJforComponents.setSelection(false) ;
 		
 		noverifyCheckbox.setSelection(ProxyPlugin.getPlugin().getPluginPreferences().getDefaultBoolean(ProxyPlugin.PREFERENCES_VM_NOVERIFY_KEY));
+
+		for (Iterator iterator = fieldEditors.iterator(); iterator.hasNext();) {
+			FieldEditor fieldEditor = (FieldEditor) iterator.next();
+			fieldEditor.loadDefault();
+		}
 		restoreDefaultStyle();
 
 	}
@@ -932,7 +930,5 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			fJavaBeansToSourceImage.dispose();
 		if (fSourceToJavaBeansImage != null)
 			fSourceToJavaBeansImage.dispose();
-
 	}
-
 }
