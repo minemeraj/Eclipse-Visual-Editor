@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<?xml-stylesheet type="text/xsl" href="http://www.eclipse.org/projects/project-plan.xsl"?>
+<plan plan-format="1.0" xmlns="http://www.eclipse.org/project/plan" xmlns:html="http://www.w3.org/1999/xhtml"
+      name="Eclipse Visual Editor">
+   <release projectid="org.eclipse.ve" version="1.5"/>
+   <introduction>
+     <html:div>
+     <p>
+     The Eclipse Visual Editor project is a vendor-neutral, open development platform supplying frameworks for creating GUI builders, and exemplary, extensible tool implementations for Swing/JFC and SWT/RCP. These tools are exemplary in that they verify the utility of the Eclipse Visual Editor frameworks, illustrate the appropriate use of those frameworks, and support the development and maintenance of the Eclipse Visual Editor Platform itself.</p>
+     <p>	
+     The purpose of the Eclipse Visual Editor Project is to advance the creation, evolution, promotion of the Eclipse Visual Editor platform, and to cultivate both an open source community and an ecosystem of complementary products, capabilities, and services. In particular, the Visual Editor Project intends to be useful for creating GUI builders for other languages such as C/C++ and alternate widget sets, including those that are not supported under Java. </p>
+     </html:div>
+   </introduction>
+   <release_deliverables>
+     <html:div>
+<p>The release deliverables are: </p>
+<ul>
+  <li>Source code release for Eclipse Visual Editor, available as versions tagged      &quot;R1_5_0&quot; in the eclipse.org <a href="http://dev.eclipse.org/viewcvs/">CVS      repository</a>.</li>
+  <li>Visual Editor Project runtime binary distributions (downloadable).</li>
+  <li>Visual Editor Project runtime binary features on eclipse.org update site      (install via Eclipse update manager).</li>
+</ul>
+</html:div>
+   </release_deliverables>
+   <release_milestones>
+      <preamble>
+         <html:div>
+As VE is dependency of numerous other projects and just a porting to new Eclipse Platform, VE will deliver its milestones within one week of
+the Eclipse Platform since the M6. Afterwards it is anticipated that VE will synchronize its
+milestones with the Galileo milestone schedule.
+        </html:div>
+      </preamble>
+		<milestone date="03/16/2009" milestone="M6"/>
+		<milestone date="05/04/2009" milestone="M7"/>
+		<milestone date="05/18/2009" milestone="RC1" />
+		<milestone date="05/25/2009" milestone="RC2" />
+		<milestone date="06/01/2009" milestone="RC3" />
+		<milestone date="06/08/2009" milestone="RC4" />
+		<milestone date="06/15/2009" milestone="RC5" />
+		<milestone date="06/28/2009" milestone="1.5.0" />
+      <postamble><html:div>As VE isn't part of Ganymede package, it will not produce maintenance releases
+to align with the Ganymede SR releases.</html:div></postamble>
+   </release_milestones>
+   <target_environments>
+     <html:div><p>In order to remain current, each release of an Eclipse project targets reasonably current  versions of underlying operating environments and other Eclipse projects on  which it depends. </p>
+<p>Most of Eclipse is &quot;pure&quot; Javaï code and has no direct  dependence on the underlying operating system. The chief dependence is on the  Eclipse Platform, and on the Java 2 Platform that runs it.</p>
+<p>The Visual Editor Project version 1.2 release depends on the following:</p>
+<ul>
+  <li>Java 2 Platform, version 1.4.2<br />
+  </li>
+  <li>Eclipse Platform 3.5</li>
+  <li>Windows 2000/XP</li>
+  <li>Linux/GTK</li>
+  <li>MAC OS<br />
+  </li>
+</ul>
+<p> The 1.5 release of Visual Editor Project is designed to run on any configuration supporting the above components.</p>
+<p>Visual Editor Project 1.5 will be tested and validated on the following reference platforms:</p>
+<table border="1">
+  <tbody>
+    <tr bgcolor="#cccccc">
+      <th colspan="4"> <div align="center"> <strong>Eclipse Reference Platforms</strong> </div></th>
+    </tr>
+    <tr>
+      <td width="205"><strong>Operating system</strong></td>
+      <td width="76"><strong>Processor architecture</strong></td>
+      <td width="59"><strong>Window system</strong></td>
+      <td width="453"><strong>Java 2 Platform</strong></td>
+    </tr>
+    <tr>
+      <td width="205"><strong>SUSE Linux Enterprise Server 10</strong></td>
+      <td width="76"><strong>x86-32</strong><br />
+      </td>
+      <td width="59">GTK<br />
+      </td>
+      <td width="453">Sun Java 2 Standard Edition 5.0 Update 4 for Linux x86<br /></td>
+    </tr>
+    <tr>
+      <td width="205">Microsoft Windows <strong>Vista</strong><br />
+      </td>
+      <td width="76">Intel x86</td>
+      <td width="59">Win32<br />
+      </td>
+      <td width="453">Sun Java 2 Standard Edition 5.0 Update 4 for Microsoft   	Windows <br /></td>
+    </tr>
+  </tbody>
+</table>
+</html:div>
+     <internationalization>
+          <html:div>The VE project is already developed by providing English strings in its default bundles and be localized to a subset of those locales offered by the Platform. This support will be respected in release 1.5.</html:div>
+     </internationalization>
+   </target_environments>
+   <compatibility_with_previous_releases>
+       <html:div>
+       Eclipse Visual Editor Project 1.5 will be compatible with Visual Editor Project 1.2.
+       </html:div>
+   </compatibility_with_previous_releases>
+	<themes_and_priorities>
+		<preamble>
+			<html:div>
+			No new items
+         </html:div>
+		</preamble>
+		<theme name="">
+		</theme>
+	</themes_and_priorities>
+   <appendix name="Project Refactoring">
+      <html:div>
+       The component JEM is moved from VE to <a href="http://www.eclipse.org/webtools/">Eclipse Web Tools Platform (WTP) Project</a>. A new deployment script will be updated.
+      </html:div>
+   </appendix>	
+ </plan>
