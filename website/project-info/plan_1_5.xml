@@ -2,7 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="http://www.eclipse.org/projects/project-plan.xsl"?>
 <plan plan-format="1.0" xmlns="http://www.eclipse.org/project/plan" xmlns:html="http://www.w3.org/1999/xhtml"
       name="Eclipse Visual Editor">
-   <release projectid="org.eclipse.ve" version="1.5"/>
+   <release projectid="tools.ve" version="1.5"/>
    <introduction>
      <html:div>
      <p>
