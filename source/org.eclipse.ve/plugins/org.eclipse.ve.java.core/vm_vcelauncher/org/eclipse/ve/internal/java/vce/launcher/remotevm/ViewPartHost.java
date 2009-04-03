@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartHost.java,v $
- *  $Revision: 1.8 $  $Date: 2005-12-09 21:55:57 $ 
+ *  $Revision: 1.9 $  $Date: 2009-04-03 22:53:45 $ 
  */
 
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
@@ -28,7 +28,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.part.*;
+import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.part.WorkbenchPart;
 
 public class ViewPartHost {
 
@@ -53,7 +54,12 @@ public class ViewPartHost {
 	    folder.setMaximizeVisible(true);
 	    folder.setMinimizeVisible(true);
 
-		folder.setTabPosition(fTabPosition);
+	    if (fTabPosition != SWT.TOP && fTabPosition != SWT.BOTTOM) {
+	    	folder.setTabPosition(SWT.TOP);
+		} else {
+			folder.setTabPosition(fTabPosition);
+	    }
+	    
 		// The method CTabFolder.setSimple(boolean) is only available in 3.1 and higher so we must use reflection
 		// to simulat the method call folder.setSimple(fTraditionalTabs);
 		try{

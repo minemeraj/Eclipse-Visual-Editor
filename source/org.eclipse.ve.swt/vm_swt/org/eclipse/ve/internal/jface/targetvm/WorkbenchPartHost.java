@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartHost.java,v $
- *  $Revision: 1.3 $  $Date: 2005-12-14 21:45:52 $ 
+ *  $Revision: 1.4 $  $Date: 2009-04-03 22:53:20 $ 
  */
 package org.eclipse.ve.internal.jface.targetvm;
 
@@ -72,8 +72,13 @@ public class WorkbenchPartHost {
 			setSimpleMethod.invoke(folder, new Object[] { Boolean.valueOf(traditionalTabs)});
 		} catch (Exception e) {
 		}
-		folder.setTabPosition(tabPosition);
-
+		
+		if (tabPosition != SWT.TOP && tabPosition != SWT.BOTTOM) {
+			folder.setTabPosition(SWT.TOP);
+		} else {
+			folder.setTabPosition(tabPosition);
+		}
+		
 		// Editor parts don't need the viewform, but viewparts will (this is where their toolbar goes).
 		ViewForm viewForm = new ViewForm(folder, SWT.NONE);
 		viewForm.marginHeight = 0;
