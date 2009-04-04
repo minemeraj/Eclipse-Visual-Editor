@@ -15,8 +15,8 @@ projectid="tools.ve"
 version="1.4.0"
 
 # leave blank to use assumed values (which may be wrong!)
-projRelengRoot='-projRelengRoot :pserver:anonymous@dev.eclipse.org:/cvsroot/technology'
-projRelengPath='-projRelengPath org.eclipse.dash/athena/org.eclipse.dash.commonbuilder/org.eclipse.gef.releng'
+projRelengRoot='-projRelengRoot :pserver:anonymous@dev.eclipse.org:/cvsroot/tools'
+projRelengPath='-projRelengPath org.eclipse.ve/org.eclipse.ve.releng'
 
 # where should we look for pre-checked out project sources for org.eclipse.dash.common.releng and org.eclipse.releng.basebuilder ?
 cvsProjectBaseDir=/opt/public/cbi/build # build.eclipse.org
@@ -73,9 +73,9 @@ relengCommonBuilderDir="${writableBuildRoot}/org.eclipse.dash.common.releng"
 ln -s ${cvsProjectBaseDir}/org.eclipse.releng.basebuilder ${writableBuildRoot}/
 ln -s ${cvsProjectBaseDir}/org.eclipse.dash.common.releng ${writableBuildRoot}/
 
-#symlink local copy of org.eclipse.gef.releng instead of fetching from CVS (so tweaks for local Hudson are preserved)
-if [[ -d ${cvsProjectBaseDir}/org.eclipse.gef.releng ]]; then
-	ln -s ${cvsProjectBaseDir}/org.eclipse.gef.releng ${writableBuildRoot}/
+#symlink local copy of org.eclipse.ve.releng instead of fetching from CVS (so tweaks for local Hudson are preserved)
+if [[ -d ${cvsProjectBaseDir}/org.eclipse.ve.releng ]]; then
+	ln -s ${cvsProjectBaseDir}/org.eclipse.ve.releng ${writableBuildRoot}/
 fi
 
 # symlink 3rdPartyJars (reuse existing content on build.eclipse.org for ant-contrib.jar, etc.)
