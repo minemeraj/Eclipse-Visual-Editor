@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.ve.perfcore"
+      label="Phony feature of perfcore for building purposes only"
+      version="1.4.0">
+
+   <plugin
+         id="org.eclipse.perfmsr.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>
