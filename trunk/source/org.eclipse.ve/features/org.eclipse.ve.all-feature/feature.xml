@@ -23,11 +23,17 @@
    </url>
 
    <includes
+         id="org.eclipse.ve.perfcore"
+         version="0.0.0"/>
+         
+   <includes
          id="org.eclipse.ve.sdk"
          version="0.0.0"/>
          
-   <!-- TODO: add JEM SDK feature -->
-
+   <includes
+         id="org.eclipse.jem.sdk"
+         version="0.0.0"/>
+         
    <includes
          id="org.eclipse.ve.examples"
          version="0.0.0"/>
