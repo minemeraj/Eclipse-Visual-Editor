@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.ve.all"
+      label="%featureName"
+      version="1.4.0.qualifier"
+      provider-name="%providerName"
+      image="eclipse_update_120.jpg">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/tools/ve/updates/1.4/"/>
+   </url>
+
+   <includes
+         id="org.eclipse.ve.sdk"
+         version="0.0.0"/>
+         
+   <!-- TODO: add JEM SDK feature -->
+
+   <includes
+         id="org.eclipse.ve.examples"
+         version="0.0.0"/>
+
+</feature>
