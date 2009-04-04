@@ -27,11 +27,11 @@
          version="0.0.0"/>
          
    <includes
-         id="org.eclipse.ve.sdk"
+         id="org.eclipse.jem.sdk"
          version="0.0.0"/>
          
    <includes
-         id="org.eclipse.jem.sdk"
+         id="org.eclipse.ve.sdk"
          version="0.0.0"/>
          
    <includes
