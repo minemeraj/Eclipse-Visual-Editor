@@ -1,5 +1,3 @@
-feature@org.eclipse.ve.perfcore=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.perfcore-feature
-
 plugin@org.eclipse.ve.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/plugins/org.eclipse.ve.sdk
 
 plugin@org.eclipse.ve=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve
@@ -13,7 +11,10 @@ plugin@org.eclipse.ve.doc=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools
 plugin@org.eclipse.ve.examples=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.examples
 plugin@org.eclipse.ve.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/tests/org.eclipse.ve.tests
 
+feature@org.eclipse.ve.all=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.all-feature
 feature@org.eclipse.ve.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.sdk-feature
 feature@org.eclipse.ve=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve-feature
 feature@org.eclipse.ve.examples=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.examples-feature
 feature@org.eclipse.ve.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.tests-feature
+
+feature@org.eclipse.ve.perfcore=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.perfcore-feature
