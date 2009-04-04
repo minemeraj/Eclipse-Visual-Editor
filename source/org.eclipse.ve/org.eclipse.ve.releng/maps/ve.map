@@ -1,3 +1,5 @@
+feature@org.eclipse.ve.perfcore=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.perfcore-feature
+
 plugin@org.eclipse.ve.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/plugins/org.eclipse.ve.sdk
 
 plugin@org.eclipse.ve=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve
