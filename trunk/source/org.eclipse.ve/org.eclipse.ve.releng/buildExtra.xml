@@ -1,0 +1,40 @@
+<project default="run" name="Project's .releng buildExtra.xml">
+
+	<target name="init">
+	</target>
+
+	<target name="run">
+		<!-- TODO: write code that's hooked into o.e.d.commonbuilder.releng's build.xml to do extra configs (eg., for inserting 3rd party libs into plugins) 
+		-->
+	</target>
+
+	<target name="extraPackaging">
+		
+		<!-- TODO: package JEM runtime + SDK - need runtime and SDK features too; no longer in WTP -->
+
+		<!-- build examples -->
+		<zip destfile="${buildDirectory}/${buildLabel}/VE-examples-${buildAlias}.zip" update="true">
+			<zipfileset src="${buildDirectory}/${buildLabel}/${allZip}" dirmode="775" filemode="664">
+				<include name="**/org.eclipse.*.examples*" />
+				<include name="**/org.eclipse.*.examples*/**" />
+				<include name="**/org.eclipse.*.examples*/**/**" />
+			</zipfileset>
+		</zip>
+	
+	</target>
+	
+	<target name="getDependencies">	
+		<!-- TODO: if your project requires more dependencies, add them here; if it does not require all of these, remove those not required -->
+		<echo message="Download, then unpack EMF" />
+		<ant target="getDependency"
+		     antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
+			<property name="url" value="${modeling.emf.runtime.url}" />
+			<property name="file" value="${modeling.emf.runtime.file}" />
+		</ant>
+		<ant target="getDependency"
+		     antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
+			<property name="url" value="${tools.gef.runtime.url}" />
+			<property name="file" value="${tools.gef.runtime.file}" />
+		</ant>
+	</target>
+</project>
