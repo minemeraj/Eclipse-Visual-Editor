@@ -26,8 +26,6 @@
 <project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.propertysheet,org.eclipse.ve.propertysheet"/>
 <project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.sdk,org.eclipse.ve.sdk"/>
 <project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.sdk-feature,org.eclipse.ve.sdk-feature"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.sweet,org.eclipse.ve.sweet"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.sweet.internal,org.eclipse.ve.sweet.internal"/>
 <project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.swt,org.eclipse.ve.swt"/>
 <project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/tests/org.eclipse.ve.tests,org.eclipse.ve.tests"/>
 <project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.tests-feature,org.eclipse.ve.tests-feature"/>
