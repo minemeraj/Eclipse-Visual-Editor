@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.6 $  $Date: 2005-12-14 21:47:19 $ 
+ *  $Revision: 1.7 $  $Date: 2009-04-06 21:14:37 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix.bits64;
 
@@ -52,7 +52,9 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 			try{
 				Class osClass = Class.forName("org.eclipse.swt.internal.gtk.OS"); //$NON-NLS-1$
 				Method method = osClass.getMethod("GTK_WIDGET_HEIGHT", new Class[]{long.class}); //$NON-NLS-1$
-				Object ret = method.invoke(menu, new Object[]{new Long(menu.handle)});
+				Field hanldeField = menu.getClass().getField("handle");
+				hanldeField.setAccessible(true);
+				Object ret = method.invoke(menu, new Object[]{new Long(hanldeField.getLong(menu))});
 				if(ret!=null){
 					int menuBarHeight = ((Integer)ret).intValue();
 					trim.y -= menuBarHeight;
