@@ -12,17 +12,39 @@ package org.eclipse.ve.internal.swt.targetvm.win32;
 
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.internal.win32.OS;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.ole.win32.OleFrame;
 import org.eclipse.swt.widgets.*;
+
+import java.lang.reflect.Method;
 
 /**
  * Image Capture for Win32 platforms.
  * 
  * @since 1.1.0
+ * 
+ * yyang (yves.yang@soyatec.com): 
+ * 			change to reflection calls on OS  
+ * 
  */
 public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapture {
+
+	static Method GetParent;
+
+	static Method SendMessage;
+
+	static {
+		try {
+			Class<?> osClass = Class.forName("org.eclipse.swt.internal.win32.OS");
+			GetParent = osClass.getDeclaredMethod("GetParent", int.class);
+			SendMessage = osClass.getDeclaredMethod("SendMessage", int.class, int.class, int.class, int.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	protected Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren) {
 		Image myImage = getImage(control, maxWidth, maxHeight);
@@ -33,13 +55,14 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 			// Get the images of all of the children
 			if (includeChildren && control instanceof Composite) {
 				Display display = control.getDisplay();
-				Rectangle parentBounds = control.getParent() == null ? control.getBounds() : display.map(control.getParent(), null, control.getBounds());
+				Rectangle parentBounds = control.getParent() == null ? control.getBounds() : display.map(control.getParent(), null, control
+						.getBounds());
 				// Need to clip the bounds to the size of the image so we get just what we need.
 				Rectangle imgBounds = myImage.getBounds();
 				parentBounds.width = imgBounds.width;
 				parentBounds.height = imgBounds.height;
-				int parentRight = parentBounds.width+parentBounds.x;
-				int parentBottom = parentBounds.height+parentBounds.y;
+				int parentRight = parentBounds.width + parentBounds.x;
+				int parentBottom = parentBounds.height + parentBounds.y;
 				Control[] children = ((Composite) control).getChildren();
 				GC myImageGC = new GC(myImage);
 				try {
@@ -60,7 +83,7 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 								// Paint the child image on top of our one
 								// Since the child bounds and parent bounds are both in display coors, the difference between
 								// the two is the offset of the child from the parent.
-								myImageGC.drawImage(childImage, childBounds.x-parentBounds.x, childBounds.y-parentBounds.y);
+								myImageGC.drawImage(childImage, childBounds.x - parentBounds.x, childBounds.y - parentBounds.y);
 							} finally {
 								childImage.dispose();
 							}
@@ -112,22 +135,26 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 			print_bits |= PRF_CHILDREN;
 		}
 		GC gc = new GC(image);
-		
+
 		// Need to handle cases where the GC font isn't automatically set by the control's image (e.g. CLabel)
 		// see bug 98830 (https://bugs.eclipse.org/bugs/show_bug.cgi?id=98830)
 		Font f = aControl.getFont();
 		if (f != null)
 			gc.setFont(f);
-		
+
 		int hwnd = aControl.handle;
-		if (aControl instanceof Tree) {
-			int hwndParent = OS.GetParent(hwnd);
-			if (hwndParent != aControl.getParent().handle) {
-				hwnd = hwndParent;
-				print_bits |= PRF_CHILDREN;		
+		try {
+			if (aControl instanceof Tree) {
+				int hwndParent = (Integer) GetParent.invoke(null, hwnd);
+				if (hwndParent != aControl.getParent().handle) {
+					hwnd = hwndParent;
+					print_bits |= PRF_CHILDREN;
+				}
 			}
+			SendMessage.invoke(null, hwnd, WM_PRINT, gc.handle, print_bits);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		OS.SendMessage(hwnd, WM_PRINT, gc.handle, print_bits);
 
 		gc.dispose();
 		return image;

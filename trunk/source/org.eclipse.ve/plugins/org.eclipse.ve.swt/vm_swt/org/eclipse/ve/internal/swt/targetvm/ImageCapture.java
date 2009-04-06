@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.7 $  $Date: 2009-04-06 09:20:58 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -18,7 +18,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Control;
 
 import org.eclipse.jem.internal.proxy.common.*;

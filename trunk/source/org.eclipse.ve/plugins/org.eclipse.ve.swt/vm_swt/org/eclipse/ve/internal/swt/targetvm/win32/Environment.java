@@ -10,11 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Environment.java,v $
- *  $Revision: 1.2 $  $Date: 2005-07-08 17:51:50 $ 
+ *  $Revision: 1.3 $  $Date: 2009-04-06 09:20:58 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.win32;
 
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.ShellListener;
+import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.jem.internal.proxy.common.IVMServer;
