@@ -30,8 +30,10 @@
          id="org.eclipse.ve.sdk"
          version="0.0.0"/>
          
+   <!-- https://bugs.eclipse.org/bugs/show_bug.cgi?id=271381 - Cannot compile examples
    <includes
          id="org.eclipse.ve.examples"
          version="0.0.0"/>
+    -->
 
 </feature>
