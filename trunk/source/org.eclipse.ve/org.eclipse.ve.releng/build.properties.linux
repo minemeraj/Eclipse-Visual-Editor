@@ -1,6 +1,6 @@
 ## BEGIN PROJECT BUILD PROPERTIES ##
 
-thirdPartyDownloadLicenseAcceptance="I accept"
+#thirdPartyDownloadLicenseAcceptance="I accept"
 
 projectid=tools.ve
 zipPrefix=VE
@@ -16,11 +16,13 @@ flattenDependencies=true
 parallelCompilation=true
 generateFeatureVersionSuffix=true
 
+#basebuilderBranch=r342_v20090210
 localSourceCheckoutDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.ve.tree
 relengBuilderDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.ve.tree/org.eclipse.ve.releng
 relengBaseBuilderDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.releng.basebuilder
 relengCommonBuilderDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.dash.common.releng
 
+# TODO: need to include mac and win platforms when building on linux?
 dependencyURLs=\
 http://download.eclipse.org/eclipse/downloads/drops/R-3.4.2-200902111700/eclipse-SDK-3.4.2-linux-gtk.tar.gz,\
 http://download.eclipse.org/modeling/emf/emf/downloads/drops/2.4.2/R200902171115/emf-runtime-2.4.2.zip,\
