@@ -1,0 +1,2 @@
+!*** Copied from http://download.eclipse.org/tools/orbit/downloads/drops/I20090401212847/orbitBundles-I20090401212847.map
+plugin@com.ibm.icu,3.4.5=GET,http://download.eclipse.org/tools/orbit/downloads/drops/I20090401212847/bundles/com.ibm.icu_3.4.5.jar
