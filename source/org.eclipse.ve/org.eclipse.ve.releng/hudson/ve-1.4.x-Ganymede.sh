@@ -70,7 +70,7 @@ touch ${writableBuildRoot}/.cvspass
 relengBaseBuilderDir="${writableBuildRoot}/org.eclipse.releng.basebuilder"
 relengCommonBuilderDir="${writableBuildRoot}/org.eclipse.dash.common.releng"
 # symlink basebuilder and common.releng; alternatively, if you omit this, they'll be checked out in start.sh
-ln -s ${cvsProjectBaseDir}/org.eclipse.releng.basebuilder ${writableBuildRoot}/
+#ln -s ${cvsProjectBaseDir}/org.eclipse.releng.basebuilder ${writableBuildRoot}/
 ln -s ${cvsProjectBaseDir}/org.eclipse.dash.common.releng ${writableBuildRoot}/
 
 #symlink local copy of org.eclipse.ve.releng instead of fetching from CVS (so tweaks for local Hudson are preserved)
