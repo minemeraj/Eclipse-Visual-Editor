@@ -1,16 +1,17 @@
 !*** Web Tools' JEE contributions: Java EMF Model (JEM)
-plugin@org.eclipse.jem=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem
-plugin@org.eclipse.jem.beaninfo=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.beaninfo
-plugin@org.eclipse.jem.beaninfo.common=v20081211FinalVersion,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.beaninfo
-plugin@org.eclipse.jem.beaninfo.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.beaninfo.ui
-plugin@org.eclipse.jem.beaninfo.vm=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.beaninfo.vm
-plugin@org.eclipse.jem.beaninfo.vm.common=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.beaninfo.vm.common
-plugin@org.eclipse.jem.proxy=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.proxy
-plugin@org.eclipse.jem.ui=R3_0_4,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.ui
-plugin@org.eclipse.jem.workbench=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.workbench
-plugin@org.eclipse.jem.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/tests/org.eclipse.jem.tests
+!*** plugin@org.eclipse.jem=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem
+!*** plugin@org.eclipse.jem.beaninfo=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.beaninfo
+!*** plugin@org.eclipse.jem.beaninfo.ui=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.beaninfo.ui
+!*** plugin@org.eclipse.jem.beaninfo.vm=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.beaninfo.vm
+!*** plugin@org.eclipse.jem.beaninfo.vm.common=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.beaninfo.vm.common
+!*** plugin@org.eclipse.jem.proxy=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.proxy
+!*** plugin@org.eclipse.jem.workbench=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.workbench
+!*** plugin@org.eclipse.jem.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/tests/org.eclipse.jem.tests
 
-plugin@org.eclipse.jem.util=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,common/plugins/org.eclipse.jem.util
+!*** plugin@org.eclipse.jem.util=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,common/plugins/org.eclipse.jem.util
+
+plugin@org.eclipse.jem.beaninfo.common=v20081211FinalVersion,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.beaninfo
+plugin@org.eclipse.jem.ui=R3_0_4,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,jeetools/plugins/org.eclipse.jem.ui
 
 feature@org.eclipse.jem.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.jem.sdk-feature
 feature@org.eclipse.jem=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.jem-feature
