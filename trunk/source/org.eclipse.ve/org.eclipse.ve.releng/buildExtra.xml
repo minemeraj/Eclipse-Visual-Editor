@@ -36,7 +36,7 @@
 			<property name="url" value="${tools.gef.runtime.url}" />
 			<property name="file" value="${tools.gef.runtime.file}" />
 		</ant>
-		<ant target="getDependency"
+		<!-- <ant target="getDependency"
 		     antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
 			<property name="url" value="${webtools.wtp.jst.url}" />
 			<property name="file" value="${webtools.wtp.jst.file}" />
@@ -45,6 +45,6 @@
 		     antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
 			<property name="url" value="${webtools.wtp.jst.Automated.Tests.url}" />
 			<property name="file" value="${webtools.wtp.jst.Automated.Tests.file}" />
-		</ant>
+		</ant> -->
 	</target>
 </project>
