@@ -1,0 +1,3 @@
+!*** from http://releases.mozilla.org/pub/mozilla.org/xulrunner/releases/1.8.1.3/contrib/eclipse/
+feature@org.mozilla.xpcom.feature,1.8.1.3-20080312=GET,http://releases.mozilla.org/pub/mozilla.org/xulrunner/releases/1.8.1.3/contrib/eclipse/features/org.mozilla.xpcom.feature_1.8.1.3-20080312.jar
+plugin@org.mozilla.xpcom,1.8.1.3-20080312=GET,http://releases.mozilla.org/pub/mozilla.org/xulrunner/releases/1.8.1.3/contrib/eclipse/plugins/org.mozilla.xpcom_1.8.1.3-20080312.jar
