@@ -22,5 +22,15 @@
 			<property name="file" value="${tools.gef.runtime.file}" />
 			<property name="unpackDest" value="${dropins-home}/gef" />
 		</ant>
+		<ant target="getTestDependency"
+		     antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
+			<property name="url" value="${webtools.wtp.jst.url}" />
+			<property name="file" value="${webtools.wtp.jst.file}" />
+		</ant>
+		<ant target="getTestDependency"
+		     antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
+			<property name="url" value="${webtools.wtp.jst.Automated.Tests.url}" />
+			<property name="file" value="${webtools.wtp.jst.Automated.Tests.file}" />
+		</ant>
 	</target>
 </project>
