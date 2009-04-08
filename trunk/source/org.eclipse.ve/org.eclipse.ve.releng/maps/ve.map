@@ -7,7 +7,7 @@ plugin@org.eclipse.ve.jfc=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools
 plugin@org.eclipse.ve.swt=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/plugins/org.eclipse.ve.swt
 plugin@org.eclipse.ve.doc=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/doc/org.eclipse.ve.doc
 
-plugin@org.eclipse.ve.examples=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/plugins/org.eclipse.ve.examples
+plugin@org.eclipse.ve.examples=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/examples/org.eclipse.ve.examples
 plugin@org.eclipse.ve.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/tests/org.eclipse.ve.tests
 
 feature@org.eclipse.ve.all=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.all-feature
