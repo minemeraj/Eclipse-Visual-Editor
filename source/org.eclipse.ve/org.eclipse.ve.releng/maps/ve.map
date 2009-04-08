@@ -1,6 +1,5 @@
 plugin@org.eclipse.ve.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/plugins/org.eclipse.ve.sdk
-
-plugin@org.eclipse.ve=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve
+plugin@org.eclipse.ve=CVS,tag=HEAD,cvsRoot=:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,path=org.eclipse.ve/plugins/org.eclipse.ve,,,
 plugin@org.eclipse.ve.cde=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.cde
 plugin@org.eclipse.ve.java.core=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.java.core
 plugin@org.eclipse.ve.propertysheet=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.propertysheet
