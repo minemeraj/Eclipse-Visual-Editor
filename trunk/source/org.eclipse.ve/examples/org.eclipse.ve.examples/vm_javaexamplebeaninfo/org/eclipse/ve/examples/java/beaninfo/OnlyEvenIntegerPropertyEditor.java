@@ -15,7 +15,7 @@ package org.eclipse.ve.examples.java.beaninfo;
  * Creation date: (10/17/00 4:43:02 PM)
  * @author: Joe Winchester
  */
-public class OnlyEvenIntegerPropertyEditor extends sun.beans.editors.IntEditor {
+public class OnlyEvenIntegerPropertyEditor extends sun.beans.editors.IntegerEditor {
 	protected Object fSource;
 /**
  * OnlyEvenIntegerPropertyEditor constructor comment.
