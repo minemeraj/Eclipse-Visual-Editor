@@ -1,4 +1,4 @@
-<project default="run" name="org.eclipse.*.releng/build.xml - Run a build using the Athena CBI">
+<project default="run" name="org.eclipse.ve.releng/build.xml - Run a build using the Athena CBI">
 	<target name="run">
 		<!-- 
 			1. You must check out the following projects to your workspace:
