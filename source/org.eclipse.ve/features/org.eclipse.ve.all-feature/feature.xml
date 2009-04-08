@@ -22,6 +22,10 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/tools/ve/updates/1.4/"/>
    </url>
 
+   <!-- includes
+         id="org.eclipse.ve.perfmsr.core"
+         version="0.0.0" -->
+         
    <includes
          id="org.eclipse.jem.sdk"
          version="0.0.0"/>
@@ -29,11 +33,9 @@
    <includes
          id="org.eclipse.ve.sdk"
          version="0.0.0"/>
-         
-   <!-- https://bugs.eclipse.org/bugs/show_bug.cgi?id=271381 - Cannot compile examples
+   
    <includes
          id="org.eclipse.ve.examples"
          version="0.0.0"/>
-    -->
 
 </feature>
