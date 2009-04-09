@@ -22,6 +22,38 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/tools/ve/updates/1.4/"/>
    </url>
 
+   <requires>
+      <import plugin="org.eclipse.emf.ecore.xmi" version="2.3.0" match="compatible"/>
+      <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jem.util" version="2.0.0" match="compatible"/>
+      <import plugin="org.eclipse.jem.proxy" version="2.0.0" match="compatible"/>
+      <import plugin="org.eclipse.jdt.core" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jem.workbench" version="2.0.0" match="compatible"/>
+      <import plugin="org.eclipse.jem" version="2.0.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.ecore.xmi" version="2.2.0" match="compatible"/>
+      <import plugin="org.eclipse.debug.core" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.ecore.change" version="2.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jem.beaninfo.vm" version="2.0.200" match="compatible"/>
+      <import plugin="org.eclipse.jem.beaninfo.vm.common" version="2.0.200" match="compatible"/>
+      <import plugin="org.eclipse.jdt.launching" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jdt.core" version="3.3.0" match="compatible"/>
+      <import plugin="org.eclipse.debug.core" version="3.3.0" match="compatible"/>
+      <import plugin="org.eclipse.core.runtime" version="3.3.0" match="compatible"/>
+      <import plugin="org.eclipse.ui" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jdt.ui" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jem.beaninfo" version="2.0.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.ide" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.debug.ui" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jdt.debug.ui" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.editors" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="compatible"/>
+      <import plugin="org.eclipse.core.resources" version="3.4.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.ecore" version="2.4.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.ecore.xmi" version="2.4.0" match="compatible"/>
+      <import plugin="com.ibm.icu" version="3.8.1.1" match="compatible"/>
+      <import plugin="org.eclipse.core.resources" version="3.2.0" match="compatible"/>
+   </requires>
+
    <plugin
          id="org.eclipse.jem"
          download-size="0"
@@ -35,21 +67,21 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.jem.beaninfo.vm"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.jem.beaninfo.vm.common"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.jem.proxy"
          download-size="0"
