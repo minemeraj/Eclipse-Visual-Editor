@@ -4,35 +4,71 @@
 	</target>
 
 	<target name="run">
-		<!-- TODO: write code that's hooked into o.e.d.commonbuilder.releng's build.xml to do extra configs (eg., for inserting 3rd party libs into plugins) 
+		<!-- If required, write code that's hooked into o.e.d.commonbuilder.releng's build.xml to do extra configs (eg., for inserting 3rd party libs into plugins) 
 		-->
 	</target>
 
 	<target name="extraPackaging">
-		
-		<!-- TODO: package JEM runtime + SDK - need runtime and SDK features too; no longer in WTP -->
+		<!-- for Galileo, need com.ibm.icu_[3.8-4.0].jar in update site, not yet 4.0.1 -->
+		<!-- for Ganymede, need com.ibm.icu_3.8+ in update site -->
+		<!-- DOES NOT WORK in Galileo - p2 cannot resolve a requirement on <=4.0.0 and =4.0.1
+		<if>
+			<not>
+				<available file="${downloadsDir}/eclipse/plugins/com.ibm.icu_3.8.1.v20080530.jar" type="file" />
+			</not>
+			<then>
+				<mkdir dir="${downloadsDir}/eclipse/plugins" />
+				<get dest="${downloadsDir}/eclipse/plugins/com.ibm.icu_3.8.1.v20080530.jar"
+				     usetimestamp="true"
+				     src="http://download.eclipse.org/tools/orbit/downloads/drops/R20080807152315/bundles/com.ibm.icu_3.8.1.v20080530.jar"
+				/>
+			</then>
+		</if>
+		<mkdir dir="${buildDirectory}/${buildLabel}" />
+		<zip destfile="${buildDirectory}/${buildLabel}/${masterZip}" update="true">
+			<fileset dir="${downloadsDir}" includes="eclipse/plugins/com.ibm.icu_3.8*.jar" />
+		</zip>
+		-->
 
-		<!-- build examples -->
-		<zip destfile="${buildDirectory}/${buildLabel}/VE-examples-${buildAlias}.zip" update="true">
+		<!-- package JEM SDK + runtime zips -->
+		<zip destfile="${buildDirectory}/${buildLabel}/JEM-SDK-${buildAlias}.zip" update="true">
 			<zipfileset src="${buildDirectory}/${buildLabel}/${allZip}" dirmode="775" filemode="664">
-				<include name="**/org.eclipse.*.examples*" />
-				<include name="**/org.eclipse.*.examples*/**" />
-				<include name="**/org.eclipse.*.examples*/**/**" />
+				<include name="**/org.eclipse.jem*" />
+				<include name="**/org.eclipse.jem*/**" />
+				<include name="**/org.eclipse.jem*/**/**" />
 			</zipfileset>
 		</zip>
-	
+
+		<zip destfile="${buildDirectory}/${buildLabel}/JEM-runtime-${buildAlias}.zip" update="true">
+			<zipfileset src="${buildDirectory}/${buildLabel}/${allZip}" dirmode="775" filemode="664">
+				<include name="**/org.eclipse.jem*" />
+				<include name="**/org.eclipse.jem*/**" />
+				<include name="**/org.eclipse.jem*/**/**" />
+
+				<exclude name="**/org.eclipse.jem.sdk_*" />
+				<exclude name="**/org.eclipse.jem.sdk_*/**" />
+				<exclude name="**/org.eclipse.jem.sdk_*/**/**" />
+
+				<exclude name="**/org.eclipse.jem.doc*" />
+				<exclude name="**/org.eclipse.jem.doc*/**" />
+				<exclude name="**/org.eclipse.jem.doc*/**/**" />
+
+				<exclude name="**/org.eclipse.jem.source*" />
+				<exclude name="**/org.eclipse.jem.source*/**" />
+				<exclude name="**/org.eclipse.jem.source*/**/**" />
+			</zipfileset>
+		</zip>
+
 	</target>
-	
-	<target name="getDependencies">	
-		<!-- TODO: if your project requires more dependencies, add them here; if it does not require all of these, remove those not required -->
+
+	<target name="getDependencies">
+		<!-- if your project requires more dependencies, add them here; if it does not require all of these, remove those not required -->
 		<echo message="Download, then unpack EMF, GEF" />
-		<ant target="getDependency"
-		     antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
+		<ant target="getDependency" antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
 			<property name="url" value="${modeling.emf.runtime.url}" />
 			<property name="file" value="${modeling.emf.runtime.file}" />
 		</ant>
-		<ant target="getDependency"
-		     antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
+		<ant target="getDependency" antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
 			<property name="url" value="${tools.gef.runtime.url}" />
 			<property name="file" value="${tools.gef.runtime.file}" />
 		</ant>
