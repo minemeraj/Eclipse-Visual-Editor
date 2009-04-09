@@ -25,7 +25,7 @@
 	
 	<target name="getDependencies">	
 		<!-- TODO: if your project requires more dependencies, add them here; if it does not require all of these, remove those not required -->
-		<echo message="Download, then unpack EMF, GEF, WTP-WST" />
+		<echo message="Download, then unpack EMF, GEF" />
 		<ant target="getDependency"
 		     antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
 			<property name="url" value="${modeling.emf.runtime.url}" />
@@ -36,15 +36,5 @@
 			<property name="url" value="${tools.gef.runtime.url}" />
 			<property name="file" value="${tools.gef.runtime.file}" />
 		</ant>
-		<!-- <ant target="getDependency"
-		     antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
-			<property name="url" value="${webtools.wtp.jst.url}" />
-			<property name="file" value="${webtools.wtp.jst.file}" />
-		</ant>
-		<ant target="getDependency"
-		     antfile="${relengCommonBuilderDir}/tools/scripts/getDependencies.xml">
-			<property name="url" value="${webtools.wtp.jst.Automated.Tests.url}" />
-			<property name="file" value="${webtools.wtp.jst.Automated.Tests.file}" />
-		</ant> -->
 	</target>
 </project>
