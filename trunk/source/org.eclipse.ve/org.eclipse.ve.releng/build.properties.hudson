@@ -10,7 +10,7 @@ buildType=N
 mainFeatureToBuildID=org.eclipse.ve.all
 testFeatureToBuildID=org.eclipse.ve.tests
 
-build.steps=buildZips,buildUpdate,buildTests,generateDigests,test,publish,cleanup
+build.steps=buildUpdate,buildTests,generateDigests,test,publish,cleanup
 
 flattenDependencies=true
 parallelCompilation=true
