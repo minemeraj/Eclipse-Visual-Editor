@@ -31,7 +31,7 @@
 		-->
 
 		<!-- package JEM SDK + runtime zips -->
-		<zip destfile="${buildDirectory}/${buildLabel}/JEM-SDK-${buildAlias}.zip" update="true">
+		<!-- <zip destfile="${buildDirectory}/${buildLabel}/JEM-SDK-${buildAlias}.zip" update="true">
 			<zipfileset src="${buildDirectory}/${buildLabel}/${allZip}" dirmode="775" filemode="664">
 				<include name="**/org.eclipse.jem*" />
 				<include name="**/org.eclipse.jem*/**" />
@@ -58,6 +58,7 @@
 				<exclude name="**/org.eclipse.jem.source*/**/**" />
 			</zipfileset>
 		</zip>
+		-->
 
 	</target>
 
