@@ -59,6 +59,8 @@
 			</zipfileset>
 		</zip>
 		-->
+		
+		<delete file="${buildDirectory}/${buildLabel}/${allZip}" quiet="true"/>
 
 	</target>
 
