@@ -60,6 +60,9 @@
 		-->
 		<property name="buildDir" value="${writableBuildRoot}/${buildType}${buildTimestamp}" />
 
+		<!-- instead of 1.4.0.HEAD, generate features/plugins with 1.4.0.vYYYYMMDDhhmm -->
+		<property name="forceContextQualifier" value="v${buildTimestamp}" />
+
 		<!-- invoke a new Eclipse process and launch the build from the common.releng folder -->
 		<property name="relengCommonBuilderDir" value="${workspaceDir}/org.eclipse.dash.common.releng" />
 		<ant antfile="${relengCommonBuilderDir}/buildAll.xml" target="runEclipse" dir="${relengCommonBuilderDir}" />
