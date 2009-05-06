@@ -83,10 +83,12 @@ ln -s ${thirdPartyJarsDir} ${writableBuildRoot}/
 thirdPartyJarsDir="${writableBuildRoot}/3rdPartyJars"
 
 # run a build - may have to pass in "-javaHome /usr/lib/jvm/java" or similar here if default JVM not found
+# until we're building from maps w/ tags in them, use -forceContextQualifier
+# once we're building from maps w/ tags, remove -forceContextQualifier flag 
 cd ${writableBuildRoot}/org.eclipse.dash.common.releng/tools/scripts
 ./start.sh -projectid ${projectid} -version ${version} -buildType ${buildType} -buildTimestamp ${buildTimestamp} \
   -writableBuildRoot ${writableBuildRoot} -thirdPartyJarsDir ${thirdPartyJarsDir} -downloadsDir ${downloadsDir} -buildDir ${buildDir} \
-  ${projRelengRoot} ${projRelengPath} ${EXTRAFLAGS} 2>&1
+  ${projRelengRoot} ${projRelengPath} -forceContextQualifier ${EXTRAFLAGS} 2>&1
 
 # remove file so workspace navigation is one click simpler
 rm -f ${writableBuildRoot}/.cvspass
