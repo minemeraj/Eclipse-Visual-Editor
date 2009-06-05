@@ -6,7 +6,7 @@ projectid=tools.ve
 zipPrefix=VE
 incubation=
 version=1.4.0
-buildType=N
+buildType=I
 mainFeatureToBuildID=org.eclipse.ve.all
 testFeatureToBuildID=org.eclipse.ve.tests
 
