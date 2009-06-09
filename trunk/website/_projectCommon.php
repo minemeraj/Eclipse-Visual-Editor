@@ -34,11 +34,7 @@ $cvsprojs = array ("ve" => "org.eclipse.ve");
 /* "cvsname" => array("shortname" => "cvsname") */
 $cvscoms = array();
 
-$projects = array(
-	"VE" => "ve",
-);
-$tmp = array_flip($projects);
-$bugcoms = preg_replace("/ /", "%20", $tmp);
+$defaultProj = "ve";
 
 $extraprojects = array(); //components with only downloads, no info yet, "prettyname" => "directory"
 $nodownloads = array(); //components with only information, no downloads, or no builds available yet, "projectkey"
