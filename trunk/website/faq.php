@@ -1,0 +1,1 @@
+<?php header("Location:http://www.eclipse.org/vep/WebContent/faq.html"); ?>
