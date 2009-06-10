@@ -58,6 +58,8 @@ $buildtypes = array(
 );
 
 $Nav->addCustomNav("About This Project", "/projects/project_summary.php?projectid=tools.ve", "", 1);
+$Nav->addNavSeparator("Visual Editor (VE)", "$rooturl/");
+
 $Nav->addNavSeparator("Downloads", "$downurl/vep/downloads/");
 $Nav->addCustomNav("Installation", "http://wiki.eclipse.org/VE/Installing", "_self", 2);
 $Nav->addCustomNav("Update Manager", "http://wiki.eclipse.org/VE/Update", "_self", 2);
