@@ -57,7 +57,6 @@ ob_end_clean();
 
 /* Note: Google Analytics moved to _projectCommon.php so it's on EVERY page */
 
-$trans = array_flip($projects);
 $pageTitle = "Visual Editor (VE) - Downloads";
 $pageKeywords = ""; // TODO: add something here
 $pageAuthor = "Nick Boldt";
