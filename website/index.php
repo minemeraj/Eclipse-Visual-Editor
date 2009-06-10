@@ -88,6 +88,7 @@ $App = new App(); $Nav = new Nav(); $Menu = new Menu(); include($App->getProject
 	        </td>
 	      </tr>
 	    </table>
+	    <p align="right"><i><a href="http://eclipse.org/vep/WebContent/main.php">Old VE Homepage</a></i></p>
 	</div>
            
 	<div id="rightcolumn">
