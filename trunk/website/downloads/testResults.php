@@ -14,7 +14,7 @@ else
 	$proj = "ve";
 }
 
-$projct = "/ve"
+$projct = "/ve";
 $projectName = explode("/",$PR); $projectName = sizeof($projectName)>1 ? strtoupper($projectName[1]) : strtoupper($projectName[0]);
 $PWD = getPWD("tools/ve/downloads/drops"); // see scripts.php
 
