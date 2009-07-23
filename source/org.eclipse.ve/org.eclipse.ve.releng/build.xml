@@ -37,7 +37,7 @@
 		-->
 
 		<!-- load properties and set timestamp for the build -->
-		<property file="build.properties.linux" />
+		<property file="build.properties" />
 		<tstamp>
 			<format property="buildTimestamp" pattern="yyyyMMddHHmm" />
 		</tstamp>
@@ -58,7 +58,7 @@
 			${writableBuildRoot}/${topprojectName}/${projectName}/downloads/drops/${version}/${buildType}${buildTimestamp} or
 			${writableBuildRoot}/${topprojectName}/${projectName}/${subprojectName}/downloads/drops/${version}/${buildType}${buildTimestamp}
 		-->
-		<property name="buildDir" value="${writableBuildRoot}/${buildType}${buildTimestamp}-${zipPrefix}" />
+		<property name="buildDir" value="${writableBuildRoot}/${buildType}${buildTimestamp}" />
 
 		<!-- instead of 1.4.0.HEAD, generate features/plugins with 1.4.0.vYYYYMMDDhhmm -->
 		<property name="forceContextQualifier" value="v${buildTimestamp}" />
