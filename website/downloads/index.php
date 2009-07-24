@@ -34,7 +34,7 @@ $extraZips = array();
 /* only required if using something other than the default 4; otherwise will be generated */
 $dls = array(
 	"/" => array( # use "/" because PDT has no parent or child projects/components
-		"PDT" => array(
+		"Visual Editor" => array(
 		 	"<acronym title=\"Click to download archived All-In-One p2 Repo Update Site\"><img alt=\"Click to download archived All-In-One p2 Repo Update Site\" src=\"/modeling/images/dl-icon-update-zip.gif\"/> <b style=\"color:green\">All-In-One Update Site</b></acronym>" => "Update",
 			"Automated Tests" => "Automated-Tests",
 		),
