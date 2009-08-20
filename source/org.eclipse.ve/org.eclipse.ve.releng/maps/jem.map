@@ -5,18 +5,22 @@ feature@org.eclipse.jem=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
 !*** Web Tools' JEE contributions: Java EMF Model (JEM) - available in 56M zip: http://download.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/wtp-jst-R-3.0.5-20090521045405.zip
 plugin@org.eclipse.jem,2.0.202=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem_2.0.202.v200810282000.jar,usetimestamp=true
 plugin@org.eclipse.jem.beaninfo,2.0.200=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.beaninfo_2.0.200.v200811261206.jar,usetimestamp=true
-plugin@org.eclipse.jem.beaninfo.source,2.0.200=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.beaninfo.source_2.0.200.v200811261206.jar,usetimestamp=true
 plugin@org.eclipse.jem.beaninfo.vm,2.0.200=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.beaninfo.vm_2.0.200.v200811260651.jar,usetimestamp=true
 plugin@org.eclipse.jem.beaninfo.vm.common,2.0.200=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.beaninfo.vm.common_2.0.200.v200811260651.jar,usetimestamp=true
+plugin@org.eclipse.jem.proxy,2.0.110=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.proxy_2.0.110.v200903042030.jar,usetimestamp=true
+plugin@org.eclipse.jem.ui,2.0.100=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.ui_2.0.100.v200806051600.jar,usetimestamp=true
+plugin@org.eclipse.jem.util,2.0.101=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.util_2.0.101.v200905140130.jar,usetimestamp=true
+plugin@org.eclipse.jem.workbench,2.0.102=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.workbench_2.0.102.v200810230530.jar,usetimestamp=true
+
+!*** JEM Source plugins
+plugin@org.eclipse.jem.beaninfo.source,2.0.200=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.beaninfo.source_2.0.200.v200811261206.jar,usetimestamp=true
 plugin@org.eclipse.jem.beaninfo.vm.common.source,2.0.200=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.beaninfo.vm.common.source_2.0.200.v200811260651.jar,usetimestamp=true
 plugin@org.eclipse.jem.beaninfo.vm.source,2.0.200=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.beaninfo.vm.source_2.0.200.v200811260651.jar,usetimestamp=true
-plugin@org.eclipse.jem.proxy,2.0.110=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.proxy_2.0.110.v200903042030.jar,usetimestamp=true
 plugin@org.eclipse.jem.proxy.source,2.0.110=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.proxy.source_2.0.110.v200903042030.jar,usetimestamp=true
 plugin@org.eclipse.jem.source,2.0.202=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.source_2.0.202.v200810282000.jar,usetimestamp=true
-plugin@org.eclipse.jem.tests,1.2.101=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.tests_1.2.101.v200904081630.jar,usetimestamp=true
-plugin@org.eclipse.jem.ui,2.0.100=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.ui_2.0.100.v200806051600.jar,usetimestamp=true
 plugin@org.eclipse.jem.ui.source,2.0.100=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.ui.source_2.0.100.v200806051600.jar,usetimestamp=true
-plugin@org.eclipse.jem.util,2.0.101=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.util_2.0.101.v200905140130.jar,usetimestamp=true
 plugin@org.eclipse.jem.util.source,2.0.101=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.util.source_2.0.101.v200905140130.jar,usetimestamp=true
-plugin@org.eclipse.jem.workbench,2.0.102=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.workbench_2.0.102.v200810230530.jar,usetimestamp=true
 plugin@org.eclipse.jem.workbench.source,2.0.102=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.workbench.source_2.0.102.v200810230530.jar,usetimestamp=true
+
+!*** JEM Tests plugin
+plugin@org.eclipse.jem.tests,1.2.101=GET,http://archive.eclipse.org/webtools/downloads/drops/R3.0/R-3.0.5-20090521045405/updateSite/plugins/org.eclipse.jem.tests_1.2.101.v200904081630.jar,usetimestamp=true,unpack=true
