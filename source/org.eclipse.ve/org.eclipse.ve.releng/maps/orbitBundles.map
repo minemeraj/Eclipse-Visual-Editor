@@ -1,7 +1,7 @@
 !*** copied from http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/orbitBundles-R20090529135407.map
-plugin@com.ibm.icu,3.6.1=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/bundles/com.ibm.icu_3.6.1.v20080530.jar
-plugin@com.ibm.icu,3.6.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/bundles/com.ibm.icu_3.6.0.v20080530.jar
-plugin@com.ibm.icu,4.0.1=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/bundles/com.ibm.icu_4.0.1.v20090415.jar
+!*** plugin@com.ibm.icu,3.6.1=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/bundles/com.ibm.icu_3.6.1.v20080530.jar
+!*** plugin@com.ibm.icu,3.6.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/bundles/com.ibm.icu_3.6.0.v20080530.jar
+!*** plugin@com.ibm.icu,4.0.1=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/bundles/com.ibm.icu_4.0.1.v20090415.jar
 plugin@com.ibm.icu,4.0.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/bundles/com.ibm.icu_4.0.0.v20081201.jar
-plugin@com.ibm.icu,3.8.1=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/bundles/com.ibm.icu_3.8.1.v20081217.jar
-plugin@com.ibm.icu,3.4.5=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/bundles/com.ibm.icu_3.4.5.jar
+!*** plugin@com.ibm.icu,3.8.1=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/bundles/com.ibm.icu_3.8.1.v20081217.jar
+!*** plugin@com.ibm.icu,3.4.5=GET,http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/bundles/com.ibm.icu_3.4.5.jar
