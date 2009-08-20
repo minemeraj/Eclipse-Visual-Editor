@@ -6,7 +6,7 @@ projectid=tools.ve
 zipPrefix=VE
 incubation=
 version=1.4.0
-buildType=I
+buildType=N
 mainFeatureToBuildID=org.eclipse.ve.all
 testFeatureToBuildID=org.eclipse.ve.tests
 
@@ -16,7 +16,7 @@ flattenDependencies=true
 parallelCompilation=true
 generateFeatureVersionSuffix=true
 
-localSourceCheckoutDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.ve.tree
+#localSourceCheckoutDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.ve.tree
 relengBuilderDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.ve.tree/org.eclipse.ve.releng
 relengBaseBuilderDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.releng.basebuilder
 relengCommonBuilderDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.dash.common.releng
