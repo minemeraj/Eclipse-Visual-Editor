@@ -8,12 +8,12 @@ plugin@org.eclipse.ve.swt=v20090605-0020,:pserver:anonymous@dev.eclipse.org:/cvs
 plugin@org.eclipse.ve.doc=v20090505-2035,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/doc/org.eclipse.ve.doc
 
 plugin@org.eclipse.ve.examples=v20090505-2035,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/examples/org.eclipse.ve.examples
-plugin@org.eclipse.ve.tests=v20090505-2035,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/tests/org.eclipse.ve.tests
+plugin@org.eclipse.ve.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/tests/org.eclipse.ve.tests
 
-feature@org.eclipse.ve.all=v20090505-2035,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.all-feature
-feature@org.eclipse.ve.sdk=v20090505-2035,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.sdk-feature
-feature@org.eclipse.ve=v20090505-2035,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve-feature
+feature@org.eclipse.ve.all=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.all-feature
+feature@org.eclipse.ve.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.sdk-feature
+feature@org.eclipse.ve=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve-feature
 feature@org.eclipse.ve.examples=v20090505-2035,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.examples-feature
-feature@org.eclipse.ve.tests=v20090505-2035,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.tests-feature
+feature@org.eclipse.ve.tests=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.tests-feature
 
-feature@org.eclipse.ve.perfmsr.core=v20090505-2035,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.perfmsr.core-feature
+feature@org.eclipse.ve.perfmsr.core=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.perfmsr.core-feature
