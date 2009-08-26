@@ -15,9 +15,9 @@ build.steps=buildUpdate,buildTests,generateDigests,test,publish,cleanup
 flattenDependencies=true
 parallelCompilation=true
 generateFeatureVersionSuffix=true
-individualSourceBundles=true
+#individualSourceBundles=true
 
-buildDir=/tmp/build/N-SNAPSHOT-VE
+#buildDir=/tmp/build/N-SNAPSHOT-VE
 #localSourceCheckoutDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.ve.tree
 relengBuilderDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.ve.tree/org.eclipse.ve.releng
 relengBaseBuilderDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.releng.basebuilder
