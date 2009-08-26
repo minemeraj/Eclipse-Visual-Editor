@@ -27,7 +27,7 @@
          id="org.eclipse.jem"
          version="0.0.0"/>
 
-   <plugin
+   <includes
          id="org.eclipse.jem.source"
          version="0.0.0"/>
 
