@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<?xml-stylesheet type="text/xsl" href="http://www.eclipse.org/projects/project-plan.xsl"?>
+<?xml-stylesheet type="text/xsl" href="project-plan-render.xsl"?>
 <plan plan-format="1.0" xmlns="http://www.eclipse.org/project/plan" xmlns:html="http://www.w3.org/1999/xhtml"
       name="Eclipse Visual Editor">
    <release projectid="tools.ve" version="1.5"/>
@@ -25,32 +25,29 @@
       <preamble>
          <html:div>
 As VE is dependency of numerous other projects and just a porting to new Eclipse Platform, VE will deliver its milestones within one week of
-the Eclipse Platform since the M6. Afterwards it is anticipated that VE will synchronize its
-milestones with the Galileo milestone schedule.
+the Eclipse Platform since the RC1. Afterwards it is anticipated that VE will synchronize its
+milestones with the Helios milestone schedule.
         </html:div>
       </preamble>
-		<milestone date="03/16/2009" milestone="M6"/>
-		<milestone date="05/04/2009" milestone="M7"/>
-		<milestone date="05/18/2009" milestone="RC1" />
-		<milestone date="05/25/2009" milestone="RC2" />
-		<milestone date="06/01/2009" milestone="RC3" />
-		<milestone date="06/08/2009" milestone="RC4" />
-		<milestone date="06/15/2009" milestone="RC5" />
-		<milestone date="06/28/2009" milestone="1.5.0" />
-      <postamble><html:div>As VE isn't part of Ganymede package, it will not produce maintenance releases
-to align with the Ganymede SR releases.</html:div></postamble>
+		<milestone date="05/18/2010" milestone="RC1" />
+		<milestone date="05/25/2010" milestone="RC2" />
+		<milestone date="06/01/2010" milestone="RC3" />
+		<milestone date="06/08/2010" milestone="RC4" />
+		<milestone date="06/15/2010" milestone="RC5" />
+		<milestone date="06/28/2010" milestone="1.5.0" />
+      <postamble><html:div>VE will produce maintenance releases to align with the galileo SR releases.</html:div></postamble>
    </release_milestones>
    <target_environments>
-     <html:div><p>In order to remain current, each release of an Eclipse project targets reasonably current  versions of underlying operating environments and other Eclipse projects on  which it depends. </p>
-<p>Most of Eclipse is &quot;pure&quot; Javaï code and has no direct  dependence on the underlying operating system. The chief dependence is on the  Eclipse Platform, and on the Java 2 Platform that runs it.</p>
-<p>The Visual Editor Project version 1.2 release depends on the following:</p>
+     <html:div><p>In order to remain current, each release of an Eclipse project targets reasonably current versions of underlying operating environments and other Eclipse projects on which it depends. </p>
+<p>Most of Eclipse is &quot;pure&quot; Javaï code and has no direct dependence on the underlying operating system. The chief dependence is on the Eclipse Platform, and on the Java 2 Platform that runs it.</p>
+<p>The Visual Editor Project version 1.5 release depends on the following:</p>
 <ul>
   <li>Java 2 Platform, version 1.4.2<br />
   </li>
-  <li>Eclipse Platform 3.5</li>
-  <li>Windows 2000/XP</li>
+  <li>Eclipse Platform 3.6</li>
+  <li>Windows 2000/XP/Windows7</li>
   <li>Linux/GTK</li>
-  <li>MAC OS<br />
+  <li>MAC OS Carbon/<br />
   </li>
 </ul>
 <p> The 1.5 release of Visual Editor Project is designed to run on any configuration supporting the above components.</p>
@@ -75,12 +72,12 @@ to align with the Ganymede SR releases.</html:div></postamble>
       <td width="453">Sun Java 2 Standard Edition 5.0 Update 4 for Linux x86<br /></td>
     </tr>
     <tr>
-      <td width="205">Microsoft Windows <strong>Vista</strong><br />
+      <td width="205">Microsoft Windows <strong>Vista</strong>/<strong>7</strong> <br />
       </td>
       <td width="76">Intel x86</td>
       <td width="59">Win32<br />
       </td>
-      <td width="453">Sun Java 2 Standard Edition 5.0 Update 4 for Microsoft   	Windows <br /></td>
+      <td width="453">Sun Java 2 Standard Edition 5.0 Update 4 for Microsoft Windows <br /></td>
     </tr>
   </tbody>
 </table>
@@ -91,7 +88,7 @@ to align with the Ganymede SR releases.</html:div></postamble>
    </target_environments>
    <compatibility_with_previous_releases>
        <html:div>
-       Eclipse Visual Editor Project 1.5 will be compatible with Visual Editor Project 1.2.
+       Eclipse Visual Editor Project 1.5 will be compatible with Visual Editor Project 1.4.
        </html:div>
    </compatibility_with_previous_releases>
 	<themes_and_priorities>
