@@ -2,7 +2,7 @@
 
 $Nav->setLinkList(null);
 
-$PR = "vep";
+$PR = "ve";
 $projectName = "VE";
 
 $isBuildServer = (preg_match("/^(emft|modeling|build)\.eclipse\.org$/", $_SERVER["SERVER_NAME"]));
