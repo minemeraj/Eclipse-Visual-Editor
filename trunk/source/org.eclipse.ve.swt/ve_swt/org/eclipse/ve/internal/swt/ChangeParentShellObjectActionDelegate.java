@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChangeParentShellObjectActionDelegate.java,v $
- *  $Revision: 1.9 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.10 $  $Date: 2009-09-30 12:21:42 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -193,7 +193,6 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 	 */
 	private class ChangeParentDialog extends Dialog {
 		protected List shellList;
-		protected Composite mainComposite = null;
 		protected org.eclipse.swt.widgets.List selectionList = null;
 
 		/**

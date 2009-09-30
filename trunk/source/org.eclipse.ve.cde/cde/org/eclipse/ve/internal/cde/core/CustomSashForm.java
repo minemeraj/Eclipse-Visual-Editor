@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomSashForm.java,v $
- *  $Revision: 1.9 $  $Date: 2005-12-05 22:10:14 $ 
+ *  $Revision: 1.10 $  $Date: 2009-09-30 12:16:49 $ 
  */
 
 import java.util.*;
@@ -55,7 +55,6 @@ public class CustomSashForm extends SashForm {
 	private static final int NO_ARROW = -1;
 	private static class SashInfo {
 		public Sash sash;
-		public boolean enabled;	// Whether this sashinfo is enabled (i.e. if there is more than one, this will be disabled).
 		public int weight = NO_WEIGHT;	// If slammed to an edge this is the restore weight. -1 means not slammed. This is the weight in the next form (i.e. sash[0] == weight[1].
 		public int cursorOver = NO_ARROW;	// Which arrow is cursor over,
 		public boolean sashBorderLeft;	// Draw sash border left/top
@@ -217,9 +216,6 @@ public class CustomSashForm extends SashForm {
 				if (newSash == null) 
 					newSash = (Sash) children[i];
 				else {
-					// We have more than one sash, so need to disable current sash, if we have one.
-					if (currentSashInfo != null)
-						currentSashInfo.enabled = false;
 					return;	// Don't go on.
 				}	
 		}
