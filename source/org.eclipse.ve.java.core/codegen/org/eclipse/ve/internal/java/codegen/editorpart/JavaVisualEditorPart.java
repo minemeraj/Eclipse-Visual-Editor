@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.169 $  $Date: 2006-05-17 20:14:53 $ 
+ *  $Revision: 1.170 $  $Date: 2009-09-30 12:19:59 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -2375,12 +2375,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// Can't happen, but it throws it
 			}
 		}
-
-		
-		public boolean isRemoveVECache() {
-			return removeVECache;
-		}
-
 		
 		public void setRemoveVECache(boolean removeVECache) {
 			this.removeVECache = removeVECache;
