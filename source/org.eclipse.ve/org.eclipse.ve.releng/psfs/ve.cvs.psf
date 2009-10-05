@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psf version="2.0">
+<provider id="org.eclipse.team.cvs.core.cvsnature">
+
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.sdk,org.eclipse.ve.sdk,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve,org.eclipse.ve,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.cde,org.eclipse.ve.cde,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.java.core,org.eclipse.ve.java.core,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.propertysheet,org.eclipse.ve.propertysheet,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.jfc,org.eclipse.ve.jfc,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.swt,org.eclipse.ve.swt,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/doc/org.eclipse.ve.doc,org.eclipse.ve.doc,v20090826-1446"/>
+
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/examples/org.eclipse.ve.examples,org.eclipse.ve.examples,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/tests/org.eclipse.ve.tests,org.eclipse.ve.tests,v20090826-1446"/>
+
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.all-feature,org.eclipse.ve.all,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.sdk-feature,org.eclipse.ve.sdk,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve-feature,org.eclipse.ve,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.examples-feature,org.eclipse.ve.examples,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.tests-feature,org.eclipse.ve.tests,v20090826-1446"/>
+
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.perfmsr.core-feature,org.eclipse.ve.perfmsr.core,v20090826-1446"/>
+</provider>
+</psf>
