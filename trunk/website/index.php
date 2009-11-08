@@ -95,11 +95,11 @@ $App = new App(); $Nav = new Nav(); $Menu = new Menu(); include($App->getProject
 		<div class="sideitem">
 			<h6>VEP Components</h6>
 			<ul>
-				<li><a href="docs/components/cde/cde.html"> CDE </a></li>
-				<li><a href="docs/components/core/core.html"> Core </a></li>
-				<li><a href="docs/components/jfc/jfc.html"> JFC/Swing</a> </li>
-				<li><a href="docs/components/javamodel/javaModel.html"> Java Model</a></li>
-				<li><a href="docs/components/swt/swt.html">SWT</a></li>
+				<li><a href="WebContent/docs/components/cde/cde.html"> CDE </a></li>
+				<li><a href="WebContent/docs/components/core/core.html"> Core </a></li>
+				<li><a href="WebContent/docs/components/jfc/jfc.html"> JFC/Swing</a> </li>
+				<li><a href="WebContent/docs/components/javamodel/javaModel.html"> Java Model</a></li>
+				<li><a href="WebContent/docs/components/swt/swt.html">SWT</a></li>
 			</ul>
 		</div>
 
