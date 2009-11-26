@@ -10,7 +10,7 @@ buildType=N
 mainFeatureToBuildID=org.eclipse.ve.all
 testFeatureToBuildID=org.eclipse.ve.tests
 
-build.steps=buildUpdate,buildTests,generateDigests,test,publish,cleanup
+build.steps=buildUpdate,buildTests,generateDigests,testLocal,publish,cleanup
 
 flattenDependencies=true
 parallelCompilation=true
@@ -18,7 +18,7 @@ generateFeatureVersionSuffix=true
 #individualSourceBundles=true
 
 #buildDir=/tmp/build/N-SNAPSHOT-VE
-#localSourceCheckoutDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.ve.tree
+localSourceCheckoutDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.ve.tree
 relengBuilderDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.ve.tree/org.eclipse.ve.releng
 relengBaseBuilderDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.releng.basebuilder
 relengCommonBuilderDir=/home/nboldt/eclipse/workspace-jboss/org.eclipse.dash.common.releng
