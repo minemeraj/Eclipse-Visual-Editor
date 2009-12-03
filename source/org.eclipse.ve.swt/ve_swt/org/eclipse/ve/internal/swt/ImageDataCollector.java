@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.4 $  $Date: 2005-11-08 22:33:17 $ 
+ *  $Revision: 1.5 $  $Date: 2009-12-03 04:10:42 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -81,7 +81,11 @@ public class ImageDataCollector implements ICallback {
 					dataCollectorType = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.unix.ImageCapture"); //$NON-NLS-1$
 			}
 			else if (Platform.OS_MACOSX.equals(Platform.getOS())) {
-				dataCollectorType = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.macosx.ImageCapture"); //$NON-NLS-1$
+				if (Platform.WS_COCOA.equals(Platform.getWS()))
+					dataCollectorType = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.macosx.cocoa.ImageCapture"); //$NON-NLS-1$
+				else if (Platform.WS_CARBON.equals(Platform.getWS()))
+					dataCollectorType = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.macosx.ImageCapture"); //$NON-NLS-1$
+
 			}
 		
 			if (dataCollectorType != null) {
