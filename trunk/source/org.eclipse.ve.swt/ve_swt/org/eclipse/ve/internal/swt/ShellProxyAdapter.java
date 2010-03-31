@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.21 $ $Date: 2005-08-24 23:52:56 $
+ * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.22 $ $Date: 2010-03-31 22:00:33 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -78,6 +78,13 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 		
 		if (onFreeForm)
 			shellManager.packWindowOnValidate(!(getEObject().eIsSet(sfControlBounds) || getEObject().eIsSet(sfControlSize)), expression);
+
+		// set shell to transparent.
+		IStandardBeanTypeProxyFactory beanTypeProxyFactory = expression.getRegistry().getBeanTypeProxyFactory();
+		IBeanTypeProxy beanTypeProxy = beanTypeProxyFactory.getBeanTypeProxy("org.eclipse.swt.widgets.Shell");
+		IMethodProxy methodProxy = beanTypeProxy.getMethodProxy("setAlpha", int.class.getName());
+		IIntegerBeanProxy alphaBeanProxy = expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(0);
+		expression.createSimpleMethodInvoke(methodProxy, result, new IProxy[] { alphaBeanProxy}, true);
 
 		return result;
 	}
