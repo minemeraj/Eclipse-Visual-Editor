@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.42 $ $Date: 2005-12-14 21:44:40 $
+ * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.43 $ $Date: 2010-03-31 22:00:33 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -30,11 +30,15 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.initParser.tree.NoExpressionValueException;
+import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
+import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable;
 
 import org.eclipse.ve.internal.cde.core.ErrorNotifier;
 
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 /**
  * Proxy adapter for swt.Composites.
@@ -413,6 +417,49 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 					
 			}
 		}
+	}
+	
+	protected IProxy primInstantiateThisPart(IProxyBeanType targetClass, final IExpression expression) throws AllocationException {
+		IProxy proxy = super.primInstantiateThisPart(targetClass, expression);
+		if (proxy != null) {
+			if (proxy.isBeanProxy()) {
+				setParentTransparent((IBeanProxy) proxy, expression);
+			} else {
+				((ExpressionProxy) proxy).addProxyListener(new ExpressionProxy.ProxyAdapter() {
+
+					public void proxyResolved(ProxyEvent event) {
+						setParentTransparent(event.getProxy(), expression);
+					}
+				});
+			}
+		}
+		return proxy;
+	}
+
+	protected void setParentTransparent(final IBeanProxy beanProxy, IExpression expression) {
+		IStandardBeanTypeProxyFactory beanTypeProxyFactory = expression.getRegistry().getBeanTypeProxyFactory();
+
+		IBeanTypeProxy controlBeanTypeProxy = beanTypeProxyFactory.getBeanTypeProxy("org.eclipse.swt.widgets.Control");
+		final IMethodProxy getShellMethodProxy = controlBeanTypeProxy.getMethodProxy("getShell");
+		final IBeanProxy shellBeanProxy = (IBeanProxy) JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(getShellMethodProxy
+				.getProxyFactoryRegistry(), new DisplayRunnable() {
+			public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
+				return getShellMethodProxy.invoke(beanProxy);
+			}
+		});
+		if (shellBeanProxy != null) {
+			IBeanTypeProxy beanTypeProxy = beanTypeProxyFactory.getBeanTypeProxy("org.eclipse.swt.widgets.Shell");
+			final IMethodProxy methodProxy = beanTypeProxy.getMethodProxy("setAlpha", int.class.getName());
+			final IIntegerBeanProxy alphaBeanProxy = expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(0);
+//			expression.createSimpleMethodInvoke(methodProxy, shellBeanProxy, new IProxy[] { alphaBeanProxy}, true);
+			JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(methodProxy
+					.getProxyFactoryRegistry(), new DisplayRunnable() {
+				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
+					return methodProxy.invoke(shellBeanProxy, new IBeanProxy[]{ alphaBeanProxy});
+				}
+			});
+		}
+
 	}
 
 }
