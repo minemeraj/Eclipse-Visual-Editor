@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.7 $  $Date: 2009-04-06 09:20:58 $ 
+ *  $Revision: 1.8 $  $Date: 2010-05-14 14:31:53 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -183,27 +183,27 @@ public abstract class ImageCapture implements ICallback {
 	private void sendPalette(ImageData imageData) { 
 		if (imageData.palette.isDirect) {
 			try {
-				os.writeByte(ImageDataConstants.CMD_DIRECT);
-				os.writeByte((byte) imageData.depth);
-				os.writeInt(imageData.palette.redMask);
-				os.writeInt(imageData.palette.greenMask);
-				os.writeInt(imageData.palette.blueMask);
+				writeByte(ImageDataConstants.CMD_DIRECT);
+				writeByte((byte) imageData.depth);
+				writeInt(imageData.palette.redMask);
+				writeInt(imageData.palette.greenMask);
+				writeInt(imageData.palette.blueMask);
 			} catch (IOException e) {
 				processTerminatingException(e);
 				return;
 			}
 		} else {
 			try {
-				os.writeByte(ImageDataConstants.CMD_INDEXED);
-				os.writeByte((byte) imageData.depth);
-				os.writeInt(imageData.transparentPixel);
+				writeByte(ImageDataConstants.CMD_INDEXED);
+				writeByte((byte) imageData.depth);
+				writeInt(imageData.transparentPixel);
 				RGB[] rgbs = imageData.palette.getRGBs();
-				os.writeInt(rgbs.length);
-				for (int i=0; i<rgbs.length; i++) {
+				writeInt(rgbs.length);
+				for (int i = 0; i < rgbs.length; i++) {
 					RGB rgb = rgbs[i];
-					os.writeByte(rgb.red);
-					os.writeByte(rgb.green);
-					os.writeByte(rgb.blue);
+					writeByte(rgb.red);
+					writeByte(rgb.green);
+					writeByte(rgb.blue);
 				}
 			} catch (IOException e) {
 				processTerminatingException(e);
@@ -229,10 +229,10 @@ public abstract class ImageCapture implements ICallback {
 					return;
 				try {
 					// Write the dimensions, the palette, and then the data.
-					os.writeByte(ImageDataConstants.CMD_DIM);
-					os.writeInt(imageData.width);
-					os.writeInt(imageData.height);
-					
+					writeByte(ImageDataConstants.CMD_DIM);
+					writeInt(imageData.width);
+					writeInt(imageData.height);
+
 					// Send the palette
 					sendPalette(imageData);
 					if (imageData.depth <= 8)
@@ -265,16 +265,28 @@ public abstract class ImageCapture implements ICallback {
 		};
 		t.start();
 	}
-	
-	private void sendByteData(ImageData imageData) {
+
+	private synchronized void writeByte(int b) throws IOException {
+		if (os != null) {
+			os.writeByte(b);
+		}
+	}
+
+	private synchronized void writeInt(int i) throws IOException {
+		if (os != null) {
+			os.writeInt(i);
+		}
+	}
+
+	private synchronized void sendByteData(ImageData imageData) {
 		byte[] pixels = new byte[imageData.width];
 		try {
 			for (int row = 0; row < imageData.height; row++) {
 				if (testForAbort())
 					return;
 				imageData.getPixels(0, row, pixels.length, pixels, 0);
-				os.writeByte(ImageDataConstants.CMD_BYTES);
-				os.writeInt(row);
+				writeByte(ImageDataConstants.CMD_BYTES);
+				writeInt(row);
 
 				// Send with simple compression.
 				int col = 0;
@@ -296,15 +308,15 @@ public abstract class ImageCapture implements ICallback {
 					}
 					// We have a nondup group and complete dup group, write them out.
 					if (startNonDup < startDup) {
-						os.writeByte(ImageDataConstants.CMD_NOREPEAT);
-						os.writeInt(startDup - startNonDup);
+						writeByte(ImageDataConstants.CMD_NOREPEAT);
+						writeInt(startDup - startNonDup);
 						while (startNonDup < startDup)
-							os.writeByte(pixels[startNonDup++]);
+							writeByte(pixels[startNonDup++]);
 					}
 
-					os.writeByte(ImageDataConstants.CMD_REPEAT);
-					os.writeInt(dupCnt);
-					os.writeByte(startDupPixel);
+					writeByte(ImageDataConstants.CMD_REPEAT);
+					writeInt(dupCnt);
+					writeByte(startDupPixel);
 
 					// Start search with current loc.
 					startDup = startNonDup = col;
@@ -321,16 +333,16 @@ public abstract class ImageCapture implements ICallback {
 				}
 				// We have a nondup group and a possible complete dup group, write them out.
 				if (startNonDup < startDup) {
-					os.writeByte(ImageDataConstants.CMD_NOREPEAT);
-					os.writeInt(startDup - startNonDup);
+					writeByte(ImageDataConstants.CMD_NOREPEAT);
+					writeInt(startDup - startNonDup);
 					while (startNonDup < startDup)
-						os.writeByte(pixels[startNonDup++]);
+						writeByte(pixels[startNonDup++]);
 				}
 
 				if (dupCnt > 0) {
-					os.writeByte(ImageDataConstants.CMD_REPEAT);
-					os.writeInt(dupCnt);
-					os.writeByte(startDupPixel);
+					writeByte(ImageDataConstants.CMD_REPEAT);
+					writeInt(dupCnt);
+					writeByte(startDupPixel);
 				}
 			}
 		} catch (IOException e) {
@@ -339,16 +351,16 @@ public abstract class ImageCapture implements ICallback {
 		}
 
 	}
-	
-	private void sendIntData(ImageData imageData) {
+
+	private synchronized void sendIntData(ImageData imageData) {
 		int[] pixels = new int[imageData.width];
 		try {
 			for (int row = 0; row < imageData.height; row++) {
 				if (testForAbort())
 					return;
 				imageData.getPixels(0, row, pixels.length, pixels, 0);
-				os.writeByte(ImageDataConstants.CMD_INTS);
-				os.writeInt(row);
+				writeByte(ImageDataConstants.CMD_INTS);
+				writeInt(row);
 
 				// Send with simple compression.
 				int col = 0;
@@ -369,16 +381,16 @@ public abstract class ImageCapture implements ICallback {
 						continue;
 					}
 					// We have a nondup group and complete dup group, write them out.
-					if (startNonDup < startDup) {						
-						os.writeByte(ImageDataConstants.CMD_NOREPEAT);
-						os.writeInt(startDup - startNonDup);
+					if (startNonDup < startDup) {
+						writeByte(ImageDataConstants.CMD_NOREPEAT);
+						writeInt(startDup - startNonDup);
 						while (startNonDup < startDup)
-							os.writeInt(pixels[startNonDup++]);
+							writeInt(pixels[startNonDup++]);
 					}
 
-					os.writeByte(ImageDataConstants.CMD_REPEAT);
-					os.writeInt(dupCnt);
-					os.writeInt(startDupPixel);
+					writeByte(ImageDataConstants.CMD_REPEAT);
+					writeInt(dupCnt);
+					writeInt(startDupPixel);
 
 					// Start search with current loc.
 					startDup = startNonDup = col;
@@ -395,16 +407,16 @@ public abstract class ImageCapture implements ICallback {
 				}
 				// We have a nondup group and a possible complete dup group, write them out.
 				if (startNonDup < startDup) {
-					os.writeByte(ImageDataConstants.CMD_NOREPEAT);
-					os.writeInt(startDup - startNonDup);
+					writeByte(ImageDataConstants.CMD_NOREPEAT);
+					writeInt(startDup - startNonDup);
 					while (startNonDup < startDup)
-						os.writeInt(pixels[startNonDup++]);
+						writeInt(pixels[startNonDup++]);
 				}
 
 				if (dupCnt > 0) {
-					os.writeByte(ImageDataConstants.CMD_REPEAT);
-					os.writeInt(dupCnt);
-					os.writeInt(startDupPixel);
+					writeByte(ImageDataConstants.CMD_REPEAT);
+					writeInt(dupCnt);
+					writeInt(startDupPixel);
 				}
 			}
 		} catch (IOException e) {
@@ -445,7 +457,7 @@ public abstract class ImageCapture implements ICallback {
 	 * 
 	 * @since 1.1.0
 	 */
-	protected void imageComplete(int status){
+	protected synchronized void imageComplete(int status) {
 		if (os != null) {
 			// Not yet completed.
 			try {
