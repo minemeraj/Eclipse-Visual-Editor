@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.169 $  $Date: 2006-05-17 20:14:53 $ 
+ *  $Revision: 1.170 $  $Date: 2010-07-15 08:06:42 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -1232,7 +1232,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			List cats = (List) paletteCategories.get(catsURI);
 			if (cats == null) {			
 				Resource res = rset.getResource(catsURI, true);
-				cats = (List) EcoreUtil.getObjectsByType(res.getContents(), PalettePackage.eINSTANCE.getContainer());
+				cats = (List) EcoreUtil.getObjectsByType(res.getContents(), PalettePackage.eINSTANCE.getDrawer());
 				paletteCategories.put(catsURI,cats);				
 			}
 			
