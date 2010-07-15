@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.18 $  $Date: 2005-12-16 16:45:26 $ 
+ *  $Revision: 1.19 $  $Date: 2010-07-15 07:19:41 $ 
  */
 
 import java.util.Collections;
@@ -134,7 +134,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	public static JavaAllocation createAnchorAllocation(int index) {
-		return (JavaAllocation) EcoreUtil.copy(ANCHOR_ALLOCATIONS[index]);
+		return EcoreUtil.copy(ANCHOR_ALLOCATIONS[index]);
 	}
 	
 
@@ -179,7 +179,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	public static JavaAllocation createFillAllocation(int index) {
-		return (JavaAllocation) EcoreUtil.copy(FILL_ALLOCATIONS[index]);
+		return EcoreUtil.copy(FILL_ALLOCATIONS[index]);
 	}
 	
 	private FillAction[] fillActions =

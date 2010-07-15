@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.24 $  $Date: 2005-12-16 16:45:23 $ 
+ *  $Revision: 1.25 $  $Date: 2010-07-15 07:19:36 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -502,17 +502,17 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 						JavaAllocation initAlloc;
 						// Apply horizontal alignment
 						if (fillHorizontal) {
-							initAlloc = (JavaAllocation) EcoreUtil.copy(alignmentAllocations[FILL]);
+							initAlloc = EcoreUtil.copy(alignmentAllocations[FILL]);
 						} else {
-							initAlloc = (JavaAllocation) EcoreUtil.copy(alignmentAllocations[horizontalAlign]);
+							initAlloc = EcoreUtil.copy(alignmentAllocations[horizontalAlign]);
 						}
 						Object alignObject = BeanUtilities.createJavaObject("int", rset, initAlloc); //$NON-NLS-1$
 						componentCB.applyAttributeSetting(gridData, sfHorizontalAlignment, alignObject);
 
 						if (fillVertical) {
-							initAlloc = (JavaAllocation) EcoreUtil.copy(alignmentAllocations[FILL]);
+							initAlloc = EcoreUtil.copy(alignmentAllocations[FILL]);
 						} else {
-							initAlloc = (JavaAllocation) EcoreUtil.copy(alignmentAllocations[verticalAlign]);
+							initAlloc = EcoreUtil.copy(alignmentAllocations[verticalAlign]);
 						}
 						alignObject = BeanUtilities.createJavaObject("int", rset, initAlloc); //$NON-NLS-1$
 						componentCB.applyAttributeSetting(gridData, sfVerticalAlignment, alignObject);
