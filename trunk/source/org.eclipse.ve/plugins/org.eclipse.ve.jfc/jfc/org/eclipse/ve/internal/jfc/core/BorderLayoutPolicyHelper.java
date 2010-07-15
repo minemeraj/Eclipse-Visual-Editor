@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutPolicyHelper.java,v $
- *  $Revision: 1.13 $  $Date: 2005-12-14 21:37:04 $ 
+ *  $Revision: 1.14 $  $Date: 2010-07-15 07:19:41 $ 
  */
 
 import java.util.*;
@@ -98,7 +98,7 @@ public class BorderLayoutPolicyHelper extends LayoutPolicyHelper {
  * @since 1.2.0
  */
 public static JavaAllocation createBorderAllocation(int index) {
-	return (JavaAllocation) EcoreUtil.copy(CODEGEN_ALLOCATIONS[index]);
+	return EcoreUtil.copy(CODEGEN_ALLOCATIONS[index]);
 }
 
 /**

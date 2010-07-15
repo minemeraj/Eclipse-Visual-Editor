@@ -1,33 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?> 
 <psf version="2.0">
-<provider id="org.eclipse.team.cvs.core.cvsnature">
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.jem,org.eclipse.jem"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.jem-feature,org.eclipse.jem-feature"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.jem.beaninfo,org.eclipse.jem.beaninfo"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.jem.beaninfo.common,org.eclipse.jem.beaninfo.common,v20081211FinalVersion"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.jem.beaninfo.ui,org.eclipse.jem.beaninfo.ui"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.jem.beaninfo.vm,org.eclipse.jem.beaninfo.vm"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.jem.beaninfo.vm.common,org.eclipse.jem.beaninfo.vm.common"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.jem.proxy,org.eclipse.jem.proxy"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.jem.sdk-feature,org.eclipse.jem.sdk-feature"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/tests/org.eclipse.jem.tests,org.eclipse.jem.tests"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.jem.ui,org.eclipse.jem.ui,R3_0_4"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.jem.util,org.eclipse.jem.util"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.jem.workbench,org.eclipse.jem.workbench"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve,org.eclipse.ve"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve-feature,org.eclipse.ve-feature"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.all-feature,org.eclipse.ve.all-feature"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.cde,org.eclipse.ve.cde"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/doc/org.eclipse.ve.doc,org.eclipse.ve.doc"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/examples/org.eclipse.ve.examples,org.eclipse.ve.examples"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.examples-feature,org.eclipse.ve.examples-feature"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.java.core,org.eclipse.ve.java.core"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.jfc,org.eclipse.ve.jfc"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.propertysheet,org.eclipse.ve.propertysheet"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.sdk,org.eclipse.ve.sdk"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.sdk-feature,org.eclipse.ve.sdk-feature"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/plugins/org.eclipse.ve.swt,org.eclipse.ve.swt"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/tests/org.eclipse.ve.tests,org.eclipse.ve.tests"/>
-<project reference="1.0,:ext:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.tests-feature,org.eclipse.ve.tests-feature"/>
-</provider>
+ <provider id="org.eclipse.team.cvs.core.cvsnature">
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/webtools,jeetools/plugins/org.eclipse.jem,org.eclipse.jem" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/webtools,jeetools/plugins/org.eclipse.jem.beaninfo,org.eclipse.jem.beaninfo" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/webtools,jeetools/plugins/org.eclipse.jem.beaninfo.vm,org.eclipse.jem.beaninfo.vm" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/webtools,jeetools/plugins/org.eclipse.jem.beaninfo.vm.common,org.eclipse.jem.beaninfo.vm.common" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/webtools,jeetools/plugins/org.eclipse.jem.proxy,org.eclipse.jem.proxy" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/webtools,jeetools/tests/org.eclipse.jem.tests,org.eclipse.jem.tests" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/webtools,common/plugins/org.eclipse.jem.util,org.eclipse.jem.util" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/webtools,jeetools/plugins/org.eclipse.jem.workbench,org.eclipse.jem.workbench" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve,org.eclipse.ve" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve-feature,org.eclipse.ve-feature" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.cde,org.eclipse.ve.cde" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.doc,org.eclipse.ve.doc" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.examples,org.eclipse.ve.examples" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.examples-feature,org.eclipse.ve.examples-feature" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.java.core,org.eclipse.ve.java.core" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.jfc,org.eclipse.ve.jfc" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.propertysheet,org.eclipse.ve.propertysheet" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.releng,org.eclipse.ve.releng" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.releng.builder,org.eclipse.ve.releng.builder" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.swt,org.eclipse.ve.swt" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.tests,org.eclipse.ve.tests" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.tests-feature,org.eclipse.ve.tests-feature" /> 
+ </provider>
 </psf>
