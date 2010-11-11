@@ -15,8 +15,7 @@
 
   <rm:searchPath name="ve-cvs">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="cvs">
-      <rm:uri format=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools/,org.eclipse.ve/{0}">
-        <bc:propertyRef key="buckminster.component"/>
+      <rm:uri format=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools/,org.eclipse.ve,org.eclipse.ve.cde,org.eclipse.ve.swt,org.eclipse.ve.java.core">
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
