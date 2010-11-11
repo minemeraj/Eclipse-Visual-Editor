@@ -7,17 +7,20 @@
   <rm:locator searchPathRef="svn" pattern="^org\.soyatec\.windows\.azure(\..+)?" />
   <rm:locator searchPathRef="modeling" failOnError="false"/>
 -->
-  <rm:locator searchPathRef="ve-cvs" pattern="^org\.eclipse\.ve(\..+)?" failOnError="false"/>
+  <rm:locator searchPathRef="ve-local" pattern="^org\.eclipse\.ve(\..+)?" failOnError="false"/>
 
   <rm:locator searchPathRef="platform" failOnError="false"/>
   <rm:locator searchPathRef="simultanious.release" failOnError="false"/>
 
-  <rm:searchPath name="ve-cvs">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="cvs" source="true">
-      <rm:uri format=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools/,org.eclipse.ve/plugins,org.eclipse.ve/features">
+  <rm:searchPath name="ve-local">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="local">
+      <rm:uri format="{0}/{1}">
+        <bc:propertyRef key="ve.local.workspace"/>
+        <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
+  
     
   <rm:searchPath name="platform">
     <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
