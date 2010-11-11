@@ -41,10 +41,9 @@
   </rm:searchPath>
   
   <rm:searchPath name="simultanious.release">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature" readerType="p2" source="false" mutable="false">
-      <rm:uri format="{0}/releases/helios">
-        <bc:propertyRef key="eclipse.download.prefix"/>
-      </rm:uri>
+	<rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
+		<rm:uri format="http://download.eclipse.org/releases/helios">
+		</rm:uri>
     </rm:provider>
   </rm:searchPath>
   
