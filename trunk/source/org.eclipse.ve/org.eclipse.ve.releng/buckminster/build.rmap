@@ -6,7 +6,6 @@
   <rm:locator searchPathRef="ve-sl" pattern="^com\.microsoft(\..+)?" failOnError="false"/>
   <rm:locator searchPathRef="svn" pattern="^org\.soyatec\.windows\.azure(\..+)?" />
   <rm:locator searchPathRef="modeling" failOnError="false"/>
-  <rm:locator searchPathRef="ve-local" pattern="^org\.soyatec\.windows\.azure(\..+)?" failOnError="false"/>
 -->
   <rm:locator searchPathRef="ve-cvs" pattern="^org\.eclipse\.ve(\..+)?" failOnError="false"/>
 
@@ -14,8 +13,8 @@
   <rm:locator searchPathRef="simultanious.release" failOnError="false"/>
 
   <rm:searchPath name="ve-cvs">
-    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="cvs">
-      <rm:uri format=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools/,org.eclipse.ve,org.eclipse.ve.cde,org.eclipse.ve.swt,org.eclipse.ve.java.core">
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature,buckminster" readerType="cvs" source="true">
+      <rm:uri format=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools/,org.eclipse.ve/plugins,org.eclipse.ve/features">
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
