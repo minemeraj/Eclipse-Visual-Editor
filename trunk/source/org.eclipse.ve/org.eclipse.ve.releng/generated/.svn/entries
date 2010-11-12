@@ -1,0 +1,34 @@
+10
+
+dir
+4231
+http://www.soyatec.org/php/trunk/windowsazure4e/bundles/org.soyatec.windows.azure.releng/generated
+http://www.soyatec.org/php
+
+
+
+2010-11-12T01:54:06.901039Z
+4228
+m.helleboid
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9fe815c3-4864-0410-b9aa-900249b78652
+
+azure
+dir
+
+org
+dir
+
