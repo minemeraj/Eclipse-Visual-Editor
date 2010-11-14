@@ -16,7 +16,7 @@
 
   <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.all-feature,org.eclipse.ve.all,v20090826-1446"/>
   <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.sdk-feature,org.eclipse.ve.sdk,v20090826-1446"/>
-  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve-feature,org.eclipse.ve,v20090826-1446"/>
+  <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.feature,org.eclipse.ve,v20090826-1446"/>
   <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.examples-feature,org.eclipse.ve.examples,v20090826-1446"/>
   <project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,org.eclipse.ve/features/org.eclipse.ve.tests-feature,org.eclipse.ve.tests,v20090826-1446"/>
 

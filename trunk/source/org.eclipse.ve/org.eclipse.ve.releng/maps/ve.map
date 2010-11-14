@@ -12,7 +12,7 @@ plugin@org.eclipse.ve.tests=v20090826-1446,:pserver:anonymous@dev.eclipse.org:/c
 
 feature@org.eclipse.ve.all=v20090826-1446,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.all-feature
 feature@org.eclipse.ve.sdk=v20090826-1446,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.sdk-feature
-feature@org.eclipse.ve=v20090826-1446,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve-feature
+feature@org.eclipse.ve=v20090826-1446,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.feature
 feature@org.eclipse.ve.examples=v20090826-1446,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.examples-feature
 feature@org.eclipse.ve.tests=v20090826-1446,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.ve/features/org.eclipse.ve.tests-feature
 

@@ -11,7 +11,7 @@
   <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/webtools,jeetools/tests/org.eclipse.jem.tests,org.eclipse.jem.tests" /> 
   <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/webtools,jeetools/plugins/org.eclipse.jem.workbench,org.eclipse.jem.workbench" /> 
   <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve,org.eclipse.ve" /> 
-  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve-feature,org.eclipse.ve-feature" /> 
+  <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.feature,org.eclipse.ve.feature" /> 
   <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.cde,org.eclipse.ve.cde" /> 
   <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.doc,org.eclipse.ve.doc" /> 
   <project reference="1.0,:pserver:dev.eclipse.org:/cvsroot/tools,org.eclipse.ve.examples,org.eclipse.ve.examples" /> 
