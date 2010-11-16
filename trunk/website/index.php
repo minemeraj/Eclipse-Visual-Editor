@@ -43,7 +43,7 @@ $App = new App(); $Nav = new Nav(); $Menu = new Menu(); include($App->getProject
 	              <td>
 	                <table border="0" cellpadding="0">
 	                  <tr>
-	                    <td><font size=+1><a href="downloads/">Downloads</a></font></td>
+	                    <td><font size=+1>Downloads</font></td>
 	                  </tr>
 	                  <tr>
 	                    <td><a href="downloads/">Get our latest <b>1.5.0</b> nightly build for Helios (Coming soon)!</a></td>
