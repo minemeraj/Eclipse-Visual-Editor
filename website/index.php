@@ -46,7 +46,10 @@ $App = new App(); $Nav = new Nav(); $Menu = new Menu(); include($App->getProject
 	                    <td><font size=+1><a href="downloads/">Downloads</a></font></td>
 	                  </tr>
 	                  <tr>
-	                    <td>Get our latest <b>1.4.0</b> nightly build!</td>
+	                    <td><a href="downloads/">Get our latest <b>1.5.0</b> nightly build for Helios (Coming soon)!</a></td>
+	                  </tr>
+	                  <tr>
+	                    <td><a href="downloads/">Get our latest <b>1.4.0</b> nightly build for Galileo!</a></td>
 	                  </tr>
 	                </table>
 	              </td>
