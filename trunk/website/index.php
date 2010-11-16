@@ -109,6 +109,7 @@ $App = new App(); $Nav = new Nav(); $Menu = new Menu(); include($App->getProject
 		<div class="sideitem">
 			<h6>Related links</h6>
 			<ul>
+				<li><a href="http://www.eclipse.org/galileo">Eclipse 3.6 Helios Release</a></li>
 				<li><a href="http://www.eclipse.org/galileo">Eclipse 3.5 Galileo Release</a></li>
 				<li><a href="http://www.eclipse.org/gef/">Graphical Editing Framework (GEF)</a></li>
 				<li><a href="http://www.eclipse.org/modeling/emf/">Eclipse Modeling Framework (EMF)</a> </li>
