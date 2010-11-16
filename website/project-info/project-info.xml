@@ -65,7 +65,7 @@
     <module path="org.eclipse.ve.swt" />
     <module path="org.eclipse.ve.tests" />    
     <module path="org.eclipse.ve.tests-feature" />
-    <module path="org.eclipse.ve-feature" />
+    <module path="org.eclipse.ve.feature" />
     <module path="org.eclipse.jem" /> 
     <module path="org.eclipse.jem.beaninfo" />
     <module path="org.eclipse.jem.beaninfo.ui" />
