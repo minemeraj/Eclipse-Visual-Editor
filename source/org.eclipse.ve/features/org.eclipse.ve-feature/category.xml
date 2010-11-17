@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipse.ve_1.4.0.qualifier.jar" id="org.eclipse.ve" version="1.4.0.qualifier">
+   <feature url="features/org.eclipse.ve_1.5.0.qualifier.jar" id="org.eclipse.ve" version="1.5.0.qualifier">
       <category name="Tools VE"/>
    </feature>
    <category-def name="Tools VE" label="Tools VE"/>
